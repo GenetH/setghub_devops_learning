@@ -69,7 +69,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    ```
    http://3.80.233.195:80
    ```
-   ![Nginx status](./self_study/images/nginx_statuspng)
+   ![Nginx status](./self_study/images/nginx_status.png)
    I saw the Nginx welcome page, confirming that Nginx was successfully installed and accessible over the internet.
 
 ## Step 2: Installing MYSQL
@@ -81,7 +81,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    sudo apt install mysql-server
    ```
    When prompted, I confirmed the installation by typing "Y" and hitting `ENTER`.
-   ![Mysql install](./self_study/images/mysql_istallng)
+   ![Mysql install](./self_study/images/mysql_istall.png)
 
 2. **Log into MySQL**
 
@@ -89,8 +89,8 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    ```bash
    sudo mysql
    ```
-  ![Mysql access](./self_study/images/mysql_access)
-  This allowed me to access the MySQL monitor with administrative privileges.
+   ![Mysql access](./self_study/images/mysql_access)
+   This allowed me to access the MySQL monitor with administrative privileges.
 
 3. **Set Root User Authentication and Password**
    ```
@@ -112,6 +112,6 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    ```bash
     sudo mysql -p
    ```
-   ![Mysql access](./self_study/images/db_access)
+   ![Mysql access](./self_study/images/db_access.png)
    This prompted me for the password I had set during the security configuration, confirming everything was properly set up.
 
