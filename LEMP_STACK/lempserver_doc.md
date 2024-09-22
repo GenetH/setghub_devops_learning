@@ -131,27 +131,21 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
 
 ## Step 4: Configuring Nginx to Use the PHP Processor
 
-1. **Create the Root Web Directory**
-   I started by creating the root directory for my project:
+
+1. **Setup the Root Web Directory and Open Nginx Configuration File**
+
+   I started by creating the root directory for my project and ensuring my user had ownership of it. Then, I opened a new Nginx configuration file using `nano`:
+
    ```bash
    sudo mkdir /var/www/projectLEMP
-   ```
-
-2. **Change Ownership of the Directory**
-   Next, I made sure my user owned the directory by running:
-   ```bash
    sudo chown -R $USER:$USER /var/www/projectLEMP
-   ```
-
-3. **Open the Nginx Configuration File**
-   I opened a new configuration file in Nginx’s `sites-available` directory. For this, I used `nano` as my editor:
-   ```bash
    sudo nano /etc/nginx/sites-available/projectLEMP
    ```
+   ![open nginx](./self_study/images/create_file.png)
 
-4. **Configure Nginx for PHP Processing**
+2. **Configure Nginx for PHP Processing**
    I pasted the following configuration into the blank file:
-   ```nginx
+   ```
    server {
        listen 80;
        server_name projectLEMP www.projectLEMP;
@@ -173,51 +167,83 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
        }
    }
    ```
+   ![open nginx](./self_study/images/copy_file.png)
+
+    Explanation of Directives and Location Blocks:
+
+   - **listen**:  
+     Defines the port on which Nginx listens. In this case, Nginx listens on port 80, the default port for HTTP traffic.
+
+   - **root**:  
+     Defines the root directory where the files for this website are stored. In this case, it's `/var/www/projectLEMP`.
+
+   - **index**:  
+     Specifies the order in which Nginx prioritizes index files. Here, `index.html` is listed before `index.php`, which means if both files are present, `index.html` will be served.
+
+   - **server_name**:  
+     Defines which domain names or IP addresses this server block responds to. This should be set to your domain name or the public IP address of the server. In this case, it's set to `projectLEMP`.
+
+   - **location /**:  
+     This block checks for the existence of files or directories that match the requested URI. If none are found, it returns a 404 error.
+
+   - **location ~ \.php$**:  
+     This block handles PHP processing by including the `fastcgi-php.conf` file and pointing Nginx to the PHP-FPM socket (`php8.3-fpm.sock`) for handling PHP files.
+
+   - **location ~ /\.ht**:  
+     This block denies access to any `.htaccess` files, which Nginx doesn't process. This adds an extra layer of security by preventing access to such files.
 
    This configuration tells Nginx to serve files from `/var/www/projectLEMP` and process `.php` files using PHP-FPM.
 
-5. **Save and Exit `nano`**:
+3. **Save and Exit `nano`**
    After entering the configuration, I saved and exited `nano` by pressing `CTRL + X`, then `Y` to confirm, and `ENTER` to save.
 
-6. **Enable the New Nginx Configuration**:
+   ![open nginx](./self_study/images/save_f.png)
+
+4. **Enable the New Nginx Configuration**
    I created a symbolic link to enable the configuration file:
    ```bash
    sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/
    ```
 
-7. **Test Nginx Configuration for Syntax Errors**:
+5. **Test Nginx Configuration for Syntax Errors**
    Before reloading Nginx, I tested the configuration to ensure there were no errors:
    ```bash
    sudo nginx -t
    ```
 
    If everything was correct, I saw this message:
-   ```bash
-   nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-   nginx: configuration file /etc/nginx/nginx.conf test is successful
-   ```
+   ![open nginx](./self_study/images/test_nginx.png)
 
-8. **Reload Nginx to Apply Changes**:
-   I reloaded Nginx to apply the new configuration:
+6. **Unlink the Default Nginx Site Configuration**  
+   Since Nginx has a default server block that listens on port 80, which may interfere with your new configuration, I disabled it by running:
+   ```bash
+   sudo unlink /etc/nginx/sites-enabled/default
+   ```
+   This command removes the symbolic link to the default site configuration in the `sites-enabled` directory.
+
+7. **Reload Nginx to Apply Changes**  
+   After disabling the default configuration, I reloaded Nginx to apply the changes:
    ```bash
    sudo systemctl reload nginx
    ```
+   This step ensures that the changes made to Nginx configurations are applied, and it starts using the new server block defined for the `projectLEMP`.
 
-9. **Create a Test HTML File**:
+8. **Create a Test HTML File**
    I created a simple test file to confirm that my Nginx server was working:
    ```bash
-   echo 'Hello LEMP from hostname' > /var/www/projectLEMP/index.html
+   sudo echo 'Hello LEMP from hostname' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html
    ```
-
-10. **Test the Setup**:
+   ![Test html](./self_study/images/test_html.png)
+9. **Test the Setup**
     I opened my web browser and navigated to the server’s public IP address:
     ```
-    http://<Public-IP-Address>:80
+    http://3.80.233.195::80
     ```
-
+    
     If everything worked correctly, I saw the text:
     ```
-    Hello LEMP from hostname
+    Hello LEMP from hostname ec2-3-80-233-195.compute-1.amazonaws.com with public IP 3.80.233.195
     ```
+   ![Test nginx](./self_study/images/test_nginx.png)
    By following these steps, I successfully configured Nginx to process PHP and served content from my project directory.
 
