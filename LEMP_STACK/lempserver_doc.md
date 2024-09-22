@@ -89,7 +89,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    ```bash
    sudo mysql
    ```
-   ![Mysql access](./self_study/images/mysql_access)
+   ![Mysql access](./self_study/images/mysql_access.png)
    This allowed me to access the MySQL monitor with administrative privileges.
 
 3. **Set Root User Authentication and Password**
@@ -103,7 +103,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    ```bash
    sudo mysql_secure_installation
    ```
-   ![Mysql make sercure](./self_study/images/secure_db)
+   ![Mysql make sercure](./self_study/images/secure_db.png)
    I ran the following command to start the MySQL secure installation script and I made the appropriate selections based on my security needs. After answering the remaining prompts (such as removing anonymous users, disallowing remote root login, and removing the test database), MySQL was fully secured.
 
 5. **Log in with Root Password**
