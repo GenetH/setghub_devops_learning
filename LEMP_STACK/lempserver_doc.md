@@ -81,7 +81,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    sudo apt install mysql-server
    ```
    When prompted, I confirmed the installation by typing "Y" and hitting `ENTER`.
-   ![Mysql install](./self_study/images/mysql_istall.png)
+   ![Mysql install](./self_study/images/istall_mysql.png)
 
 2. **Log into MySQL**
 
@@ -114,4 +114,110 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    ```
    ![Mysql access](./self_study/images/db_access.png)
    This prompted me for the password I had set during the security configuration, confirming everything was properly set up.
+
+
+## Step 3: Install PHP
+
+   With Nginx and MySQL installed, I moved on to installing PHP to handle dynamic content and communicate with MySQL databases.
+
+   To install PHP along with the necessary components for Nginx, I ran:
+   ```bash
+   sudo apt install php-fpm php-mysql
+   ```
+   When prompted, I confirmed the installation by typing "Y" and pressing `ENTER`.
+   ![php install](./self_study/images/php_install.png)
+
+   This installed **php-fpm** (PHP FastCGI Process Manager) to allow Nginx to process PHP requests, and **php-mysql**, which enables PHP to communicate with MySQL databases.
+
+## Step 4: Configuring Nginx to Use the PHP Processor
+
+1. **Create the Root Web Directory**
+   I started by creating the root directory for my project:
+   ```bash
+   sudo mkdir /var/www/projectLEMP
+   ```
+
+2. **Change Ownership of the Directory**
+   Next, I made sure my user owned the directory by running:
+   ```bash
+   sudo chown -R $USER:$USER /var/www/projectLEMP
+   ```
+
+3. **Open the Nginx Configuration File**
+   I opened a new configuration file in Nginx’s `sites-available` directory. For this, I used `nano` as my editor:
+   ```bash
+   sudo nano /etc/nginx/sites-available/projectLEMP
+   ```
+
+4. **Configure Nginx for PHP Processing**
+   I pasted the following configuration into the blank file:
+   ```nginx
+   server {
+       listen 80;
+       server_name projectLEMP www.projectLEMP;
+       root /var/www/projectLEMP;
+
+       index index.html index.htm index.php;
+
+       location / {
+           try_files $uri $uri/ =404;
+       }
+
+       location ~ \.php$ {
+           include snippets/fastcgi-php.conf;
+           fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+       }
+
+       location ~ /\.ht {
+           deny all;
+       }
+   }
+   ```
+
+   This configuration tells Nginx to serve files from `/var/www/projectLEMP` and process `.php` files using PHP-FPM.
+
+5. **Save and Exit `nano`**:
+   After entering the configuration, I saved and exited `nano` by pressing `CTRL + X`, then `Y` to confirm, and `ENTER` to save.
+
+6. **Enable the New Nginx Configuration**:
+   I created a symbolic link to enable the configuration file:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/
+   ```
+
+7. **Test Nginx Configuration for Syntax Errors**:
+   Before reloading Nginx, I tested the configuration to ensure there were no errors:
+   ```bash
+   sudo nginx -t
+   ```
+
+   If everything was correct, I saw this message:
+   ```bash
+   nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+   nginx: configuration file /etc/nginx/nginx.conf test is successful
+   ```
+
+8. **Reload Nginx to Apply Changes**:
+   I reloaded Nginx to apply the new configuration:
+   ```bash
+   sudo systemctl reload nginx
+   ```
+
+9. **Create a Test HTML File**:
+   I created a simple test file to confirm that my Nginx server was working:
+   ```bash
+   echo 'Hello LEMP from hostname' > /var/www/projectLEMP/index.html
+   ```
+
+10. **Test the Setup**:
+    I opened my web browser and navigated to the server’s public IP address:
+    ```
+    http://<Public-IP-Address>:80
+    ```
+
+    If everything worked correctly, I saw the text:
+    ```
+    Hello LEMP from hostname
+    ```
+   By following these steps, I successfully configured Nginx to process PHP and served content from my project directory.
 

@@ -23,8 +23,6 @@ To allow necessary traffic, I set up security rules to open HTTP (Port 80) to th
      ```
  ![Connect to instance](./images/connect-to-instance.png)
   
-
-
 ##  Step 2. Install Apache 
 First, I updated the package list and installed Apache:
 ```
