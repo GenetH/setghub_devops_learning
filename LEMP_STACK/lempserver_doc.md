@@ -273,3 +273,120 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    ```
    By removing this file, I ensured that no sensitive PHP or server details would remain publicly accessible.
 
+## Step 6:  Retrieve Data from MySQL database with PHP
+
+1. **Create the Database**
+
+   Start by accessing your MySQL console as the root user:
+
+   ```bash
+   sudo mysql
+   ```
+
+   Then, create a new database:
+
+   ```sql
+   CREATE DATABASE `example_database`;
+   ```
+
+2. **Create a New User and Assign Privileges**
+
+   Create a new MySQL user named `example_user` and define their password, using the `mysql_native_password` authentication method:
+
+   ```sql
+   CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';
+   ```
+
+   Grant the new user full privileges on the database:
+
+   ```sql
+   GRANT ALL ON example_database.* TO 'example_user'@'%';
+   ```
+
+3. **Test User Permissions**
+
+   Exit the MySQL console:
+
+   ```sql
+   exit;
+   ```
+
+   Log back into MySQL using the new user credentials to confirm access:
+
+   ```bash
+   mysql -u example_user -p
+   ```
+
+   After logging in, show all the databases to confirm access to `example_database`:
+
+   ```sql
+   SHOW DATABASES;
+   ```
+
+   You should see the `example_database` listed along with `information_schema`.
+
+4. **Create a Test Table**
+
+   While still in the MySQL console, create a simple table named `todo_list`:
+
+   ```sql
+     CREATE TABLE example_database.todo_list (
+         item_id INT AUTO_INCREMENT,
+         content VARCHAR(255),
+         PRIMARY KEY(item_id)
+    );
+   ```
+
+5. **Insert Data into the Table**
+
+   Insert sample rows into the `todo_list` table:
+
+   ```sql
+   INSERT INTO example_database.todo_list (content) VALUES ("My first important item");
+   INSERT INTO example_database.todo_list (content) VALUES ("My second important item");
+   ```
+
+6. **Retrieve Data from the Table**
+
+   To ensure the data was successfully inserted, run the following:
+
+   ```sql
+   SELECT * FROM example_database.todo_list;
+   ```
+
+7. **PHP Script to Retrieve and Display Data**
+
+   Create a PHP file called `todo_list.php` in your project directory, and insert the following code to retrieve and display the `todo_list` items from MySQL:
+
+   ```php
+   <?php
+   $user = "example_user";
+   $password = "PassWord.1";
+   $database = "example_database";
+   $table = "todo_list";
+
+   try {
+     $db = new PDO("mysql:host=localhost;dbname=$database", $user, $password);
+     echo "<h2>TODO</h2><ol>";
+
+     foreach($db->query("SELECT content FROM $table") as $row) {
+        echo "<li>" . $row['content'] . "</li>";
+    }
+    echo "</ol>";
+   } catch (PDOException $e) {
+    print "Error!: " . $e->getMessage() . "<br/>";
+    die();
+   }
+   ?>
+   ```
+
+8. **Test the PHP Script**
+
+   Navigate to your browser and load the script by visiting:
+
+   ```
+   http://3.80.233.195/todo_list.php
+   ```
+
+You should see a list of the `todo_list` items displayed on your page.
+
