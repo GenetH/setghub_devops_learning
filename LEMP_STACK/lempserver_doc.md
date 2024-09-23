@@ -81,7 +81,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    sudo apt install mysql-server
    ```
    When prompted, I confirmed the installation by typing "Y" and hitting `ENTER`.
-   ![Mysql install](./self_study/images/istall_mysql.png)
+   ![Mysql install](./self_study/images/install_mysql.png)
 
 2. **Log into MySQL**
 
@@ -104,6 +104,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
    sudo mysql_secure_installation
    ```
    ![Mysql make sercure](./self_study/images/secure_db.png)
+   
    I ran the following command to start the MySQL secure installation script and I made the appropriate selections based on my security needs. After answering the remaining prompts (such as removing anonymous users, disallowing remote root login, and removing the test database), MySQL was fully secured.
 
 5. **Log in with Root Password**
@@ -173,22 +174,16 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
 
    - **listen**:  
      Defines the port on which Nginx listens. In this case, Nginx listens on port 80, the default port for HTTP traffic.
-
    - **root**:  
      Defines the root directory where the files for this website are stored. In this case, it's `/var/www/projectLEMP`.
-
    - **index**:  
      Specifies the order in which Nginx prioritizes index files. Here, `index.html` is listed before `index.php`, which means if both files are present, `index.html` will be served.
-
    - **server_name**:  
      Defines which domain names or IP addresses this server block responds to. This should be set to your domain name or the public IP address of the server. In this case, it's set to `projectLEMP`.
-
    - **location /**:  
      This block checks for the existence of files or directories that match the requested URI. If none are found, it returns a 404 error.
-
    - **location ~ \.php$**:  
      This block handles PHP processing by including the `fastcgi-php.conf` file and pointing Nginx to the PHP-FPM socket (`php8.3-fpm.sock`) for handling PHP files.
-
    - **location ~ /\.ht**:  
      This block denies access to any `.htaccess` files, which Nginx doesn't process. This adds an extra layer of security by preventing access to such files.
 
@@ -237,13 +232,44 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
 9. **Test the Setup**
     I opened my web browser and navigated to the server’s public IP address:
     ```
-    http://3.80.233.195::80
+    http://3.80.233.195:80
     ```
     
     If everything worked correctly, I saw the text:
     ```
     Hello LEMP from hostname ec2-3-80-233-195.compute-1.amazonaws.com with public IP 3.80.233.195
     ```
-   ![Test nginx](./self_study/images/test_nginx.png)
+   ![Test nginx](./self_study/images/check_nginx.png)
    By following these steps, I successfully configured Nginx to process PHP and served content from my project directory.
+
+## Step 5: Testing PHP with Nginx
+
+1. **Create a PHP Info File**
+   I created a PHP file to test that PHP is correctly configured with Nginx. First, I navigated to my document root and created a file named `info.php`:
+   ```bash
+   nano /var/www/projectLEMP/info.php
+   ```
+
+   Inside the file, I added the following PHP code:
+   ```
+   <?php
+   phpinfo();
+   ```
+   ![php info](./self_study/images/php_info.png)
+   This code outputs detailed information about the PHP setup on my server.
+
+2. **Access the PHP Info Page**
+   After saving the file, I opened my web browser and navigated to the following URL, replacing `<Public-IP-Address>` with my server’s actual IP address:
+   ```bash
+   http://3.80.233.195/info.php
+   ```
+   ![php status](./self_study/images/php_status.png)
+   This displayed a webpage with detailed information about my PHP installation, including the version, configuration, and extensions.
+
+3. **Remove the PHP Info File**
+   Since the `info.php` file exposes sensitive information about the server, I removed it after verifying the setup to ensure security:
+   ```bash
+   sudo rm /var/www/projectLEMP/info.php
+   ```
+   By removing this file, I ensured that no sensitive PHP or server details would remain publicly accessible.
 
