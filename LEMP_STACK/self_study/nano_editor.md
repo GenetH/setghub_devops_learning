@@ -25,6 +25,7 @@ To become proficient in using the Nano text editor for editing files, managing c
      ```
      nano filename.txt
      ```
+     
     ![edit using nano](./images/open_file.png)
 
    - **Navigation**:
