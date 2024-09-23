@@ -121,14 +121,14 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
 
    With Nginx and MySQL installed, I moved on to installing PHP to handle dynamic content and communicate with MySQL databases.
 
-    To install PHP along with the necessary components for Nginx, I ran:
-    ```bash
-    sudo apt install php-fpm php-mysql
-    ```
-    When prompted, I confirmed the installation by typing "Y" and pressing `ENTER`.
-    ![php install](./self_study/images/php_install.png)
+   To install PHP along with the necessary components for Nginx, I ran:
+   ```bash
+   sudo apt install php-fpm php-mysql
+   ```
+   When prompted, I confirmed the installation by typing "Y" and pressing `ENTER`.
+   ![php install](./self_study/images/php_install.png)
 
-    This installed **php-fpm** (PHP FastCGI Process Manager) to allow Nginx to process PHP requests, and **php-mysql**, which enables PHP to communicate with MySQL databases.
+   This installed **php-fpm** (PHP FastCGI Process Manager) to allow Nginx to process PHP requests, and **php-mysql**, which enables PHP to communicate with MySQL databases.
 
 ## Step 4: Configuring Nginx to Use the PHP Processor
 
