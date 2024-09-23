@@ -1,4 +1,4 @@
-Guide on SQL Syntax
+## Guide on SQL Syntax
 
 SQL (Structured Query Language) is the standard language for interacting with relational databases. SQL enables users to query, update, insert, and delete data within a database. Below is a comprehensive guide to understanding key SQL syntax for a self-paced learning journey.
 
