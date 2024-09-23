@@ -2,7 +2,7 @@
 
 SQL (Structured Query Language) is the standard language for interacting with relational databases. SQL enables users to query, update, insert, and delete data within a database. Below is a comprehensive guide to understanding key SQL syntax for a self-paced learning journey.
 
-1. **SQL Basics: SELECT Statement**
+## 1. **SQL Basics: SELECT Statement**
 
    The `SELECT` statement is used to query data from a database. It's the most frequently used SQL command.
 
@@ -44,7 +44,7 @@ This will retrieve the `first_name` and `last_name` columns from the `employees`
 
 ---
 
-2. **SQL Filtering: WHERE Clause**
+## 2. **SQL Filtering: WHERE Clause**
 
 The `WHERE` clause is used to filter records based on conditions.
 
@@ -76,7 +76,7 @@ WHERE condition;
 
 ---
 
-3. **SQL Aggregations: GROUP BY & HAVING**
+## 3. **SQL Aggregations: GROUP BY & HAVING**
 
 SQL provides aggregate functions to perform calculations on data, such as `SUM()`, `COUNT()`, `AVG()`, `MIN()`, and `MAX()`.
 
@@ -97,7 +97,7 @@ This query will return the count of employees in each department.
   GROUP BY department
   HAVING COUNT(*) > 5;
   ```
-4. **SQL Joins**
+## 4. **SQL Joins**
 
 Joins are used to combine rows from two or more tables based on related columns.
 
@@ -126,7 +126,7 @@ Joins are used to combine rows from two or more tables based on related columns.
   RIGHT JOIN departments
   ON employees.department_id = departments.id;
   ```
-5. **Inserting Data: INSERT INTO**
+## 5. **Inserting Data: INSERT INTO**
 
 The `INSERT INTO` statement is used to add new rows into a table.
 
@@ -140,7 +140,7 @@ VALUES (value1, value2, ...);
   INSERT INTO employees (first_name, last_name, department_id)
   VALUES ('John', 'Doe', 3);
   ```
-6. **Updating Data: UPDATE**
+## 6. **Updating Data: UPDATE**
 
 The `UPDATE` statement is used to modify existing rows in a table.
 
@@ -157,9 +157,7 @@ WHERE condition;
   WHERE employee_id = 1;
   ```
 
----
-
-7. **Deleting Data: DELETE**
+## 7. **Deleting Data: DELETE**
 
 The `DELETE` statement is used to remove rows from a table.
 
@@ -174,7 +172,7 @@ WHERE condition;
   WHERE employee_id = 1;
   ```
 
-8. **Creating and Altering Tables**
+## 8. **Creating and Altering Tables**
 
 - **CREATE TABLE**: Used to create a new table in the database.
 
@@ -192,8 +190,7 @@ WHERE condition;
   ALTER TABLE employees
   ADD salary DECIMAL(10, 2);
   ```
-
-
+  
 ## Conclusion
 
 Understanding SQL syntax is foundational for working with relational databases. Regular practice of querying, updating, and managing databases using SQL will improve your proficiency over time.
