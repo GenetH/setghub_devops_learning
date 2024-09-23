@@ -119,7 +119,7 @@ This guide describes the step-by-step process I followed to set up a LAMP stack 
 
 ## Step 3: Install PHP
 
-    With Nginx and MySQL installed, I moved on to installing PHP to handle dynamic content and communicate with MySQL databases.
+   With Nginx and MySQL installed, I moved on to installing PHP to handle dynamic content and communicate with MySQL databases.
 
     To install PHP along with the necessary components for Nginx, I ran:
     ```bash
