@@ -232,12 +232,15 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    This step ensures that the changes made to Nginx configurations are applied, and it starts using the new server block defined for the `projectLEMP`.
 
 8. **Create a Test HTML File**
+
    I created a simple test file to confirm that my Nginx server was working:
    ```bash
    sudo echo 'Hello LEMP from hostname' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html
    ```
    ![Test html](./self_study/images/test_html.png)
+
 9. **Test the Setup**
+
     I opened my web browser and navigated to the server’s public IP address:
     ```
     http://3.80.233.195:80
