@@ -22,11 +22,12 @@ To become proficient in using the Nano text editor for editing files, managing c
 ## 2. **Basic Operations**
 
    - **Opening a File**:
+
      ```
      nano filename.txt
      ```
-     
-    ![edit using nano](./images/open_file.png)
+
+     ![edit using nano](./images/open_file.png)
 
    - **Navigation**:
      - Use the arrow keys to move through the text.
