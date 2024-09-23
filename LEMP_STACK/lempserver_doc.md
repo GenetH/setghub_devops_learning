@@ -277,27 +277,28 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
 
 1. **Create the Database**
 
-   Start by accessing your MySQL console as the root user:
+   I started by accessing my MySQL console as the root user using the following command:
 
    ```bash
    sudo mysql
    ```
 
-   Then, create a new database:
+   Then, I created a new database called example_database with:
 
    ```sql
    CREATE DATABASE `example_database`;
    ```
+   ![php status](./self_study/images/create_db.png) 
 
 2. **Create a New User and Assign Privileges**
 
-   Create a new MySQL user named `example_user` and define their password, using the `mysql_native_password` authentication method:
+   Next, I created a MySQL user named `example_user`, defined the password, and used the mysql_native_password method for authentication:
 
    ```sql
    CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';
    ```
 
-   Grant the new user full privileges on the database:
+   I then granted this user full privileges to the example_database:
 
    ```sql
    GRANT ALL ON example_database.* TO 'example_user'@'%';
@@ -305,29 +306,29 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
 
 3. **Test User Permissions**
 
-   Exit the MySQL console:
+   After creating the user, I exited the MySQL console with:
 
    ```sql
    exit;
    ```
 
-   Log back into MySQL using the new user credentials to confirm access:
+   To confirm the permissions for the new user, I logged back in as `example_user`:
 
    ```bash
    mysql -u example_user -p
    ```
 
-   After logging in, show all the databases to confirm access to `example_database`:
+   I then checked the available databases to verify that the `example_database` was accessible:
 
    ```sql
    SHOW DATABASES;
    ```
-
-   You should see the `example_database` listed along with `information_schema`.
+   ![php status](./self_study/images/show_db.png)
+   As expected, `example_database`was listed along with `information_schema`.
 
 4. **Create a Test Table**
 
-   While still in the MySQL console, create a simple table named `todo_list`:
+   Still in the MySQL console, I created a table named `todo_list` within the `example_database`:
 
    ```sql
      CREATE TABLE example_database.todo_list (
@@ -336,28 +337,35 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
          PRIMARY KEY(item_id)
     );
    ```
+   ![php status](./self_study/images/create_table.png)
 
 5. **Insert Data into the Table**
 
-   Insert sample rows into the `todo_list` table:
+   I proceeded to insert a few sample items into the `todo_list` table using:
 
    ```sql
    INSERT INTO example_database.todo_list (content) VALUES ("My first important item");
    INSERT INTO example_database.todo_list (content) VALUES ("My second important item");
+   INSERT INTO example_database.todo_list (content) VALUES ("My third important item");
    ```
+   ![php status](./self_study/images/insert_table.png)
 
 6. **Retrieve Data from the Table**
 
-   To ensure the data was successfully inserted, run the following:
+   To verify that the data had been successfully inserted, I ran:
 
    ```sql
    SELECT * FROM example_database.todo_list;
    ```
+   ![php status](./self_study/images/list_table.png)
+   The query returned the items I inserted, confirming that the data was correctly stored.
 
 7. **PHP Script to Retrieve and Display Data**
 
-   Create a PHP file called `todo_list.php` in your project directory, and insert the following code to retrieve and display the `todo_list` items from MySQL:
-
+   I then created a PHP file called `todo_list.php` within `/var/www/projectLEMP/` directory. The PHP script below was used to retrieve and display the `todo_list` items from MySQL:
+   ```
+   sudo nano /var/www/projectLEMP/todo_list.php
+   ```
    ```php
    <?php
    $user = "example_user";
@@ -379,14 +387,16 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    }
    ?>
    ```
-
+   ![php script](./self_study/images/php_script.png)
 8. **Test the PHP Script**
 
-   Navigate to your browser and load the script by visiting:
+   Finally, I tested the PHP script by navigating to the following URL in my browser:
 
    ```
    http://3.80.233.195/todo_list.php
    ```
+   ![php script](./self_study/images/todo_list.png)
+   This displayed the list of todo_list items as expected.
 
-You should see a list of the `todo_list` items displayed on your page.
-
+## Conclusion
+   By following this comprehensive guide, I successfully set up a LEMP stack on Ubuntu 24.04 LTS, installed and configured Nginx, MySQL, and PHP, and demonstrated data retrieval using PHP from a MySQL database. This environment is now ready to host dynamic web applications efficiently.
