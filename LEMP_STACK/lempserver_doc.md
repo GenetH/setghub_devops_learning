@@ -5,6 +5,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
 ## Step 0: Server Setup
 
 1. **Launch EC2 Instance**
+
    I launched an EC2 instance of type **t2.micro** running **Ubuntu 24.04 LTS (HVM)** in the **us-east-1** region using the AWS console.
 
    ![Launch Instance](./self_study/images/ec2_create.png)
@@ -17,6 +18,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    ![Security Rules](./self_study/images/security-rule.png)
 
 3. **Create SSH Key Pair**
+
    I created an SSH key pair named my-key for secure access, adjusted file permissions, and connected to the instance using the following commands:
      ```bash
      chmod 400 my-key.pem
@@ -96,7 +98,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    ```
    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';
    ```
-   This command changed the root user's authentication method and set the password to PassWord.1.
+   This command changed the root user's authentication method and set the password to `PassWord.1`.
 4. **Secure MySQL**
 
    To improve security, I exited MySQL and ran the following script:
@@ -126,6 +128,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    sudo apt install php-fpm php-mysql
    ```
    When prompted, I confirmed the installation by typing "Y" and pressing `ENTER`.
+   
    ![php install](./self_study/images/php_install.png)
 
    This installed **php-fpm** (PHP FastCGI Process Manager) to allow Nginx to process PHP requests, and **php-mysql**, which enables PHP to communicate with MySQL databases.
@@ -145,6 +148,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    ![open nginx](./self_study/images/create_file.png)
 
 2. **Configure Nginx for PHP Processing**
+
    I pasted the following configuration into the blank file:
    ```
    server {
@@ -190,23 +194,27 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    This configuration tells Nginx to serve files from `/var/www/projectLEMP` and process `.php` files using PHP-FPM.
 
 3. **Save and Exit `nano`**
+
    After entering the configuration, I saved and exited `nano` by pressing `CTRL + X`, then `Y` to confirm, and `ENTER` to save.
 
    ![open nginx](./self_study/images/save_f.png)
 
 4. **Enable the New Nginx Configuration**
+
    I created a symbolic link to enable the configuration file:
    ```bash
    sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/
    ```
 
 5. **Test Nginx Configuration for Syntax Errors**
+
    Before reloading Nginx, I tested the configuration to ensure there were no errors:
    ```bash
    sudo nginx -t
    ```
 
    If everything was correct, I saw this message:
+
    ![open nginx](./self_study/images/test_nginx.png)
 
 6. **Unlink the Default Nginx Site Configuration**  
@@ -245,6 +253,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
 ## Step 5: Testing PHP with Nginx
 
 1. **Create a PHP Info File**
+
    I created a PHP file to test that PHP is correctly configured with Nginx. First, I navigated to my document root and created a file named `info.php`:
    ```bash
    nano /var/www/projectLEMP/info.php
@@ -259,6 +268,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    This code outputs detailed information about the PHP setup on my server.
 
 2. **Access the PHP Info Page**
+
    After saving the file, I opened my web browser and navigated to the following URL, replacing `<Public-IP-Address>` with my server’s actual IP address:
    ```bash
    http://3.80.233.195/info.php
@@ -267,6 +277,7 @@ This guide describes the step-by-step process I followed to set up a LEMP stack 
    This displayed a webpage with detailed information about my PHP installation, including the version, configuration, and extensions.
 
 3. **Remove the PHP Info File**
+
    Since the `info.php` file exposes sensitive information about the server, I removed it after verifying the setup to ensure security:
    ```bash
    sudo rm /var/www/projectLEMP/info.php
