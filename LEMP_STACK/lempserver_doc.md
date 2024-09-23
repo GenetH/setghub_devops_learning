@@ -1,22 +1,22 @@
 # LEMP Stack Setup on Ubuntu 24.04 LTS
 
-This guide describes the step-by-step process I followed to set up a LAMP stack on an Ubuntu server. This environment, which includes Linux, Nginx, MySQL, and PHP , is essential for hosting websites and web applications.
+This guide describes the step-by-step process I followed to set up a LEMP stack on an Ubuntu server. This environment, which includes Linux, Nginx, MySQL, and PHP , is essential for hosting websites and web applications.
 
 ## Step 0: Server Setup
 
-1. **Launch EC2 Instance:**
+1. **Launch EC2 Instance**
    I launched an EC2 instance of type **t2.micro** running **Ubuntu 24.04 LTS (HVM)** in the **us-east-1** region using the AWS console.
 
    ![Launch Instance](./self_study/images/ec2_create.png)
    ![Launch Instance](./self_study/images/ec2_instance.png)
 
-2. **Configure Security Group:**
+2. **Configure Security Group**
  
    To allow necessary traffic, I set up security rules to open HTTP (Port 80) to the world for web traffic and restrict SSH (Port 22) access to my IP for security reasons.
 
    ![Security Rules](./self_study/images/security-rule.png)
 
-3. **Create SSH Key Pair:**
+3. **Create SSH Key Pair**
    I created an SSH key pair named my-key for secure access, adjusted file permissions, and connected to the instance using the following commands:
      ```bash
      chmod 400 my-key.pem
