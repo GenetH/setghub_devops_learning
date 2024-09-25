@@ -215,13 +215,13 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
 ## Step 3: **Routes Setup**
 
-   There are three actions that my To-Do application needs to handle:
+    There are three actions that my To-Do application needs to handle:
 
-   1. Create a new task
-   2. Display a list of all tasks
-   3. Delete a completed task
+    1. Create a new task
+    2. Display a list of all tasks
+    3. Delete a completed task
 
-   Each task will be associated with its own endpoint, using standard HTTP request methods: POST, GET, and DELETE.
+    Each task will be associated with its own endpoint, using standard HTTP request methods: POST, GET, and DELETE.
 
 1. **Create the routes folder**
 
