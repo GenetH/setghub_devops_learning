@@ -118,7 +118,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    
    I was able to see 'package.json' listed in the output.
 
-**Install ExpressJS**
+   **Install ExpressJS**
 
 1. **Install Express**
 
