@@ -213,7 +213,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    
    I successfully accessed the Express server, and it displayed the message: **"Welcome to Express."**
 
-## **Routes Setup**
+ **Routes Setup**
 
    There are three actions that my To-Do application needs to handle:
 
@@ -283,7 +283,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    Now, I am ready to move forward with setting up the **Models** directory, where I'll define the structure of the task data.
 
-## **Models Setup**
+ **Models Setup**
 
    Now comes the interesting part, since the app is going to make use of **MongoDB** (a NoSQL database), we need to create a model.
 
@@ -383,7 +383,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    By following these steps, I now have a fully functioning MongoDB model that can interact with the database to perform **CRUD** operations on the to-do tasks: create new tasks, display all tasks, and delete completed tasks.
 
 
-## **MongoDB Database Setup**
+ **MongoDB Database Setup**
 
 1. **Login to MongoDB Atlas**
    
@@ -551,11 +551,11 @@ Here’s how it looks in Postman:
 
 ![Postman POST Request](./self_study/images/postman_post_request.png)
 
-### 3. Created a GET Request to Verify the Task
+3. **Created a GET Request to Verify the Task**
 
-After successfully creating the task using the POST request, I verified if it was stored in the database by making a **GET request**:
+   After successfully creating the task using the POST request, I verified if it was stored in the database by making a **GET request**:
 
-- I created a **GET request** to retrieve the list of all tasks:
+  - I created a **GET request** to retrieve the list of all tasks:
 
    ```
    http:35.173.221.171:5000/api/todos
