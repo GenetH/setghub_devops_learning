@@ -118,7 +118,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    
    I was able to see 'package.json' listed in the output.
 
-## Step 2: **Install ExpressJS**
+## **Install ExpressJS**
 
 1. **Install Express**
 
@@ -382,4 +382,254 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    By following these steps, I now have a fully functioning MongoDB model that can interact with the database to perform **CRUD** operations on the to-do tasks: create new tasks, display all tasks, and delete completed tasks.
 
+
+## Step 5: **MongoDB Database Setup**
+
+1. **Login to MongoDB Atlas**
+   
+   Since I already have an account, I just logged into **MongoDB Atlas**. If you don't have one, you can sign up here and follow the steps provided to create an account and start using MongoDB Atlas.
+
+   ![Login to MongoDB Atlas](./self_study/images/mongodb_login.png)
+
+2. **Create a New Cluster**
+
+   After logging in, I created a new MongoDB cluster by selecting the **Create a New Cluster** button and following the checklist provided to complete the initial setup. This involved choosing **AWS** as the cloud provider and selecting a region that is nearest to my location for optimal performance.
+
+   ![Create Cluster](./self_study/images/mongodb_cluster_setup.png)
+
+3. **Whitelist Your IP**
+
+   After creating the cluster, I configured **Network Access** by whitelisting my IP address. This is an important security measure to restrict who can connect to the MongoDB database.
+
+   ![Whitelist IP](./self_study/images/mongodb_whitelist_ip.png)
+
+4. **Create MongoDB Collections**
+
+   Once the cluster was set up, I navigated to the **Collections** section in MongoDB Atlas to create a new collection. This collection is where the application data will be stored and managed. 
+
+   ![Create MongoDB Collection](./self_study/images/mongodb_create_collection.png)
+
+5. **Retrieve the Connection String**
+
+   In the **Clusters** section, I obtained the connection string necessary to connect my application to the MongoDB database. This string includes important details such as the username, password, and database information. I added this connection string to the environment variables in my `.env` file.
+
+   ```bash
+   touch .env
+   vim .env
+   ```
+
+   In the `.env` file, I added the following:
+
+   ```
+   DB = 'mongodb+srv://genet:<password>@cluster0.xlcje.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+   ```
+
+   ![Connection String](./self_study/images/mongodb_connection_string.png)
+
+6. **Update the `index.js` file**
+
+   I then updated the `index.js` file to use the environment variables, allowing the application to securely connect to the MongoDB database. 
+
+   To do this, I opened `index.js` in the `vim` editor, deleted the old content, and added the updated code as shown below:
+
+   ```bash
+   vim index.js
+   ```
+
+   **Steps to delete the old content:**
+
+   1. Open the file with `vim index.js`
+   2. Press `esc`
+   3. Type `:`
+   4. Type `%d`
+   5. Press `Enter`
+
+   Now, insert the new code:
+
+   ```bash
+   Press `i` to enter insert mode in vim.
+   ```
+
+   Then, add the following code:
+
+   ```js
+   const express = require('express');
+   const bodyParser = require('body-parser');
+   const mongoose = require('mongoose');
+   const routes = require('./routes/api');
+   const path = require('path');
+   require('dotenv').config();
+
+   const app = express();
+   const port = process.env.PORT || 5000;
+
+   // Connect to the database
+   mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+   .then(() => console.log('Database connected successfully'))
+   .catch(err => console.log(err));
+
+   // Override mongoose promises with Node.js promises
+   mongoose.Promise = global.Promise;
+
+   // Middleware to handle CORS and JSON parsing
+   app.use((req, res, next) => {
+       res.header("Access-Control-Allow-Origin", "*");
+       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+       next();
+   });
+
+   app.use(bodyParser.json());
+   app.use('/api', routes);
+
+   // Error handling middleware
+   app.use((err, req, res, next) => {
+       console.log(err);
+       next();
+   });
+
+   // Start the server
+   app.listen(port, () => {
+       console.log(`Server running on port ${port}`);
+   });
+   ```
+
+   ![Updated index.js file](./self_study/images/index_file_update.png)
+
+
+7. **Starting the Application and Verifying MongoDB Connection**
+
+   Once you've set up your application and configured everything, start the server to check if the connection to MongoDB is successful. You can do this by running the following command in the terminal:
+
+   ```bash
+   node index.js
+   ```
+ 
+   ![Start Server](./self_study/images/start_server.png)
+
+   If everything is correctly configured, you should see the following message in your terminal:
+
+   ```
+   Database connected successfully
+   ```
+
+   This message indicates that the backend is successfully connected to MongoDB, and the application is ready to start functioning.
+
+
+## 6: **Testing Backend Code without Frontend using RESTful API**
+
+   Since I have already written the backend code for my **To-Do** application and configured the MongoDB database, I tested my backend without a frontend by using **Postman** to simulate RESTful API requests and ensure the backend is functioning correctly.
+
+1. Installed Postman 
+
+   I already had **Postman** installed, so I proceeded with creating the requests.
+
+2. Created a POST Request
+
+   In **Postman**, I created a **POST request** to my API endpoint:
+
+   ```
+   http://35.173.221.171:5000/api/todos
+   ```
+
+- **Headers Setup**: I added a header to specify the content type.
+   ```
+   Key: Content-Type
+   Value: application/json
+   ```
+
+- **Body Setup**: In the Body section of the request, I selected the **raw** option and chose **JSON** from the dropdown. I entered the following data:
+
+   ```json
+   {
+     "action": "Finish Project 8 and 9"
+   }
+   ```
+
+This POST request sent a new task to my To-Do application, and the backend stored it in the MongoDB database.
+
+Here’s how it looks in Postman:
+
+![Postman POST Request](./self_study/images/postman_post_request.png)
+
+### 3. Created a GET Request to Verify the Task
+
+After successfully creating the task using the POST request, I verified if it was stored in the database by making a **GET request**:
+
+- I created a **GET request** to retrieve the list of all tasks:
+
+   ```
+   http:35.173.221.171:5000/api/todos
+   ```
+
+This GET request retrieved all tasks stored in the To-Do application by fetching the records from MongoDB.
+
+Here's an example of the GET request in Postman:
+
+![Postman GET Request](./self_study/images/postman_get_request.png)
+
+### 4. Optional Task: DELETE Request
+
+Now that I tested adding and retrieving tasks, I also sent a **DELETE request** to remove a task from the To-Do list.
+
+- To delete a task, I sent its unique **ID** as part of the DELETE request URL:
+
+   ```
+   http://<PublicIP-or-PublicDNS>:5000/api/todos/<TaskID>
+   ```
+
+This DELETE request removed the task with the specified ID from the database.
+
+By now, I have successfully tested all the main CRUD (Create, Read, Update, Delete) operations of my To-Do application’s backend. The backend code supports the following operations:
+
+- [x] **Display** a list of tasks - HTTP GET request
+- [x] **Add** a new task to the list - HTTP POST request
+- [x] **Delete** an existing task from the list - HTTP DELETE request
+
+##  ***Frontend Creation**
+1. **Creating the React App:**
+   - Command: `npx create-react-app client`
+   - This command will create a React application inside a `client` folder in your project directory.
+
+### 2. **Installing Dependencies:**
+   - **Concurrently**: 
+     ```bash
+     npm install concurrently --save-dev
+     ```
+     Concurrently allows you to run multiple npm scripts at the same time, useful for running both the backend and frontend servers together.
+
+   - **Nodemon**: 
+     ```bash
+     npm install nodemon --save-dev
+     ```
+     Nodemon automatically restarts the server when you make changes to your server-side code.
+
+### 3. **Modifying `package.json` for Dev Scripts:**
+   - You need to update the `package.json` file in your `Todo` folder to include scripts that run the backend and frontend together:
+     ```json
+     "scripts": {
+       "start": "node index.js",
+       "start-watch": "nodemon index.js",
+       "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
+     }
+     ```
+   This script allows you to run both the backend and frontend using the command `npm run dev`.
+
+### 4. **Proxy Configuration:**
+   - To avoid CORS issues and simplify API calls, you'll set up a proxy in the `client/package.json`:
+     ```json
+     "proxy": "http://localhost:5000"
+     ```
+   This proxy configuration allows you to make API calls directly from the frontend to the backend without needing to specify the full URL (like `http://localhost:5000/api/todos`).
+
+### 5. **Running the Development Environment:**
+   - After making the above changes, navigate back to your `Todo` directory and run:
+     ```bash
+     npm run dev
+     ```
+   This will start both the backend (on port 5000) and the frontend (on port 3000) at the same time.
+
+### 6. **Opening TCP Port 3000:**
+   - If you are using an EC2 instance or any other cloud-hosted server, make sure to open **TCP port 3000** in your security group settings to allow access to your React app from the internet.
+
+By following these instructions, you should be able to integrate your React frontend with your Node.js backend and run them concurrently. Let me know if you need help with any specific part of this process!
 
