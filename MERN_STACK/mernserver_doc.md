@@ -206,7 +206,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    To verify everything, I opened my browser and navigated to:
 
-   ```bash
+   ```
    http://35.173.221.171:5000
    ```
    ![Security Group](./self_study/images/access_app.png) 
@@ -215,13 +215,13 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
 ## Step 3: **Routes Setup**
 
-    There are three actions that my To-Do application needs to handle:
+   There are three actions that my To-Do application needs to handle:
 
-    1. Create a new task
-    2. Display a list of all tasks
-    3. Delete a completed task
+   1. Create a new task
+   2. Display a list of all tasks
+   3. Delete a completed task
 
-    Each task will be associated with its own endpoint, using standard HTTP request methods: POST, GET, and DELETE.
+   Each task will be associated with its own endpoint, using standard HTTP request methods: POST, GET, and DELETE.
 
 1. **Create the routes folder**
 
@@ -252,7 +252,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    I used `vim` to open the `api.js` file and wrote the following code, which handles the three operations: creating, listing, and deleting tasks.
  
-   ```bash
+   ```
    vim api.js
    ```
 
@@ -282,3 +282,104 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ![Change Directory](./self_study/images/edit_apis.png) 
 
    Now, I am ready to move forward with setting up the **Models** directory, where I'll define the structure of the task data.
+
+## Step 4: **Models Setup**
+
+   Now comes the interesting part, since the app is going to make use of **MongoDB** (a NoSQL database), we need to create a model.
+
+1. **Install Mongoose** 
+
+   First, I installed **Mongoose**, which is a Node.js package that makes working with MongoDB easier.
+
+   ```
+   cd Todo
+   ```
+
+   ```bash
+   npm install mongoose
+   ```
+   ![Install Mongoose](./self_study/images/install_mongo.png) 
+
+2. **Create the Models Folder**
+
+   I created a new folder called `models` where my schema and models will be stored.
+
+   ```
+   mkdir models && cd models && touch todo.js
+   ```
+   ![Create Models](./self_study/images/create_file.png) 
+   
+3. **Create the Todo Schema and Model**
+
+   I opened the newly created `todo.js` file and added the schema for the "To-Do" items using Mongoose.
+
+   ```
+   vim todo.js
+   ```
+
+   Here’s the code I added:
+
+   ```
+   const mongoose = require('mongoose');
+   const Schema = mongoose.Schema;
+
+   // Create schema for todo
+   const TodoSchema = new Schema({
+     action: {
+     type: String,
+     required: [true, 'The todo text field is required']
+   }
+   });
+
+   // Create model for todo
+   const Todo = mongoose.model('todo', TodoSchema);
+
+   module.exports = Todo;
+   ```
+   ![Create Schema](./self_study/images/save_file.png) 
+   
+4. **Update the Routes to Use the Model**
+
+   Now, I needed to update my routes to interact with the **MongoDB** database using the model. I opened the `api.js` file in the `routes` folder and replaced the previous code with the following:
+
+   ```
+   vim ../routes/api.js
+   ```
+
+   ```js
+   const express = require('express');
+   const router = express.Router();
+   const Todo = require('../models/todo');
+
+   // Get all tasks
+   router.get('/todos', (req, res, next) => {
+     Todo.find({}, 'action')
+       .then(data => res.json(data))
+       .catch(next);
+   });
+
+   // Create a new task
+   router.post('/todos', (req, res, next) => {
+     if (req.body.action) {
+       Todo.create(req.body)
+         .then(data => res.json(data))
+         .catch(next);
+     } else {
+       res.json({ error: 'The input field is empty' });
+    }
+   });
+
+    // Delete a task by id
+   router.delete('/todos/:id', (req, res, next) => {
+     Todo.findOneAndDelete({ "_id": req.params.id })
+       .then(data => res.json(data))
+       .catch(next);
+   });
+
+    module.exports = router;
+   ```
+   ![Update Routes](./self_study/images/save_routes.png) 
+
+   By following these steps, I now have a fully functioning MongoDB model that can interact with the database to perform **CRUD** operations on the to-do tasks: create new tasks, display all tasks, and delete completed tasks.
+
+
