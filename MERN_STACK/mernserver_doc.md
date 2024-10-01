@@ -118,7 +118,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    
    I was able to see 'package.json' listed in the output.
 
-## **Install ExpressJS**
+**Install ExpressJS**
 
 1. **Install Express**
 
@@ -213,7 +213,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    
    I successfully accessed the Express server, and it displayed the message: **"Welcome to Express."**
 
-## Step 3: **Routes Setup**
+## **Routes Setup**
 
    There are three actions that my To-Do application needs to handle:
 
@@ -283,7 +283,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    Now, I am ready to move forward with setting up the **Models** directory, where I'll define the structure of the task data.
 
-## Step 4: **Models Setup**
+## **Models Setup**
 
    Now comes the interesting part, since the app is going to make use of **MongoDB** (a NoSQL database), we need to create a model.
 
@@ -383,7 +383,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    By following these steps, I now have a fully functioning MongoDB model that can interact with the database to perform **CRUD** operations on the to-do tasks: create new tasks, display all tasks, and delete completed tasks.
 
 
-## Step 5: **MongoDB Database Setup**
+## **MongoDB Database Setup**
 
 1. **Login to MongoDB Atlas**
    
@@ -515,7 +515,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    This message indicates that the backend is successfully connected to MongoDB, and the application is ready to start functioning.
 
 
-## 6: **Testing Backend Code without Frontend using RESTful API**
+##  **Testing Backend Code without Frontend using RESTful API**
 
    Since I have already written the backend code for my **To-Do** application and configured the MongoDB database, I tested my backend without a frontend by using **Postman** to simulate RESTful API requests and ensure the backend is functioning correctly.
 
@@ -567,7 +567,7 @@ Here's an example of the GET request in Postman:
 
 ![Postman GET Request](./self_study/images/postman_get_request.png)
 
-### 4. Optional Task: DELETE Request
+4. **Optional Task: DELETE Request**
 
 Now that I tested adding and retrieving tasks, I also sent a **DELETE request** to remove a task from the To-Do list.
 
@@ -585,7 +585,7 @@ By now, I have successfully tested all the main CRUD (Create, Read, Update, Dele
 - [x] **Add** a new task to the list - HTTP POST request
 - [x] **Delete** an existing task from the list - HTTP DELETE request
 
-##  ***Frontend Creation**
+## Step 0: **Frontend Creation**
 1. **Creating the React App:**
    - Command: `npx create-react-app client`
    - This command will create a React application inside a `client` folder in your project directory.
