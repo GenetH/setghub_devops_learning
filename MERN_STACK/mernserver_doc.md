@@ -546,11 +546,11 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    }
    ```
 
-This POST request sent a new task to my To-Do application, and the backend stored it in the MongoDB database.
+  This POST request sent a new task to my To-Do application, and the backend stored it in the MongoDB database.
 
-Here’s how it looks in Postman:
+  Here’s how it looks in Postman:
 
-![Postman POST Request](./self_study/images/postman_post_request.png)
+  ![Postman POST Request](./self_study/images/postman_post_request.png)
 
 3. **Created a GET Request to Verify the Task**
 
@@ -562,11 +562,11 @@ Here’s how it looks in Postman:
    http:35.173.221.171:5000/api/todos
    ```
 
- This GET request retrieved all tasks stored in the To-Do application by fetching the records from MongoDB.
+   This GET request retrieved all tasks stored in the To-Do application by fetching the records from MongoDB.
 
- Here's an example of the GET request in Postman:
+   Here's an example of the GET request in Postman:
 
- ![Postman GET Request](./self_study/images/postman_get_request.png)
+   ![Postman GET Request](./self_study/images/postman_get_request.png)
 
 4. **Optional Task: DELETE Request**
 
@@ -604,7 +604,7 @@ Here’s how it looks in Postman:
 
  **Running a React App** 
 
- Before testing the React app, there are some dependencies that need to be installed.
+  Before testing the React app, there are some dependencies that need to be installed.
 
 1. **Install Dependencies**
 
