@@ -585,51 +585,88 @@ By now, I have successfully tested all the main CRUD (Create, Read, Update, Dele
 - [x] **Add** a new task to the list - HTTP POST request
 - [x] **Delete** an existing task from the list - HTTP DELETE request
 
-## Step 0: **Frontend Creation**
-1. **Creating the React App:**
-   - Command: `npx create-react-app client`
-   - This command will create a React application inside a `client` folder in your project directory.
+## Step 2: **Frontend Creation**
 
-### 2. **Installing Dependencies:**
-   - **Concurrently**: 
-     ```bash
-     npm install concurrently --save-dev
-     ```
-     Concurrently allows you to run multiple npm scripts at the same time, useful for running both the backend and frontend servers together.
+  Since I have already completed the backend functionality and API setup for my To-Do application, it is now time to create the frontend interface for users to interact with the application through a web client (browser).
 
-   - **Nodemon**: 
-     ```bash
-     npm install nodemon --save-dev
-     ```
-     Nodemon automatically restarts the server when you make changes to your server-side code.
+1. **Creating the React App**
 
-### 3. **Modifying `package.json` for Dev Scripts:**
-   - You need to update the `package.json` file in your `Todo` folder to include scripts that run the backend and frontend together:
-     ```json
-     "scripts": {
-       "start": "node index.js",
-       "start-watch": "nodemon index.js",
-       "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
-     }
-     ```
-   This script allows you to run both the backend and frontend using the command `npm run dev`.
+   In the same root directory as my backend code (the `Todo` directory), I ran the following command to scaffold a new React app:
 
-### 4. **Proxy Configuration:**
-   - To avoid CORS issues and simplify API calls, you'll set up a proxy in the `client/package.json`:
-     ```json
-     "proxy": "http://localhost:5000"
-     ```
-   This proxy configuration allows you to make API calls directly from the frontend to the backend without needing to specify the full URL (like `http://localhost:5000/api/todos`).
+   ```bash
+   npx create-react-app client
+   ```
+   This command created a new folder called `client` in my Todo directory, where all the React code will be stored.
+    
+   ![Creating the React App](./self_study/images/postman_get_request.png)
 
-### 5. **Running the Development Environment:**
-   - After making the above changes, navigate back to your `Todo` directory and run:
-     ```bash
-     npm run dev
-     ```
-   This will start both the backend (on port 5000) and the frontend (on port 3000) at the same time.
+ **Running a React App** 
 
-### 6. **Opening TCP Port 3000:**
-   - If you are using an EC2 instance or any other cloud-hosted server, make sure to open **TCP port 3000** in your security group settings to allow access to your React app from the internet.
+ Before testing the React app, there are some dependencies that need to be installed.
 
-By following these instructions, you should be able to integrate your React frontend with your Node.js backend and run them concurrently. Let me know if you need help with any specific part of this process!
+1. **Install Dependencies**
+
+   Before testing the React app, I needed to install some dependencies that are required for managing multiple commands and monitoring the server.
+
+   I installed **concurrently** to run more than one command from the same terminal window simultaneously:
+
+   ```bash
+   npm install concurrently --save-dev
+   ```
+   I installed **nodemon** to monitor changes in the server code. Whenever there's a change, nodemon automatically restarts the server.
+
+   ```bash
+   npm install nodemon --save-dev
+   ```
+2. **Update the `package.json` file**
+
+   I updated the `package.json` file inside the **Todo** folder to allow concurrently running both the backend and frontend. Here's the section I updated:
+
+```json
+"scripts": {
+  "start": "node index.js",
+  "start-watch": "nodemon index.js",
+  "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
+},
+```
+
+![Updated Scripts](./self_study/images/package_json_update.png)
+
+ **Configure Proxy in `package.json` (client)**
+
+ Next, I configured a proxy to ensure that API calls made from the frontend will be forwarded to the backend without needing to include the full URL.
+
+Here’s how I did it:
+
+1. I navigated to the **client** directory:
+
+   ```bash
+   cd client
+   ```
+
+2. Then, I opened the `package.json` file inside the **client** folder and added the following line to configure the proxy:
+
+   ```json
+   "proxy": "http://localhost:5000"
+   ```
+
+This proxy configuration helps simplify API calls in development. Instead of calling the backend using the full path like `http://localhost:5000/api/todos`, I can just call `/api/todos` directly.
+
+4. **Run the React Application**
+
+Once everything was set up, I navigated back to the **Todo** directory and ran both the backend and frontend with the following command:
+
+```bash
+npm run dev
+```
+
+By running this command, both the backend and frontend servers started simultaneously. The React app should be accessible on `localhost:3000`.
+
+5. **Open Ports**
+
+To make the application accessible to the public, I opened **TCP port 3000** on EC2 by adding a new security group rule. This allows me to access the React app from a browser on the Internet.
+
+---
+
+Now, my application is fully functional with both the backend and frontend running smoothly. I can interact with the To-Do application through the web browser, adding tasks, viewing them, and deleting them.
 
