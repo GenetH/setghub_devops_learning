@@ -556,17 +556,17 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    After successfully creating the task using the POST request, I verified if it was stored in the database by making a **GET request**:
 
-  - I created a **GET request** to retrieve the list of all tasks:
+   - I created a **GET request** to retrieve the list of all tasks:
 
-   ```
-   http:35.173.221.171:5000/api/todos
-   ```
+    ```
+    http:35.173.221.171:5000/api/todos
+    ```
 
-   This GET request retrieved all tasks stored in the To-Do application by fetching the records from MongoDB.
+    This GET request retrieved all tasks stored in the To-Do application by fetching the records from MongoDB.
 
-   Here's an example of the GET request in Postman:
+    Here's an example of the GET request in Postman:
 
-   ![Postman GET Request](./self_study/images/postman_get_request.png)
+    ![Postman GET Request](./self_study/images/postman_get_request.png)
 
 4. **Optional Task: DELETE Request**
 
@@ -591,7 +591,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
   Since I have already completed the backend functionality and API setup for my To-Do application, it is now time to create the frontend interface for users to interact with the application through a web client (browser).
 
-1. **Creating the React App**
+  **Creating the React App**
 
    In the same root directory as my backend code (the `Todo` directory), I ran the following command to scaffold a new React app:
 
@@ -600,7 +600,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```
    This command created a new folder called `client` in my Todo directory, where all the React code will be stored.
     
-   ![Creating the React App](./self_study/images/postman_get_request.png)
+   ![Creating the React App](./self_study/images/creating_app.png)
 
  **Running a React App** 
 
@@ -624,21 +624,21 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    I updated the `package.json` file inside the **Todo** folder to allow concurrently running both the backend and frontend. Here's the section I updated:
 
-```json
-"scripts": {
-  "start": "node index.js",
-  "start-watch": "nodemon index.js",
-  "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
-},
-```
+   ```
+   "scripts": {
+   "start": "node index.js",
+   "start-watch": "nodemon index.js",
+   "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
+   },
+   ```
 
-![Updated Scripts](./self_study/images/package_json_update.png)
+   ![Updated Scripts](./self_study/images/package_json_update.png)
 
  **Configure Proxy in `package.json` (client)**
 
- Next, I configured a proxy to ensure that API calls made from the frontend will be forwarded to the backend without needing to include the full URL.
+  Next, I configured a proxy to ensure that API calls made from the frontend will be forwarded to the backend without needing to include the full URL.
 
-Here’s how I did it:
+  Here’s how I did it:
 
 1. I navigated to the **client** directory:
 
@@ -652,23 +652,21 @@ Here’s how I did it:
    "proxy": "http://localhost:5000"
    ```
 
-This proxy configuration helps simplify API calls in development. Instead of calling the backend using the full path like `http://localhost:5000/api/todos`, I can just call `/api/todos` directly.
+   This proxy configuration helps simplify API calls in development. Instead of calling the backend using the full path like `http://localhost:5000/api/todos`, I can just call `/api/todos` directly.
 
-4. **Run the React Application**
+3. Run the React Application
 
-Once everything was set up, I navigated back to the **Todo** directory and ran both the backend and frontend with the following command:
+   Once everything was set up, I navigated back to the **Todo** directory and ran both the backend and frontend with the following command:
 
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
+   By running this command, both the backend and frontend servers started simultaneously. The React app should be accessible on `localhost:3000`.
 
-By running this command, both the backend and frontend servers started simultaneously. The React app should be accessible on `localhost:3000`.
+4. Open Ports 
 
-5. **Open Ports**
+   To make the application accessible to the public, I opened **TCP port 3000** on EC2 by adding a new security group rule. This allows me to access the React app from a browser on the Internet.
 
-To make the application accessible to the public, I opened **TCP port 3000** on EC2 by adding a new security group rule. This allows me to access the React app from a browser on the Internet.
-
----
 
 Now, my application is fully functional with both the backend and frontend running smoothly. I can interact with the To-Do application through the web browser, adding tasks, viewing them, and deleting them.
 
