@@ -308,7 +308,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```
    mkdir models && cd models && touch todo.js
    ```
-   ![Create Models](./self_study/images/create_file.png) 
+   ![Create Models](./self_study/images/create_models.png) 
    
 3. **Create the Todo Schema and Model**
 
@@ -388,9 +388,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
 1. **Login to MongoDB Atlas**
    
-   Since I already have an account, I just logged into **MongoDB Atlas**. If you don't have one, you can sign up here and follow the steps provided to create an account and start using MongoDB Atlas.
-
-   ![Login to MongoDB Atlas](./self_study/images/mongodb_login.png)
+   Since I already have an account, I just logged into **MongoDB Atlas**. If you don't have one, you can [sign up here](https://www.mongodb.com/products/try-free/platform/atlas-signup-from-mlab) and follow the steps provided to create an account and start using MongoDB Atlas.
 
 2. **Create a New Cluster**
 
