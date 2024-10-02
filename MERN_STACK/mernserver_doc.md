@@ -54,7 +54,9 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```
    ![Install Nodejs](./self_study/images/install_package.png)
 
-4. **Install Node.js on the Server**
+ **Install Node.js on the Server**
+
+1. **Install Node.js on the Server**
 
    After setting up the repository, I installed Node.js using the following command:
 
@@ -63,7 +65,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```
    ![Install Nodejs](./self_study/images/install_node.png)
 
-5. **Verify Installation**
+2. **Verify Installation**
 
    To confirm Node.js and npm were successfully installed, I checked their versions:
 
@@ -77,7 +79,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    You should see the Node.js and npm version numbers displayed if everything worked correctly.
 
-6. **Setting Up Application Code**
+3. **Setting Up Application Code**
 
    Now that Node.js is installed, we are going to set up the application code for the project.I started by creating a new directory for my To-Do application:
    ```
@@ -90,15 +92,14 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```
    ![Create Directory](./self_study/images/create_directory.png)
 
-7. **Navigate to the Project Directory**
+4. **Navigate to the Project Directory**
 
    Next, I changed my current directory to the newly created Todo directory:
 
    ```
    cd Todo
    ```
-
-8. **Initialize npm**
+5. **Initialize npm**
 
    I initialized my project using npm, which generated a package.json file for my application. I did this by running:
 
