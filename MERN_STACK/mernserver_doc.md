@@ -515,7 +515,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    This message indicates that the backend is successfully connected to MongoDB, and the application is ready to start functioning.
 
 
-##  **Testing Backend Code without Frontend using RESTful API**
+ **Testing Backend Code without Frontend using RESTful API**
 
    Since I have already written the backend code for my **To-Do** application and configured the MongoDB database, I tested my backend without a frontend by using **Postman** to simulate RESTful API requests and ensure the backend is functioning correctly.
 
@@ -536,6 +536,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    Key: Content-Type
    Value: application/json
    ```
+  ![Postman GET Request](./self_study/images/headers_setup.png)
 
 - **Body Setup**: In the Body section of the request, I selected the **raw** option and chose **JSON** from the dropdown. I entered the following data:
 
@@ -561,25 +562,26 @@ Here’s how it looks in Postman:
    http:35.173.221.171:5000/api/todos
    ```
 
-This GET request retrieved all tasks stored in the To-Do application by fetching the records from MongoDB.
+ This GET request retrieved all tasks stored in the To-Do application by fetching the records from MongoDB.
 
-Here's an example of the GET request in Postman:
+ Here's an example of the GET request in Postman:
 
-![Postman GET Request](./self_study/images/postman_get_request.png)
+ ![Postman GET Request](./self_study/images/postman_get_request.png)
 
 4. **Optional Task: DELETE Request**
 
-Now that I tested adding and retrieving tasks, I also sent a **DELETE request** to remove a task from the To-Do list.
+   Now that I tested adding and retrieving tasks, I also sent a **DELETE request** to remove a task from the To-Do list.
 
-- To delete a task, I sent its unique **ID** as part of the DELETE request URL:
+   - To delete a task, I sent its unique **ID** as part of the DELETE request URL:
 
    ```
    http://<PublicIP-or-PublicDNS>:5000/api/todos/<TaskID>
    ```
+   ![DELETE Request](./self_study/images/delete_id.png)
+   
+  This DELETE request removed the task with the specified ID from the database.
 
-This DELETE request removed the task with the specified ID from the database.
-
-By now, I have successfully tested all the main CRUD (Create, Read, Update, Delete) operations of my To-Do application’s backend. The backend code supports the following operations:
+  By now, I have successfully tested all the main CRUD (Create, Read, Update, Delete) operations of my To-Do application’s backend. The backend code supports the following operations:
 
 - [x] **Display** a list of tasks - HTTP GET request
 - [x] **Add** a new task to the list - HTTP POST request
