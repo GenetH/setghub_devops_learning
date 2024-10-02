@@ -448,6 +448,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```bash
    Press `i` to enter insert mode in vim.
    ```
+   ![delete the old](./self_study/images/delete.png)
 
    Then, add the following code:
 
