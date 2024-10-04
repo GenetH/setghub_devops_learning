@@ -753,11 +753,13 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    export default Input;
    ```
+   ![Create the component](./self_study/images/input_com.png)
 
 7. **To install Axios in my client directory (if not already installed), I ran:**
    ```bash
    npm install axios
    ```
+   ![install Axiost](./self_study/images/install_ax.png)
 
 8. **Then I went to the components directory and opened `ListTodo.js`:**
    ```bash
@@ -948,7 +950,8 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     ```
     Then, I copied and pasted the following CSS code to style my app:
 
-    ```body {
+    ```
+    body {
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
