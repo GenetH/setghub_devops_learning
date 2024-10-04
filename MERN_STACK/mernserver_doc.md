@@ -639,9 +639,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
  **Configure Proxy in `package.json` (client)**
 
-  Next, I configured a proxy to ensure that API calls made from the frontend will be forwarded to the backend without needing to include the full URL.
-
-  Here’s how I did it:
+   Next, I configured a proxy to ensure that API calls made from the frontend will be forwarded to the backend without needing to include the full URL.
 
 1. I navigated to the **client** directory:
 
@@ -681,35 +679,35 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
 **Creating Your React Components**
 
-1. **Navigate to the client directory:**
+1. I navigated to the client directory
 
    ```
    cd client
    ```
+2. Then, I moved to the src directory
 
-2. **Move to the src directory:**
-
-   ```
+   ```bash
    cd src
    ```
+3. I created a new folder for components
 
-3. **Create a new folder for components:**
    ```
    mkdir components
    ```
+4. Next, I moved into the components directory
 
-4. **Move into the components directory:**
    ```
    cd components
    ```
 
-5. **Create the component files:**
+5. I created the component files
+
    ```
    touch Input.js ListTodo.js Todo.js
    ```
    ![Create the component](./self_study/images/create_com.png)
 
-6. **Edit `Input.js` and paste the following:**
+6. **I edited `Input.js` and pasted the following code:**
    ```javascript
    import React, { Component } from 'react';
    import axios from 'axios';
@@ -756,18 +754,18 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    export default Input;
    ```
 
-7. **Install Axios in your client directory (if not installed):**
-   ```
+7. **To install Axios in my client directory (if not already installed), I ran:**
+   ```bash
    npm install axios
    ```
 
-8. **Go to the components directory and open `ListTodo.js`:**
+8. **Then I went to the components directory and opened `ListTodo.js`:**
    ```bash
    cd src/components
    vi ListTodo.js
    ```
 
-9. **Copy and paste the following code into `ListTodo.js`:**
+9. **I copied and pasted the following code into `ListTodo.js`:**
    ```javascript
    import React from 'react';
 
@@ -790,7 +788,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    export default ListTodo;
    ```
 
-10. **Open `Todo.js` and paste the following:**
+10. **For `Todo.js`, I wrote and pasted the following:**
     ```javascript
     import React, { Component } from 'react';
     import axios from 'axios';
@@ -841,14 +839,14 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     export default Todo;
     ```
 
-11. **Adjust your `App.js` file by running:**
-    ```
+11. **I adjusted the `App.js` file by running:**
+    ```bash
     vi src/App.js
     ```
 
-12. **Replace the contents with the following code:**
+12. **Finally, I replaced the contents of `App.js` with this code:**
 
-    ```
+    ```javascript
     import React from 'react';
     import Todo from './components/Todo';
 
@@ -863,3 +861,8 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     export default App;
     ```
 
+---
+
+I’ve successfully created and configured my React components and adjusted the `App.js` file. This structure will allow me to render and manage todos in my application.
+
+Let me know if you'd like to continue or make any changes!
