@@ -939,8 +939,8 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     margin-left: 10px;
     margin-top: 0;
     }
-   }
-   ```
+    }
+    ```
 14. I exited the components directory and opened the 'index.css' file in the 'src' directory
 
     ```
@@ -974,12 +974,12 @@ code {
 
 16. Finally, I started my React Todo app by running:
  
-   ```
-   npm run dev
-   ```
-   ![Create the component](./self_study/images/run_todo.png)
+    ```
+    npm run dev
+    ```
+    ![Create the component](./self_study/images/run_todo.png)
 
-I have successfully created a simple To-Do application and deployed it using the MERN stack.
+   I have successfully created a simple To-Do application and deployed it using the MERN stack.
 
 **Congratulations**
 
