@@ -589,18 +589,21 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
 ## Step 2: **Frontend Creation**
 
-  Since I have already completed the backend functionality and API setup for my To-Do application, it is now time to create the frontend interface for users to interact with the application through a web client (browser).
+   Since I have already completed the backend functionality and API setup for my To-Do application, it is now time to create the frontend interface for users to interact with the application through a web client (browser).
 
-  **Creating the React App**
+   **Creating the React App**
 
-   In the same root directory as my backend code (the `Todo` directory), I ran the following command to scaffold a new React app:
+    **"Since the t2.micro instance has 1GB of memory, I upgraded to a t2.medium. After upgrading, there was a new IP address, so I needed to whitelist the new IP in MongoDB."**
 
-   ```bash
-   npx create-react-app client
-   ```
-   This command created a new folder called `client` in my Todo directory, where all the React code will be stored.
+    In the same root directory as my backend code (the `Todo` directory), I ran the following command to scaffold a new React app:
+
+    ```bash
+    npx create-react-app client
+    ```
+    This command created a new folder called `client` in my Todo directory, where all the React code will be stored.
     
-   ![Creating the React App](./self_study/images/creating_app.png)
+    ![Creating the React App](./self_study/images/creating_app.png)
+
 
  **Running a React App** 
 
@@ -651,6 +654,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```json
    "proxy": "http://localhost:5000"
    ```
+   ![Updated Scripts](./self_study/images/package_json.png)
 
    This proxy configuration helps simplify API calls in development. Instead of calling the backend using the full path like `http://localhost:5000/api/todos`, I can just call `/api/todos` directly.
 
@@ -661,12 +665,201 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```bash
    npm run dev
    ```
+   ![React Application](./self_study/images/run_react.png)
+
    By running this command, both the backend and frontend servers started simultaneously. The React app should be accessible on `localhost:3000`.
 
 4. Open Ports 
 
    To make the application accessible to the public, I opened **TCP port 3000** on EC2 by adding a new security group rule. This allows me to access the React app from a browser on the Internet.
 
+   ![Open Ports](./self_study/images/open_ports.png)
 
-Now, my application is fully functional with both the backend and frontend running smoothly. I can interact with the To-Do application through the web browser, adding tasks, viewing them, and deleting them.
+   ![Open Ports 3000](./self_study/images/run_r.png)
+
+   Now, my application is fully functional with both the backend and frontend running smoothly. I can interact with the To-Do application through the web browser, adding tasks, viewing them, and deleting them.
+
+**Creating Your React Components**
+
+1. **Navigate to the client directory:**
+
+   ```
+   cd client
+   ```
+
+2. **Move to the src directory:**
+
+   ```
+   cd src
+   ```
+
+3. **Create a new folder for components:**
+   ```
+   mkdir components
+   ```
+
+4. **Move into the components directory:**
+   ```
+   cd components
+   ```
+
+5. **Create the component files:**
+   ```
+   touch Input.js ListTodo.js Todo.js
+   ```
+   ![Create the component](./self_study/images/create_com.png)
+
+6. **Edit `Input.js` and paste the following:**
+   ```javascript
+   import React, { Component } from 'react';
+   import axios from 'axios';
+
+   class Input extends Component {
+     state = {
+       action: ""
+     };
+
+     addTodo = () => {
+       const task = { action: this.state.action };
+
+       if (task.action && task.action.length > 0) {
+         axios.post('/api/todos', task)
+           .then(res => {
+             if (res.data) {
+               this.props.getTodos();
+               this.setState({ action: "" });
+             }
+           })
+           .catch(err => console.log(err));
+       } else {
+         console.log('Input field required');
+       }
+     };
+
+     handleChange = (e) => {
+       this.setState({
+         action: e.target.value
+       });
+     };
+
+     render() {
+       let { action } = this.state;
+       return (
+         <div>
+           <input type="text" onChange={this.handleChange} value={action} />
+           <button onClick={this.addTodo}>Add todo</button>
+         </div>
+       );
+     }
+   }
+
+   export default Input;
+   ```
+
+7. **Install Axios in your client directory (if not installed):**
+   ```
+   npm install axios
+   ```
+
+8. **Go to the components directory and open `ListTodo.js`:**
+   ```bash
+   cd src/components
+   vi ListTodo.js
+   ```
+
+9. **Copy and paste the following code into `ListTodo.js`:**
+   ```javascript
+   import React from 'react';
+
+   const ListTodo = ({ todos, deleteTodo }) => {
+     return (
+       <ul>
+         {todos && todos.length > 0 ? (
+           todos.map(todo => (
+             <li key={todo._id} onClick={() => deleteTodo(todo._id)}>
+               {todo.action}
+             </li>
+           ))
+         ) : (
+           <li>No todos left</li>
+         )}
+       </ul>
+     );
+   };
+
+   export default ListTodo;
+   ```
+
+10. **Open `Todo.js` and paste the following:**
+    ```javascript
+    import React, { Component } from 'react';
+    import axios from 'axios';
+    import Input from './Input';
+    import ListTodo from './ListTodo';
+
+    class Todo extends Component {
+      state = {
+        todos: []
+      };
+
+      componentDidMount() {
+        this.getTodos();
+      }
+
+      getTodos = () => {
+        axios.get('/api/todos')
+          .then(res => {
+            if (res.data) {
+              this.setState({ todos: res.data });
+            }
+          })
+          .catch(err => console.log(err));
+      };
+
+      deleteTodo = (id) => {
+        axios.delete(`/api/todos/${id}`)
+          .then(res => {
+            if (res.data) {
+              this.getTodos();
+            }
+          })
+          .catch(err => console.log(err));
+      };
+
+      render() {
+        let { todos } = this.state;
+        return (
+          <div>
+            <h1>My Todos</h1>
+            <Input getTodos={this.getTodos} />
+            <ListTodo todos={todos} deleteTodo={this.deleteTodo} />
+          </div>
+        );
+      }
+    }
+
+    export default Todo;
+    ```
+
+11. **Adjust your `App.js` file by running:**
+    ```
+    vi src/App.js
+    ```
+
+12. **Replace the contents with the following code:**
+
+    ```
+    import React from 'react';
+    import Todo from './components/Todo';
+
+    function App() {
+      return (
+        <div className="App">
+          <Todo />
+        </div>
+      );
+    }
+
+    export default App;
+    ```
 
