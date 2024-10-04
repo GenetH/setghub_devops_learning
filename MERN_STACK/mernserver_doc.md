@@ -707,7 +707,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```
    ![Create the component](./self_study/images/create_com.png)
 
-6. **I edited `Input.js` and pasted the following code:**
+6. I edited `Input.js` and pasted the following code
    ```javascript
    import React, { Component } from 'react';
    import axios from 'axios';
@@ -839,12 +839,12 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     export default Todo;
     ```
 
-11. **I adjusted the `App.js` file by running:**
+11. I adjusted the `App.js` file by running
     ```bash
     vi src/App.js
     ```
 
-12. **Finally, I replaced the contents of `App.js` with this code:**
+12. I replaced the contents of `App.js` with this code
 
     ```javascript
     import React from 'react';
@@ -861,8 +861,127 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     export default App;
     ```
 
----
+13. After updating app.js I replaced the contents of `App.css` with this code
+
+    ```
+    .app {
+    max-width: 600px;
+    margin: 50px auto;
+  padding: 20px;
+  background: #282c34;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.todo-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-input input {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.todo-input button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #61dafb;
+  color: #282c34;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.todo-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.todo-item {
+  padding: 10px;
+  background: #444;
+  margin: 5px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.todo-item:hover {
+  background: #555;
+}
+
+@media only screen and (min-width: 300px) {
+  .app {
+    width: 80%;
+  }
+  .todo-input input {
+    width: 100%;
+  }
+  .todo-input button {
+    width: 100%;
+    margin-top: 15px;
+    margin-left: 0;
+  }
+}
+
+@media only screen and (min-width: 640px) {
+  .app {
+    width: 60%;
+  }
+  .todo-input input {
+    width: 50%;
+  }
+  .todo-input button {
+    width: 30%;
+    margin-left: 10px;
+    margin-top: 0;
+  }
+}
+```
+14. I exited the components directory and opened the 'index.css' file in the 'src' directory
+
+    ```
+    vim src/index.css
+    ```
+    Then, I copied and pasted the following CSS code to style my app:
+
+    ```body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+  background-color: #282c34;
+  color: #787a80;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+    ```
+15. After saving the changes, I navigated back to the Todo directory
+
+    ```
+    cd ../..
+   ```
+
+16. Finally, I started my React Todo app by running:
+ 
+   ```
+   npm run dev
+   ```
 
 I’ve successfully created and configured my React components and adjusted the `App.js` file. This structure will allow me to render and manage todos in my application.
 
-Let me know if you'd like to continue or make any changes!
+**Congratulations**
+
+In this project, I have successfully created a simple To-Do application and deployed it using the MERN stack. I built the frontend using React.js, which communicates with a backend written in Express.js. Additionally, I integrated a MongoDB backend for storing tasks in a database, making the app fully functional.
+
+
