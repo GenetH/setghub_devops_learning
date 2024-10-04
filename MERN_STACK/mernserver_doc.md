@@ -867,80 +867,80 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     .app {
     max-width: 600px;
     margin: 50px auto;
-  padding: 20px;
-  background: #282c34;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+    padding: 20px;
+    background: #282c34;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-.todo-input {
-  display: flex;
-  flex-direction: column;
-}
+    .todo-input {
+    display: flex;
+    flex-direction: column;
+    }
 
-.todo-input input {
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
+    .todo-input input {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    }
 
-.todo-input button {
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #61dafb;
-  color: #282c34;
-  cursor: pointer;
-  font-size: 16px;
-}
+    .todo-input button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #61dafb;
+    color: #282c34;
+    cursor: pointer;
+    font-size: 16px;
+    }
 
-.todo-list {
-  list-style-type: none;
-  padding: 0;
-}
+    .todo-list {
+    list-style-type: none;
+    padding: 0;
+    } 
 
-.todo-item {
-  padding: 10px;
-  background: #444;
-  margin: 5px 0;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
+    .todo-item {
+    padding: 10px;
+    background: #444;
+    margin: 5px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+    }
 
-.todo-item:hover {
-  background: #555;
-}
+    .todo-item:hover {
+    background: #555;
+    }
 
-@media only screen and (min-width: 300px) {
-  .app {
+    @media only screen and (min-width: 300px) {
+    .app {
     width: 80%;
-  }
-  .todo-input input {
+    }
+    .todo-input input {
     width: 100%;
-  }
-  .todo-input button {
-    width: 100%;
-    margin-top: 15px;
-    margin-left: 0;
-  }
-}
+    }
+    .todo-input button {
+     width: 100%;
+     margin-top: 15px;
+     margin-left: 0;
+    }
+    }
 
-@media only screen and (min-width: 640px) {
-  .app {
+    @media only screen and (min-width: 640px) {
+    .app {
     width: 60%;
-  }
-  .todo-input input {
+    }
+    .todo-input input {
     width: 50%;
-  }
-  .todo-input button {
+    }
+    .todo-input button {
     width: 30%;
     margin-left: 10px;
     margin-top: 0;
-  }
-}
-```
+    }
+   }
+   ```
 14. I exited the components directory and opened the 'index.css' file in the 'src' directory
 
     ```
@@ -977,8 +977,9 @@ code {
    ```
    npm run dev
    ```
+   ![Create the component](./self_study/images/run_todo.png)
 
-I’ve successfully created and configured my React components and adjusted the `App.js` file. This structure will allow me to render and manage todos in my application.
+I have successfully created a simple To-Do application and deployed it using the MERN stack.
 
 **Congratulations**
 
