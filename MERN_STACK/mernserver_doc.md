@@ -759,7 +759,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
    ```bash
    npm install axios
    ```
-   ![install Axiost](./self_study/images/install_ax.png)
+   ![Create the component](./self_study/images/install_ax.png)
 
 8. **Then I went to the components directory and opened `ListTodo.js`:**
    ```bash
