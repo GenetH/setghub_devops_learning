@@ -593,16 +593,16 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
    **Creating the React App**
 
-    **"Since the t2.micro instance has 1GB of memory, I upgraded to a t2.medium. After upgrading, there was a new IP address, so I needed to whitelist the new IP in MongoDB."**
+   **"Since the t2.micro instance has 1GB of memory, I upgraded to a t2.medium. After upgrading, there was a new IP address, so I needed to whitelist the new IP in MongoDB."**
 
-    In the same root directory as my backend code (the `Todo` directory), I ran the following command to scaffold a new React app:
+   In the same root directory as my backend code (the `Todo` directory), I ran the following command to scaffold a new React app:
 
-    ```bash
-    npx create-react-app client
-    ```
-    This command created a new folder called `client` in my Todo directory, where all the React code will be stored.
+   ```
+   npx create-react-app client
+   ```
+   This command created a new folder called `client` in my Todo directory, where all the React code will be stored.
     
-    ![Creating the React App](./self_study/images/creating_app.png)
+   ![Creating the React App](./self_study/images/creating_app.png)
 
 
  **Running a React App** 
