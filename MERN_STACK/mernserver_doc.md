@@ -949,28 +949,28 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
     Then, I copied and pasted the following CSS code to style my app:
 
     ```body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  box-sizing: border-box;
-  background-color: #282c34;
-  color: #787a80;
-}
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+    background-color: #282c34;
+    color: #787a80;  
+    }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
+    code {
+      font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
+      }
     ```
 15. After saving the changes, I navigated back to the Todo directory
 
     ```
     cd ../..
-   ```
+    ```
 
 16. Finally, I started my React Todo app by running:
  
@@ -979,7 +979,7 @@ code {
     ```
     ![Create the component](./self_study/images/run_todo.png)
 
-   I have successfully created a simple To-Do application and deployed it using the MERN stack.
+    I have successfully created a simple To-Do application and deployed it using the MERN stack.
 
 **Congratulations**
 
