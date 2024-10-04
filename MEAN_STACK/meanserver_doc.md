@@ -284,10 +284,9 @@ This guide describes the step-by-step process I followed to set up a MEAN stack 
 
    module.exports = mongoose.model('Book', bookSchema);
    ```
+   ![MongoDB Repository](./self_study/images/add_r.png)
 
-
-
-With everything set up, I can now interact with my MongoDB database using the defined routes to fetch, add, and delete book records.
+   With everything set up, I can now interact with my MongoDB database using the defined routes to fetch, add, and delete book records.
 
 ## Step 4: Access the Routes with AngularJS
 
