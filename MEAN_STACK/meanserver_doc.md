@@ -176,7 +176,7 @@ This guide describes the step-by-step process I followed to set up a MEAN stack 
         console.log(`Server up: http://localhost:${PORT}`);
     });
     ```
-   ![MongoDB Repository](./self_study/images/add_file.png)
+    ![MongoDB Repository](./self_study/images/add_file.png)
 
 
 ## Step 3: Installing Express and Set Up Routes to the Server
@@ -360,7 +360,8 @@ With everything set up, I can now interact with my MongoDB database using the de
        };
    });
    ```
-
+   ![MongoDB Repository](./self_study/images/add_s.png)
+   
 5. **Created the `index.html` File**
 
    After setting up the AngularJS script, I created an `index.html` file in the `public` folder:
@@ -464,7 +465,8 @@ With everything set up, I can now interact with my MongoDB database using the de
 
    With these steps completed, my web application is fully functional, allowing me to manage books through the AngularJS frontend connected to the Node.js backend.
 
-
+**Congratulations**
+Setting up the MEAN stack on Ubuntu 24.04 LTS provided a powerful platform for full-stack web development. I launched an EC2 instance, installed Node.js, MongoDB, and configured an Express API with AngularJS for managing book records. This process helped enhance my skills in AWS EC2 management and deploying scalable web applications, creating a solid foundation for future projects.
 
 
 
