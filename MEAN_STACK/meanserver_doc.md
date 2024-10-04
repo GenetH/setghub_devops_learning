@@ -465,7 +465,8 @@ With everything set up, I can now interact with my MongoDB database using the de
 
    With these steps completed, my web application is fully functional, allowing me to manage books through the AngularJS frontend connected to the Node.js backend.
 
-**Congratulations**
+**Conclusion**
+
 Setting up the MEAN stack on Ubuntu 24.04 LTS provided a powerful platform for full-stack web development. I launched an EC2 instance, installed Node.js, MongoDB, and configured an Express API with AngularJS for managing book records. This process helped enhance my skills in AWS EC2 management and deploying scalable web applications, creating a solid foundation for future projects.
 
 

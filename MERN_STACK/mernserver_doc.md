@@ -984,7 +984,7 @@ This guide describes the step-by-step process I followed to set up a MERN stack 
 
     I have successfully created a simple To-Do application and deployed it using the MERN stack.
 
-**Congratulations**
+**Conclusion**
 
 In this project, I have successfully created a simple To-Do application and deployed it using the MERN stack. I built the frontend using React.js, which communicates with a backend written in Express.js. Additionally, I integrated a MongoDB backend for storing tasks in a database, making the app fully functional.
 
