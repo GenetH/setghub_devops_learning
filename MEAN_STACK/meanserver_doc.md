@@ -47,6 +47,8 @@ This guide describes the step-by-step process I followed to set up a MEAN stack 
    ```bash
    sudo apt upgrade
    ```
+   ![MongoDB Repository](./self_study/images/upgrade.png)
+   
 3. **Add Certificates**
 
    Then, I installed the necessary packages for Node.js by typing:
