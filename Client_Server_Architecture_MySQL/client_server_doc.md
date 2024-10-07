@@ -70,33 +70,33 @@ On **Server A (MySQL Server)**, I needed to configure MySQL to allow remote conn
 
 ## **Step 6: Connect MySQL Client to the MySQL Server**
 
-1.Create User and Grant Remote Access
+1. Create User and Grant Remote Access
 
-  Log in to MySQL:
+   Log in to MySQL:
    ```bash
    sudo mysql -u root
    ```
 
-  Create User `genet`:
+   Create User `genet`:
    ```sql
    CREATE USER 'genet'@'%' IDENTIFIED BY 'your_password';
    ```
 
-  Grant Privileges:
+   Grant Privileges:
    ```sql
    GRANT ALL PRIVILEGES ON *.* TO 'genet'@'%' WITH GRANT OPTION;
    ```
 
-  Apply Changes:
+   Apply Changes:
    ```sql
    FLUSH PRIVILEGES;
    ```
-  ![Install MySQL](./self_study/images/remote_user.png)
+   ![Install MySQL](./self_study/images/remote_user.png)
 
-  Exit MySQL:
+   Exit MySQL:
    ```bash
    exit;
-  ```
+   ```
 2. Connect MySQL Client to the MySQL Server
 
    On **Server B (MySQL Client)**, I used the MySQL client utility to connect to **mysql server** by running the following command:
