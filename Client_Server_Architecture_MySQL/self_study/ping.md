@@ -27,7 +27,7 @@ ping <hostname or IP>
 ```bash
 ping google.com
 ```
-![Show Databases](./self_study/images/show_ping.png)
+![Show Databases](./images/show_ping.png)
 
 #### **Traceroute**:
 
