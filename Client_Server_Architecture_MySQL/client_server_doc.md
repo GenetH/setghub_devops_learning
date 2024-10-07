@@ -28,14 +28,14 @@ Now, let’s move on to a practical example of setting up a MySQL Client-Server 
 ## **Step 1: Create and Configure Two Linux-Based Virtual Servers**
 
 I began by creating two Linux-based virtual servers (EC2 instances) on AWS:
-- **Server A**: I named this the **MySQL server**.
-- **Server B**: I named this the **MySQL client**.
+- **Server A**: I named this the **mysql server**.
+- **Server B**: I named this the **mysql client**.
 
 ![Create the component](./self_study/images/create_instance.png)
 
-## **Step 2: Install MySQL Server on MySQL Server**
+## **Step 2: Install MySQL Server on mysql server**
 
-On **Server A (MySQL server)**, I installed the MySQL server software by running:
+On **Server A (mysql server)**, I installed the MySQL server software by running:
 ```bash
 sudo apt update
 sudo apt install mysql-server
@@ -50,7 +50,7 @@ At this point, MySQL was successfully installed on **Server A**.
 
 ## **Step 3: Install MySQL Client on MySQL Client**
 
-Next, I moved on to **Server B (MySQL Client)** and installed the MySQL client software using the following commands:
+Next, I moved on to **Server B (mysql Client)** and installed the MySQL client software using the following commands:
 ```bash
 sudo apt update
 sudo apt install mysql-client
@@ -61,7 +61,7 @@ Now that the MySQL client was installed, **Server B** was ready to connect to **
 
 ## **Step 4: Configure Security Groups**
 
-I configured the security groups for **Server A (MySQL Server)** to allow access to **port 3306** (the default MySQL port) exclusively from **mysql client**'s IP address.
+I configured the security groups for **Server A (mysql server)** to allow access to **port 3306** (the default MySQL port) exclusively from **mysql client**'s IP address.
 
 - To ensure security, I only allowed the private IP address of **Server B** to access this port. Here’s what the security group rule looked like:
 
@@ -69,7 +69,7 @@ I configured the security groups for **Server A (MySQL Server)** to allow access
 
 ## **Step 5: Configure MySQL for Remote Connections**
 
-On **Server A (MySQL Server)**, I needed to configure MySQL to allow remote connections:
+On **Server A (mysql Server)**, I needed to configure MySQL to allow remote connections:
 
 1. I opened the MySQL configuration file and modified the following line to allow connections from any IP address:
 ```bash
@@ -85,7 +85,7 @@ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 sudo systemctl restart mysql
 ```
 
-## **Step 6: Connect MySQL Client to the MySQL Server**
+## **Step 6: Connect mysql client to the mysql server**
 
 ### 1. Create a User and Grant Remote Access
 
@@ -115,9 +115,9 @@ Exit MySQL:
 exit;
 ```
 
-### 2. Connect MySQL Client to the MySQL Server
+### 2. Connect MySQL Client to the mysql server
 
-On **Server B (MySQL Client)**, I used the MySQL client utility to connect to **Server A** by running the following command:
+On **Server B (mysql client)**, I used the MySQL client utility to connect to **Server A** by running the following command:
 ```bash
 mysql -u genet -p -h <mysql_server_ip_address>
 ```
