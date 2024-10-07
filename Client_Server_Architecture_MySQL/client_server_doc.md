@@ -96,8 +96,8 @@ On **Server A (MySQL Server)**, I needed to configure MySQL to allow remote conn
   Exit MySQL:
    ```bash
    exit;
-  
- 2. Connect MySQL Client to the MySQL Server
+  ```
+2. Connect MySQL Client to the MySQL Server
 
    On **Server B (MySQL Client)**, I used the MySQL client utility to connect to **mysql server** by running the following command:
    ```bash
