@@ -22,6 +22,8 @@ On **Server A (mysql server)**, I installed the MySQL server software by running
   ![Install MySQL](./self_study/images/secure_db.png)
  
 
+  
+
   At this point, MySQL was successfully installed on **Server A**. 
 
 ## **Step 3: Install MySQL Client on Server B**
@@ -33,9 +35,9 @@ On **Server A (mysql server)**, I installed the MySQL server software by running
   ```
   ![Install MySQL](./self_study/images/mysql_client.png)
 
-Now that the MySQL client was installed, **mysql client** was ready to connect to **mysql server**.
 
----
+
+Now that the MySQL client was installed, **mysql client** was ready to connect to **mysql server**.
 
 ### **Step 4: Configure Security Groups**
 
@@ -65,29 +67,57 @@ On **Server A (MySQL Server)**, I needed to configure MySQL to allow remote conn
    sudo systemctl restart mysql
    ```
 
----
 
-### **Step 6: Connect MySQL Client to the MySQL Server**
+## **Step 6: Connect MySQL Client to the MySQL Server**
 
-On **Server B (MySQL Client)**, I used the MySQL client utility to connect to **Server A** by running the following command:
+1.Create User and Grant Remote Access
+
+  Log in to MySQL:
    ```bash
-   mysql -u <your_mysql_username> -p -h <mysql_server_ip_address>
+   sudo mysql -u root
+   ```
+
+  Create User `genet`:
+   ```sql
+   CREATE USER 'genet'@'%' IDENTIFIED BY 'your_password';
+   ```
+
+  Grant Privileges:
+   ```sql
+   GRANT ALL PRIVILEGES ON *.* TO 'genet'@'%' WITH GRANT OPTION;
+   ```
+
+  Apply Changes:
+   ```sql
+   FLUSH PRIVILEGES;
+   ```
+  ![Install MySQL](./self_study/images/remote_user.png)
+
+  Exit MySQL:
+   ```bash
+   exit;
+  
+ 2. Connect MySQL Client to the MySQL Server
+
+   On **Server B (MySQL Client)**, I used the MySQL client utility to connect to **mysql server** by running the following command:
+   ```bash
+   mysql -u genet -p -h <mysql_server_ip_address>
    ```
    Example:
    ```bash
-   mysql -u admin -p -h 35.158.97.139
+   mysql -u genet -p -h 'myprivate ip'
    ```
+   ![Install MySQL](./self_study/images/root_db.png)
 
 After entering the password for the MySQL user, I was successfully connected to the MySQL server.
 
----
-
-### **Step 7: Verify Connection and Perform SQL Queries**
+## **Step 7: Verify Connection and Perform SQL Queries**
 
 To verify the connection, I ran an SQL query to list the databases:
   ```sql
   SHOW DATABASES;
   ```
+  ![Install MySQL](./self_study/images/show_db.png)
 
 Seeing the list of databases confirmed that the connection was successful. I was now able to manage the MySQL server remotely from **Server B**.
 
