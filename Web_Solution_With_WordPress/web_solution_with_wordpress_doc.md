@@ -1,5 +1,8 @@
 
-### Step 1: Prepare My Web Server on AWS EC2
+# Web Solution with WordPress
+## Step 1: Prepare a Web Server 
+
+### 1: Prepare My Web Server on AWS EC2
 
 - **I launched my EC2 instance:**
   - I logged into the AWS Console and launched an EC2 instance to serve as my web server.
