@@ -7,7 +7,7 @@ As a member of the DevOps team, my objective is to implement a tooling website s
 
 1. **Infrastructure**: AWS, providing reliable and scalable cloud infrastructure.
 2. **Web Server**: Red Hat Enterprise Linux 8, offering enterprise-grade stability and performance.
-3. **Database Server**: Ubuntu 24.04 running MySQL, providing robust database management for the web application.
+3. **Database Server**: RHEL 9 running MySQL, providing robust database management for the web application.
 4. **Storage Server**: Red Hat Enterprise Linux 8 with NFS, enabling shared storage for the web servers to maintain statelessness.
 5. **Programming Language**: PHP, a powerful scripting language for web development.
 6. **Code Repository**: GitHub, used to manage and deploy the tooling application code.
@@ -159,7 +159,7 @@ This project covers the steps of configuring the infrastructure, setting up the 
 
 ### Step 3: Configure the Database Server
 
-1. **I installed the MySQL server** on the EC2 instance running Ubuntu 24.04:
+1. **I installed the MySQL server** on the EC2 instance running RHEL 9:
    ```bash
    sudo apt update
    sudo apt install mysql-server -y
@@ -219,8 +219,6 @@ This project covers the steps of configuring the infrastructure, setting up the 
      sudo mkdir /var/www
      sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
      ```
-     ![Mount NFS](./self_study/images/nfs_access.png)
-
 4. **I persisted the mount points** by adding the following line to `/etc/fstab`:
    ```bash
    <NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
