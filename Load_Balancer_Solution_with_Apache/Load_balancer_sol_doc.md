@@ -1,3 +1,9 @@
+### **Introduction:**
+
+In modern web architectures, ensuring high availability and scalability is crucial for handling increased web traffic. One way to achieve this is by distributing traffic across multiple web servers through a **load balancer**. In this project, I configured an **Apache Load Balancer** on an Ubuntu EC2 instance, balancing traffic between two web servers. Additionally, the setup includes a **MySQL database server** and an **NFS server** for file sharing across the web servers. This architecture ensures both **horizontal scaling** and **reliability** by distributing traffic and centralizing file storage.
+
+The key steps of the project include setting up an EC2 instance for the load balancer, configuring Apache to act as a load balancer, and verifying the distribution of traffic across the web servers.
+
 ### Prerequisites
 - I ensured that two **RHEL8 web servers**, one **MySQL DB server** (Ubuntu 20.04), and one **RHEL8 NFS server** were properly set up. 
 - I confirmed Apache was installed and running on both web servers.
@@ -54,6 +60,7 @@ sudo systemctl status apache2
    ProxyPassReverse / balancer://mycluster/
    ```
    ![Install Apach](./self_study/images/ff.png)
+
 ### 4: Verify the load balancer configuration
 1. I restarted the Apache service to apply the changes:
    ```bash
@@ -69,11 +76,14 @@ sudo systemctl status apache2
    ```bash
    http://18.232.99.226/index.php
    ```
+   ![Install Apach](./self_study/images/ss.png)
 
 4. To confirm the load balancing was working, I SSHed into both web servers and checked the access logs:
    ```bash
    sudo tail -f /var/log/httpd/access_log
    ```
+   ![Install Apach](./self_study/images/mm.png)
+
    I refreshed the browser multiple times and saw logs being generated on both servers as the requests were distributed.
 
 Note: Test other load balancing methods
@@ -81,4 +91,8 @@ Note: Test other load balancing methods
    - `byrequests`: balancing based on the number of requests.
    - `bybusyness`: balancing based on the current load of the servers.
    - `heartbeat`: monitoring the server health.
+
+### **Conclusion:**
+
+This configuration demonstrates the basic principles of **horizontal scaling** using an Apache load balancer. By distributing requests across two web servers, we ensure that the load is balanced, improving both the performance and reliability of the application. In the future, the setup can be enhanced by integrating additional load balancing algorithms, auto-scaling mechanisms, and health checks to make the system even more robust.
 
