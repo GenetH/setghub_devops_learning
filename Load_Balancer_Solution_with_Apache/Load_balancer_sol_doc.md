@@ -44,6 +44,8 @@ sudo systemctl restart apache2
 # Check if apache2 is up and running
 sudo systemctl status apache2
 ```
+![Install Apach](./self_study/images/ll.png)
+
 
 ---
 
@@ -65,7 +67,7 @@ sudo systemctl status apache2
    ProxyPass / balancer://mycluster/
    ProxyPassReverse / balancer://mycluster/
    ```
-
+   ![Install Apach](./self_study/images/ff.png)
 ---
 
 ### **Verify the Load Balancer Configuration**
@@ -84,11 +86,13 @@ sudo systemctl status apache2
    ```bash
    http://18.232.99.226/index.php
    ```
+   ![Install Apach](./self_study/images/ss.png)
 
 4. To confirm that load balancing was working, I SSHed into both web servers and checked the access logs:
    ```bash
    sudo tail -f /var/log/httpd/access_log
    ```
+   ![Install Apach](./self_study/images/mm.png)
 
    I refreshed the browser multiple times and saw logs being generated on both servers as the requests were distributed.
 
@@ -120,6 +124,7 @@ Example:
 172.31.39.156 Web1
 172.31.44.106 Web2
 ```
+![Install Apach](./self_study/images/hosts.png)
 
 #### **3. I Updated the Apache Load Balancer Configuration**
 
@@ -135,6 +140,7 @@ I replaced the IP addresses with the new names (`Web1` and `Web2`) in the `Balan
 ProxyPass / balancer://mycluster/
 ProxyPassReverse / balancer://mycluster/
 ```
+![Install Apach](./self_study/images/web.png)
 
 #### **4. I Tested the Configuration**
 
@@ -150,6 +156,7 @@ I then tested if the new names (`Web1` and `Web2`) resolved correctly by running
 curl http://Web1
 curl http://Web2
 ```
+![Install Apach](./self_study/images/webaccess.png)
 
 Everything worked correctly, and I received responses from the web servers.
 
