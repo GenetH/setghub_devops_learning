@@ -68,7 +68,7 @@ In this project, I configured a highly available and secure web application infr
 
 #### 1. **I Registered a Domain Name**
    - I registered a new domain using [GoDaddy](https://www.godaddy.com).
-   - I selected my preferred domain zone such as `.com`, `.net`, `.org`, `.xyz`, etc.
+   - I selected my preferred domain zone such as `.com`.
 
 #### 2. **I Assigned an Elastic IP**
    - I assigned an **Elastic IP** to my Nginx Load Balancer (EC2 instance).
@@ -82,7 +82,7 @@ In this project, I configured a highly available and secure web application infr
    - I went into my domain registrar’s settings and updated the **A Record** to point to the Elastic IP.
    - This step links the domain name to the public IP address of my Nginx Load Balancer.
 
-    ![Install Apach](./self_study/images/d.png)
+     ![Install Apach](./self_study/images/d.png)
 
 #### 4. **I Configured Nginx to Recognize My Domain Name**
    - I updated the Nginx configuration file to recognize my new domain name by adding:
@@ -111,9 +111,9 @@ In this project, I configured a highly available and secure web application infr
      ```
      https://www.weneedtech.com/
      ```
-    ![Install Apach](./self_study/images/yl.png)
+     ![Install Apach](./self_study/images/yl.png)
 
-    I successfully deployed using Nginx, and my new domain is now accessible.
+     I successfully deployed using Nginx, and my new domain is now accessible.
 ---
 
 #### **Note**: Set Up Periodical Renewal for SSL/TLS Certificates
