@@ -25,7 +25,7 @@ The diagram clearly illustrates how traffic flows between the different componen
 - **DB Traffic**: Web servers interact with the database server for data storage and retrieval.
 - **Deploy Traffic**: Jenkins pushes code updates to the NFS server, making the updated code available to the web servers.
 
-This setup allows for seamless and automated deployments, ensuring that the application running on the web servers is always up-to-date with the latest changes from the GitHub repository.
+ This setup allows for seamless and automated deployments, ensuring that the application running on the web servers is always up-to-date with the latest changes from the GitHub repository.
 ---
 ### Step 1: Install Jenkins Server (Completed)
 
