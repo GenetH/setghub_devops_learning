@@ -1,8 +1,21 @@
 ## Load Balancer Solution with Nginx and SSL/TLS
+---
 
 ### Introduction
 
 In this project, I configured a highly available and secure web application infrastructure using Nginx as a load balancer with SSL/TLS certificates, integrated with Jenkins for CI/CD. The goal was to ensure that web traffic is evenly distributed between two web servers, with secure communication enabled for client traffic. Additionally, the infrastructure leverages GitHub for version control and Jenkins for automating the deployment of updates to the web servers.
+
+By now, you may have learned what Load Balancing is used for and may have configured an LB solution using Apache. However, a versatile DevOps engineer must know multiple solutions for the same problem. That’s why in this project, I configured an **Nginx Load Balancer solution**.
+
+It is also important to ensure that all connections to web solutions are secure and that information is **encrypted in transit**. In this project, I’ll be covering the implementation of HTTPS (HTTP Secure) to ensure secure connections between the client and server, preventing data from being intercepted.
+
+When data moves between a client (browser) and a web server over the internet, it passes through several network devices. If this data is not encrypted, it can be intercepted by someone who has access to the network. This is known as a **Man-In-The-Middle (MIMT) attack**. To prevent this, secure connections using SSL/TLS encryption must be implemented.
+
+SSL and its newer version, **TLS**, are security protocols that encrypt the session between the client and the server, making sure data is securely transferred. I’ll be using **Let's Encrypt** to automate the issuance of SSL certificates in this project, ensuring continuous security with automated renewals.
+
+In this setup, Nginx acts as both a load balancer and an SSL termination point, ensuring that all web traffic, whether internal or external, is encrypted and securely transmitted.
+
+
 
 ---
 
