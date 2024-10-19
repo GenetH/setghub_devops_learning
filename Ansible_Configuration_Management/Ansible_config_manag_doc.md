@@ -180,8 +180,8 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
    - To set up the SSH agent and connect **VS Code** to my Jenkins-Ansible instance, I followed the helpful video guides below:
 
-   - For **Windows** users: [https://www.youtube.com/watch?v=OplGrY74qog](#)
-   - For **Linux** users: [https://www.youtube.com/watch?v=OplGrY74qog](#)
+   - For **Windows** users: [SSH-Agent Setup for Windows](https://www.youtube.com/watch?v=OplGrY74qog) 
+   - For **Linux** users: [SSH-Agent Setup for Linux](https://www.youtube.com/watch?v=OplGrY74qog)
 
      ![Updated the Tag](./self_study/images/ssh-agent.png)
 
