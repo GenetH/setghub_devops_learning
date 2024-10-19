@@ -176,16 +176,16 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
 5. **Connect VS Code to Jenkins-Ansible Instance**:
 
-Once I configured the SSH agent, I connected **Visual Studio Code (VS Code)** to my Jenkins-Ansible instance for easier development and testing.
+   - Once I configured the SSH agent, I connected **Visual Studio Code (VS Code)** to my Jenkins-Ansible instance for easier development and testing.
 
-To set up the SSH agent and connect **VS Code** to my Jenkins-Ansible instance, I followed the helpful video guides below:
+   - To set up the SSH agent and connect **VS Code** to my Jenkins-Ansible instance, I followed the helpful video guides below:
 
-- For **Windows** users: [SSH-Agent Setup on Windows](#)
-- For **Linux** users: [SSH-Agent Setup on Linux](#)
+   - For **Windows** users: [https://www.youtube.com/watch?v=OplGrY74qog](#)
+   - For **Linux** users: [https://www.youtube.com/watch?v=OplGrY74qog](#)
 
-![Updated the Tag](./self_study/images/ssh-agent.png)
+     ![Updated the Tag](./self_study/images/ssh-agent.png)
 
-By setting up the SSH agent, I ensured a secure connection when using **VS Code** to interact with my Jenkins-Ansible instance. This allowed me to run Ansible playbooks and manage my configurations easily from within **VS Code**.
+   By setting up the SSH agent, I ensured a secure connection when using **VS Code** to interact with my Jenkins-Ansible instance. This allowed me to run Ansible playbooks and manage my configurations easily from within **VS Code**.
 
 ---
 
@@ -232,13 +232,6 @@ Here’s the content of the `playbooks/common.yml` file:
 2. **For the Load Balancer (LB) Server** (Ubuntu-based system):
    - It first updates the `apt` repository cache.
    - Then, it installs and ensures that **Wireshark** is up to date.
-
-#### Next Steps:
-- I can update this playbook to include additional tasks, such as:
-   - Creating a directory and a file inside it.
-   - Changing the timezone on all servers.
-   - Running some shell scripts across the infrastructure.
-
 
 ---
 
