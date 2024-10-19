@@ -33,14 +33,14 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
 ---
 
-### Step 1: Install and Configure Ansible on EC2 Instance (Already Done)
+### Step 1: Install and Configure Ansible on EC2 Instance 
 
 
-1. **Updated the Name Tag**: I have changed the Name tag of my Jenkins EC2 instance to `Jenkins-Ansible`, which is used to run Ansible playbooks.
+1. **Update the Name Tag**: I have changed the Name tag of my Jenkins EC2 instance to `Jenkins-Ansible`, which is used to run Ansible playbooks.
    
    ![Updated the Tag](./self_study/images/a.png)
 
-2. **Created a GitHub Repository**: I have created a new GitHub repository named `ansible-config-mgt`.
+2. **Create a GitHub Repository**: I have created a new GitHub repository named `ansible-config-mgt`.
 
    ![Updated the Tag](./self_study/images/b.png)
 
@@ -58,7 +58,7 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
    - This displayed the installed version of Ansible along with configuration details.
 
-4. **Configured Jenkins Build Job to Archive Repository**:
+4. **Configure Jenkins Build Job to Archive Repository**:
 
    - **Created a Freestyle Project in Jenkins**:
      - I named the project `ansible` and linked it to the `ansible-config-mgt` repository on GitHub.
@@ -69,8 +69,8 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
    - **Configured a Post-Build Action**:
      - I added a post-build step in Jenkins to archive all files (`**`), similar to the process followed in **Project 9**.
 
-5. **Tested the Setup**:
-   - I modified the `README.md` file in the `master` branch to trigger a build.
+5. **Test the Setup**:
+   - I modified the `README.md` file in the `main` branch to trigger a build.
    - The build started automatically, and Jenkins successfully archived the build artifacts.
 
    - I verified the archived files in the following directory on the Jenkins server:
@@ -89,15 +89,13 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
 2. After successfully installing VSC, I configured it to connect to my newly created [GitHub repository](https://github.com).
 
-   ![Updated the Tag](./self_study/images/d.png)
+   ![Updated the Tag](./self_study/images/e.png)
 
 3. I cloned my `ansible-config-mgt` repository to my Jenkins-Ansible instance using the following command:
 
     ```bash
     git clone  https://github.com/GenetH/ansible-config-mgt
     ```
-    ![Updated the Tag](./self_study/images/f.png)
-
 ---
 
 ### Step 3 - Begin Ansible Development 
@@ -112,7 +110,7 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
 3. I created a directory named `playbooks` to store all the playbook files.
 
-   ![Updated the Tag](./self_study/images/m.png)
+   ![Updated the Tag](./self_study/images/k.png)
 
 4. I created another directory named `inventory` to keep my hosts organized.
 
@@ -125,7 +123,7 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
 ---
 
-### Step 4 - Set Up an Ansible Inventory (Already Done)
+### Step 4 - Set Up an Ansible Inventory 
 
 1. **Understanding the Ansible Inventory**:
    - An Ansible inventory file defines the hosts and groups of hosts on which commands, modules, and tasks in a playbook operate.
@@ -178,7 +176,7 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
 ---
 
-### Step 5 - Created a Common Playbook (Already Done)
+### Step 5 - Create a Common Playbook 
 
 I have created a common Ansible playbook (`common.yml`) that provides instructions for tasks that should be performed on all servers listed in the `inventory/dev` file.
 
@@ -231,13 +229,13 @@ Here’s the content of the `playbooks/common.yml` file:
 
 ---
 
-### Step 6 - Updated GIT with the Latest Code (Already Done)
+### Step 6 - Update Git with the Latest Code 
 
 All of my directories and files were created and saved on my local machine. I needed to push these changes to GitHub.
 
 In real-world environments, I worked alongside other DevOps engineers and developers. It’s crucial to collaborate with Git, especially because many organizations have a development rule that prevents code deployment until it has been peer-reviewed. This is often referred to as the "Four Eyes Principle."
 
-Since I was working on a separate branch, I had to raise a **Pull Request (PR)** to get the branch peer-reviewed and merged into the `master` branch.
+Since I was working on a separate branch, I had to raise a **Pull Request (PR)** to get the branch peer-reviewed and merged into the `main` branch.
 
 I committed my code to GitHub using the following steps:
 
@@ -264,8 +262,7 @@ I committed my code to GitHub using the following steps:
    git checkout main
    git pull origin main
    ```
-   ![Updated the Tag](./self_study/images/tt.png)
-
+ 
 Once my code changes appeared in the `main` branch, Jenkins triggered the build process and saved all files (build artifacts) to the following directory on the Jenkins-Ansible server:
 
 ```bash
@@ -292,6 +289,7 @@ Here’s what I did:
    ```bash
    ansible-playbook -i inventory/dev.yml playbooks/common.yml
    ```
+   ![Updated the Tag](./self_study/images/do.png)
 
 4. **Verifying Wireshark Installation**:
    After running the playbook, I checked each server to confirm if Wireshark was installed by using the command:
@@ -302,12 +300,56 @@ Here’s what I did:
    ```bash
    wireshark --version
    ```
+   **Webserver1**
+
+   ![Updated the Tag](./self_study/images/web1.png)
+
+   **Webserver2**
+
+   ![Updated the Tag](./self_study/images/web2.png)
+
+   **nfs server**
+
+   ![Updated the Tag](./self_study/images/nfs.png)
+
+   **db server**
+   
+   ![Updated the Tag](./self_study/images/db.png)
+
+   **Load balancer server**
+   
+   ![Updated the Tag](./self_study/images/ld.png)
+
+ This test allowed me to confirm that the playbook was functioning correctly and that Wireshark was installed and updated as expected on the target servers. Let me know if you need further assistance!
 
 ---
 
-This test allowed me to confirm that the playbook was functioning correctly and that Wireshark was installed and updated as expected on the target servers. Let me know if you need further assistance!
----
 
+![Updated the Tag](./self_study/images/ph.png)
+
+Here is a general overview of the architecture I implemented:
+
+1. **Developer’s PC/Laptop (VS Code)**:
+   - I used **VS Code** on my local machine to write, modify, and manage Ansible playbooks and configurations.
+   - Any changes made locally are committed to a **GitHub repository** for version control and collaboration.
+
+2. **GitHub Repository**:
+   - The **GitHub repository** acts as a central hub where all Ansible configuration files and playbooks are stored.
+   - A **webhook** is set up to notify **Jenkins** when changes are pushed to the repository.
+
+3. **Jenkins/Ansible Server**:
+   - Jenkins is configured to pull the latest changes from the **GitHub repository** whenever a push is detected (triggered by the webhook).
+   - The **Ansible playbooks** are executed by Jenkins to configure and manage the target servers defined in the **Ansible inventory**.
+   - This ensures an automated deployment process across all the target servers.
+
+4. **Ansible Inventory**:
+   - The **Ansible inventory** defines the different servers, such as **Web Servers, Database Servers, NFS Server**, and **Load Balancer**.
+   - The servers are grouped by environment (e.g., Development, Staging, Production) and Ansible playbooks are run on these groups to configure them accordingly.
+   - These servers are categorized as **RHEL-based servers** (Web, DB, NFS) and **Ubuntu-based servers** (Load Balancer).
+
+Overall, this architecture automates the deployment and configuration of all target servers, ensuring consistency across environments through Ansible, Jenkins, and GitHub integration.
+
+---
 
 ### Conclusion
 
