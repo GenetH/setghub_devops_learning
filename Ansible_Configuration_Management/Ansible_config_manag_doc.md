@@ -174,6 +174,19 @@ In your case, the **Ansible client** is configured to act as the **Jump Server**
 
    This setup allowed me to connect my Jenkins-Ansible instance securely to the target servers using the inventory configuration I created.
 
+5. **Connect VS Code to Jenkins-Ansible Instance**:
+
+Once I configured the SSH agent, I connected **Visual Studio Code (VS Code)** to my Jenkins-Ansible instance for easier development and testing.
+
+To set up the SSH agent and connect **VS Code** to my Jenkins-Ansible instance, I followed the helpful video guides below:
+
+- For **Windows** users: [SSH-Agent Setup on Windows](#)
+- For **Linux** users: [SSH-Agent Setup on Linux](#)
+
+![Updated the Tag](./self_study/images/ssh-agent.png)
+
+By setting up the SSH agent, I ensured a secure connection when using **VS Code** to interact with my Jenkins-Ansible instance. This allowed me to run Ansible playbooks and manage my configurations easily from within **VS Code**.
+
 ---
 
 ### Step 5 - Create a Common Playbook 
@@ -320,7 +333,7 @@ Here’s what I did:
    
    ![Updated the Tag](./self_study/images/ld.png)
 
- This test allowed me to confirm that the playbook was functioning correctly and that Wireshark was installed and updated as expected on the target servers. Let me know if you need further assistance!
+ This test allowed me to confirm that the playbook was functioning correctly and that Wireshark was installed and updated as expected on the target servers. 
 
 ---
 
@@ -345,7 +358,7 @@ Here is a general overview of the architecture I implemented:
 4. **Ansible Inventory**:
    - The **Ansible inventory** defines the different servers, such as **Web Servers, Database Servers, NFS Server**, and **Load Balancer**.
    - The servers are grouped by environment (e.g., Development, Staging, Production) and Ansible playbooks are run on these groups to configure them accordingly.
-   - These servers are categorized as **RHEL-based servers** (Web, DB, NFS) and **Ubuntu-based servers** (Load Balancer).
+   - These servers are categorized as **RHEL-based servers** (Webserver1, webserver2, DB, NFS) and **Ubuntu-based servers** (Load Balancer).
 
 Overall, this architecture automates the deployment and configuration of all target servers, ensuring consistency across environments through Ansible, Jenkins, and GitHub integration.
 
