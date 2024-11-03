@@ -161,7 +161,7 @@ Since I needed to apply some tasks to my `dev` servers where **Wireshark** was a
         purge: yes
         autoclean: yes
 ```
-![Access Application](./self_study/images/sr.png)
+![Access Application](./self_study/images/creen.png)
 
 #### Update `site.yml` and Run the Playbook
 
@@ -193,10 +193,6 @@ I checked all servers
 ![Access Application](./self_study/images/aa.png)
 
 **Wireshark** was deleted on all targeted servers.
-
----
-
-This refactoring approach, leveraging the `import_playbook` module, simplified managing tasks across multiple servers and improved code clarity. It ensured that I could deploy, update, or remove configurations with a single command, making my infrastructure code more maintainable and easier for team collaboration.
 
 ---
 
@@ -372,7 +368,7 @@ After running the playbook, I verified that my UAT web servers were configured c
 
 - `http://<Web2-UAT-Server-Public-IP-or-DNS-Name>/index.php`
 
-![Access Application](./self_study/images/soi.png)
+![Access Application](./self_study/images/arr.png)
 
 Both URLs confirmed successful configuration when they displayed the expected output.
 
@@ -380,7 +376,7 @@ Both URLs confirmed successful configuration when they displayed the expected ou
 
 The updated Ansible infrastructure included:
 
-![Access Application](./self_study/images/arr.png)
+![Access Application](./self_study/images/ar.png)
 
 - A **GitHub repository** that hosted the codebase.
 - **Jenkins/Ansible server** acting as a CI/CD orchestrator, triggering jobs on code commits through webhooks.
