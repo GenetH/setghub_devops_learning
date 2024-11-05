@@ -77,7 +77,6 @@ By implementing these changes, I ensured that my Jenkins pipeline is more effici
 
 ---
 
-
 ### Step 2 - Refactor Ansible Code by Importing Other Playbooks into `site.yml`
 
 Before refactoring my Ansible code, I ensured that I pulled down the latest code from the `master` (main) branch and created a new branch called `refactor`.
