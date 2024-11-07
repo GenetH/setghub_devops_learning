@@ -239,14 +239,7 @@ Here's the revised step-by-step guide tailored to reflect my own experience in c
    ![Access Application](./self_study/images/sss.png)
 
    To use Apache instead, I would set `enable_nginx_lb` to `false` and `enable_apache_lb` to `true`.
-
-6. **Test My Configuration**:
-   I updated the inventory file for the UAT environment and ran the playbook:
-   ```bash
-   ansible-playbook -i inventory/uat.yml playbooks/site.yml
-   ```
-   I then verified that the correct load balancer (Nginx or Apache) was deployed based on the configuration in the environment file.
-
+   
 ### Conclusion
 
 Completing this project enhanced my understanding of both static and dynamic assignments within Ansible, highlighting the crucial differences between the `import` and `include` modules. The practical implementation of dynamic assignments demonstrated how they adapt during the execution phase, making them an invaluable tool for scenarios where flexibility is required.
