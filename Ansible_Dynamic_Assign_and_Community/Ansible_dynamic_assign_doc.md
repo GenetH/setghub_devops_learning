@@ -15,6 +15,10 @@ Static assignments (`import`) are processed during the parsing phase of the play
 ---
 ### Introducing Dynamic Assignment Into Our Structure
 
+**Launch EC2 Instances**: I created two web servers, one database server, and one load balancer server to apply those tasks.
+
+![Access Application](./self_study/images/ec2_instance.png)
+
 #### 1. Create a New Branch
 First, I navigated to my GitHub repository (`ansible-config-mgt`) and created a new branch named `dynamic-assignments` for organizing environment-specific variables.
 
@@ -161,6 +165,53 @@ I added the following code to `env-vars.yml`:
    ```
    ![Access Application](./self_study/images/k.png)
 
+**Create the `main.yml` File in the `vars` Directory**
+
+In the `roles/mysql/vars/main.yml`, I added the MySQL root password, the databases to be created, and the users with appropriate privileges. Here's how I structured it:
+
+```yaml
+
+mysql_root_password: ""
+mysql_databases:
+  - name: tooling
+    encoding: utf8
+    collation: utf8_general_ci
+mysql_users:
+  - name: webaccess
+    host: "172.31.16.0/20"  # Allow access from specific IP range
+    password: Admin123      # User password for 'webaccess'
+    priv: "tooling.*:ALL"    # Grant all privileges on the 'tooling' database
+```
+![Access Application](./self_study/images/srrr.png)
+
+- **`mysql_root_password`**: This is the root password I set for MySQL.
+- **`mysql_databases`**: I specified the database I wanted to create, `tooling`, with UTF-8 encoding and collation.
+- **`mysql_users`**: I created a user `webaccess` and granted it full privileges on the `tooling` database, allowing access from the IP range `172.31.16.0/20`.
+
+**Include the MySQL Role in `db-server.yml`**
+
+In the `db-server.yml` playbook,inside static-assignments folder and name it db-servers.yml , update it with mysql roles.
+
+```yaml
+- hosts: db_servers
+  become: yes
+  vars_files:
+    - vars/main.yml
+  roles:
+    - { role: mysql }
+```
+![Access Application](./self_study/images/tw.png)
+
+**Include the `db-server.yml` in `site.yml`**
+
+To ensure that the MySQL role is applied to the database servers, I included the `db-server.yml` playbook in the main `site.yml` playbook:
+
+```yaml
+import_playbook: ../static-assignments/db-server.yml
+```
+
+**Configured MySQL**: The role automatically handled other necessary MySQL configurations, ensuring it was ready to use.
+
 **Reviewing and Editing the Role**:
    I reviewed the `README.md` file of the role and adjusted the configuration settings to match the credentials and requirements for my project.
 
@@ -175,10 +226,6 @@ I added the following code to `env-vars.yml`:
 
 **Creating a Pull Request**:
    After confirming everything was correct, I created a Pull Request in GitHub and merged it into the `main` branch.
-
-
-
-Here's the revised step-by-step guide tailored to reflect my own experience in configuring load balancer roles:
 
 ### Configure Load Balancer Roles
 
@@ -196,6 +243,14 @@ Here's the revised step-by-step guide tailored to reflect my own experience in c
    ```
    ansible-galaxy role install geerlingguy.apache
    ```
+   Rename both apache and nginx
+
+   ```
+   mv geerlingguy.nginx nginx
+   mv geerlingguy.apache apache
+   ```
+   ![Access Application](./self_study/images/sb.png)
+
 2. **Create Variables for Load Balancer Selection**:
    Inside the `defaults/main.yml` file for both Nginx and Apache roles, I created the following variables:
    ```yaml
