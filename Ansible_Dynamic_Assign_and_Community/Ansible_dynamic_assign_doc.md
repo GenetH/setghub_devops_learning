@@ -182,7 +182,7 @@ mysql_users:
     password: Admin123      # User password for 'webaccess'
     priv: "tooling.*:ALL"    # Grant all privileges on the 'tooling' database
 ```
-![Access Application](./self_study/images/srrr.png)
+![Access Application](./self_study/images/srrrr.png)
 
 - **`mysql_root_password`**: This is the root password I set for MySQL.
 - **`mysql_databases`**: I specified the database I wanted to create, `tooling`, with UTF-8 encoding and collation.
