@@ -251,7 +251,218 @@ import_playbook: ../static-assignments/db-server.yml
    ```
    ![Access Application](./self_study/images/sb.png)
 
-2. **Create Variables for Load Balancer Selection**:
+2. **Update Webservers Role**
+   I updated the webservers role to install EPEL, Remi's repository, Apache, PHP, and clone the tooling website from my GitHub repository.
+   Update `roles/webservers/tasks/main.yml`:
+```yaml
+---
+- name: install apache
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.yum:
+    name: "httpd"
+    state: present
+
+- name: Enable apache
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.command:
+    cmd: sudo systemctl enable httpd
+
+- name: Install EPEL release
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.command:
+    cmd: sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
+
+- name: Install dnf-utils and Remi repository
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.command:
+    cmd: sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-9.rpm -y
+
+- name: Reset PHP module
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.command:
+    cmd: sudo dnf module reset php -y
+
+- name: Enable PHP 8.2 module
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.command:
+    cmd: sudo dnf module enable php:remi-8.2 -y
+
+- name: Install PHP and extensions
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.yum:
+    name:
+      - php
+      - php-opcache
+      - php-gd
+      - php-curl
+      - php-mysqlnd
+    state: present
+
+- name: Install MySQL client
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.yum:
+    name: "mysql"
+    state: present
+
+- name: Start PHP-FPM service
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.service:
+    name: php-fpm
+    state: started
+
+- name: Enable PHP-FPM service
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.service:
+    name: php-fpm
+    enabled: true
+
+- name: Set SELinux boolean for httpd_execmem
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.command:
+    cmd: sudo setsebool -P httpd_execmem 1
+
+- name: install git
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.yum:
+    name: "git"
+    state: present
+
+- name: clone a repo
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.git:
+    repo: https://github.com/Github-name/tooling
+    dest: /var/www/html
+    force: yes
+
+- name: copy html content to one level up
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  command: cp -r /var/www/html/html/ /var/www/
+
+- name: Start service httpd, if not started
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+- name: recursively remove /var/www/html/html/ directory
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  ansible.builtin.file:
+    path: /var/www/html/html
+    state: absent
+
+- name: Check if Apache is running
+  ansible.builtin.service_facts:
+
+- name: Stop and disable Apache if it is running
+  ansible.builtin.service:
+    name: apache2
+    state: stopped
+    enabled: no
+  when: "'apache2' in services and services['apache2'].state == 'running'"
+  become: yes
+```
+    
+   ![Access Application](./self_study/images/srs.png)
+
+3. **Create a Task to Stop Apache if Running**
+   Next, I added a task to check and stop Apache if it is running on the web servers.
+   Add to `roles/nginx/tasks/main.yml`:
+```yaml
+- name: Check if Apache is running
+  ansible.builtin.service_facts:
+
+- name: Stop and disable Apache if it is running
+  ansible.builtin.service:
+    name: apache2
+    state: stopped
+    enabled: no
+  when: "'apache2' in services and services['apache2'].state == 'running'"
+  become: yes
+```
+![Access Application](./self_study/images/srt.png)
+
+4. **Update roles/nginx/defaults/main.yml for Nginx Load Balancer**
+```yaml
+# roles/nginx/defaults/main.yml
+
+# Enable/disable Nginx as a load balancer
+enable_nginx_lb: true
+load_balancer_is_required: true
+
+# Define the virtual hosts for Nginx
+nginx_vhosts:
+  - listen: "80"
+    server_name: "example.com"
+    root: "/var/www/html"
+    index: "index.php index.html index.htm"
+    locations:
+      - path: "/"
+        proxy_pass: "http://myapp1"
+      
+    # Optional properties that can be used
+    server_name_redirect: "www.example.com"
+    error_page: ""
+    access_log: ""
+    error_log: ""
+    extra_parameters: ""
+    template: "{{ nginx_vhost_template }}"
+    state: "present"
+
+# Define upstreams for load balancing
+nginx_upstreams:
+  - name: myapp1
+    strategy: "ip_hash"
+    keepalive: 16
+    servers:
+      - "172.31.35.223 weight=5"
+      - "172.31.34.101 weight=5"
+
+# Define Nginx logging format
+nginx_log_format: |-
+  '$remote_addr - $remote_user [$time_local] "$request" '
+  '$status $body_bytes_sent "$http_referer" '
+  '"$http_user_agent" "$http_x_forwarded_for"'
+
+# Ensure the load balancer works as intended
+nginx_http_proxy:
+  - listen: "80"
+  - server_name: "loadbalancer.example.com"
+```
+![Access Application](./self_study/images/sc.png)
+
+5. **Create Variables for Load Balancer Selection**:
    Inside the `defaults/main.yml` file for both Nginx and Apache roles, I created the following variables:
    ```yaml
    enable_nginx_lb: false
@@ -265,7 +476,7 @@ import_playbook: ../static-assignments/db-server.yml
    ```
    ![Access Application](./self_study/images/ff.png)
 
-3. **Configure the `loadbalancers.yml` Assignment**:
+. **Configure the `loadbalancers.yml` Assignment**:
    I created a `loadbalancers.yml` file in the `static-assignments` directory and set conditions for applying the roles:
    ```yaml
    - hosts: lb
@@ -275,7 +486,7 @@ import_playbook: ../static-assignments/db-server.yml
    ```
    ![Access Application](./self_study/images/ab.png)
 
-4. **Update the `site.yml` File**:
+6. **Update the `site.yml` File**:
    I updated the `site.yml` file to include the new load balancer playbook:
    ```yaml
    - name: Loadbalancers assignment
@@ -285,7 +496,7 @@ import_playbook: ../static-assignments/db-server.yml
    ```
    ![Access Application](./self_study/images/rr.png)
 
-5. **Set Variables in Environment-Specific Files**:
+7. **Set Variables in Environment-Specific Files**:
    In the `env-vars` folder, I set the necessary variables in the `uat.yml` file to activate the Nginx load balancer:
    ```yaml
    enable_nginx_lb: true
@@ -295,7 +506,7 @@ import_playbook: ../static-assignments/db-server.yml
 
    To use Apache instead, I would set `enable_nginx_lb` to `false` and `enable_apache_lb` to `true`.
 
-6. **Test**:
+8. **Test**:
 
    Command to run the playbook
    ```bash
