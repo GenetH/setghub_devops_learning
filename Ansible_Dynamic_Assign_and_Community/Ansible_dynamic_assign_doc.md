@@ -496,7 +496,7 @@ nginx_http_proxy:
    ```
    ![Access Application](./self_study/images/rr.png)
 
-8. **pdate inventory/uat.yml**
+8. **Update `inventory/uat.yml`**
 
 ```yaml
 [uat-webservers]
