@@ -294,6 +294,36 @@ import_playbook: ../static-assignments/db-server.yml
    ![Access Application](./self_study/images/sss.png)
 
    To use Apache instead, I would set `enable_nginx_lb` to `false` and `enable_apache_lb` to `true`.
+
+6. **Test**:
+
+   Command to run the playbook
+   ```bash
+   ansible-playbook -i inventory/uat.yml playbooks/site.yml --extra-vars "@env-vars/uat.yml"
+   ```
+   ![Access Application](./self_study/images/ta.png)
+   ![Access Application](./self_study/images/tb.png)
+   ![Access Application](./self_study/images/tc.png)
+   ![Access Application](./self_study/images/td.png)
+   ![Access Application](./self_study/images/te.png)
+   ![Access Application](./self_study/images/tf.png)
+   ![Access Application](./self_study/images/tg.png)
+   ![Access Application](./self_study/images/th.png)
+   ![Access Application](./self_study/images/tr.png)
+
+### Verification
+
+After running the playbook, I verified that my UAT web servers were configured correctly by accessing them through a web browser:
+
+- `http://<Web1-UAT-Server-Public-IP-or-DNS-Name>/index.php`
+
+![Access Application](./self_study/images/ha.png)
+
+- `http://<Web2-UAT-Server-Public-IP-or-DNS-Name>/index.php`
+
+![Access Application](./self_study/images/hb.png)
+
+Both URLs confirmed successful configuration when they displayed the expected output.
    
 ### Conclusion
 
