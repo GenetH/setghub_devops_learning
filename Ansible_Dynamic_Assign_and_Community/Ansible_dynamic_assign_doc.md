@@ -476,7 +476,7 @@ nginx_http_proxy:
    ```
    ![Access Application](./self_study/images/ff.png)
 
-. **Configure the `loadbalancers.yml` Assignment**:
+6. **Configure the `loadbalancers.yml` Assignment**:
    I created a `loadbalancers.yml` file in the `static-assignments` directory and set conditions for applying the roles:
    ```yaml
    - hosts: lb
@@ -486,7 +486,7 @@ nginx_http_proxy:
    ```
    ![Access Application](./self_study/images/ab.png)
 
-6. **Update the `site.yml` File**:
+7. **Update the `site.yml` File**:
    I updated the `site.yml` file to include the new load balancer playbook:
    ```yaml
    - name: Loadbalancers assignment
@@ -496,7 +496,22 @@ nginx_http_proxy:
    ```
    ![Access Application](./self_study/images/rr.png)
 
-7. **Set Variables in Environment-Specific Files**:
+8. **pdate inventory/uat.yml**
+
+```yaml
+[uat-webservers]
+172.31.18.6 ansible_ssh_user=ec2-user
+172.31.19.105 ansible_ssh_user=ec2-user
+
+[db_servers]
+172.31.88.43 ansible_ssh_user=ec2-user
+
+[lb]
+172.31.86.76 ansible_ssh_user=ubuntu
+```
+![Access Application](./self_study/images/sa.png)
+
+9. **Set Variables in Environment-Specific Files**:
    In the `env-vars` folder, I set the necessary variables in the `uat.yml` file to activate the Nginx load balancer:
    ```yaml
    enable_nginx_lb: true
@@ -506,7 +521,7 @@ nginx_http_proxy:
 
    To use Apache instead, I would set `enable_nginx_lb` to `false` and `enable_apache_lb` to `true`.
 
-8. **Test**:
+10. **Test**:
 
    Command to run the playbook
    ```bash
