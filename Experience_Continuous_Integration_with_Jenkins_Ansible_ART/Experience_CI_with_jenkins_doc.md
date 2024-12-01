@@ -1,22 +1,15 @@
 ## Continuous Integration with Jenkins | Ansible | Artifactory | SonarQube | PHP
-
 ---
-
 ### **Project Context**
 - This project is designed to teach fundamental DevOps concepts related to **CI/CD pipelines** by using tools like Jenkins, Ansible, Artifactory, and SonarQube, with a focus on PHP applications.
-
----
-
 ### **Key Concepts**
-1. **Compiled vs. Interpreted Languages**  
+**Compiled vs. Interpreted Languages**  
    - Compiled languages like Java and .NET require a build stage to create an executable file (e.g., `.jar`) that contains all dependencies.
    - Interpreted languages like PHP, JavaScript, and Python do not need a build stage, and their code can be directly deployed.
 
-2. **Improved Deployment**  
+**Improved Deployment**  
    - Direct deployment from Git to servers (e.g., placing code into `/var/www/html`) is not an optimal approach for real-world applications.
    - A better approach is to package the code and its dependencies into archives (e.g., `.tar.gz` or `.zip`) for easier deployment across environments.
-
----
 
 ### **Goals of the Project**
 - To provide a hands-on understanding of CI/CD concepts from an **application perspective** using PHP.
