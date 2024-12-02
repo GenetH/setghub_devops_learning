@@ -100,6 +100,100 @@ After all, DevOps is about continuous delivery or deployment and shipping qualit
 
 These metrics are essential to ensure the CI/CD pipeline operates smoothly and delivers high-quality software efficiently.
 
+---
+### **Simulating a Typical CI/CD Pipeline for a PHP-Based Application**
+
+As part of ongoing infrastructure development using **Ansible** (from **Project 11**), the goal is to simulate a CI/CD pipeline for continuous integration and delivery of PHP applications. This project focuses on **Tooling** and **TODO Web Applications**, which are based on the **interpreted (scripting) language PHP**. Since PHP does not require compilation to machine language, it can be deployed directly to a server.
+
+![Creating the React App](./self_study/images/sr.png)
+
+### **CI/CD Pipeline for a TODO PHP WebApp**
+
+#### **Pipeline Workflow**
+1. **Code Commit & Push**  
+   - Developers push their code to a Git repository.
+
+2. **Download Code Dependencies**  
+   - Jenkins fetches dependencies required for the application to run.
+
+3. **Unit Tests**  
+   - Code undergoes unit testing to validate individual components.
+
+4. **Static Code Analysis**  
+   - Tools like **SonarQube** perform static code checks to ensure quality and adherence to coding standards.
+
+5. **Package Code**  
+   - The source code is packaged into deployable formats (e.g., `.tar.gz` or `.zip`).
+
+6. **Deploy Code to Artifactory**  
+   - Packaged artifacts are stored in **Artifactory**, enabling better version control and accessibility.
+
+7. **Testing (UAT, Integration, Penetration)**  
+   - **UAT (User Acceptance Testing)** ensures the application meets user requirements.  
+   - **Integration Tests** validate that different modules work together seamlessly.  
+   - **Penetration Tests** identify vulnerabilities and ensure the application is secure.
+
+8. **Pre-Production or Staging**  
+   - The application is deployed to a staging environment that mirrors production.
+
+9. **Production Release**  
+   - After successful testing, the application is released to the production environment.
+
+---
+
+#### **Legend for Tools in the Workflow**
+- **Git**: Code repository for managing versions.  
+- **Jenkins**: CI server for orchestrating builds and deployments.  
+- **SonarQube**: Code analysis tool for static checks.  
+- **Ansible**: Automation tool for configuration and deployment.  
+- **Artifactory**: Artifact repository for storing and managing deployable packages.
+---
+
+### **Set Up**
+
+This project is a continuation of the Ansible work from a previous setup. The main goal is to create a multi-environment infrastructure for a CI/CD pipeline. The environments include **CI**, **Dev**, **Pentest**, **SIT**, **UAT**, **Preprod**, and **Prod**. Each environment is set up to simulate real-world development, testing, and production stages.
+
+- **Start with minimal servers**: Create only the servers necessary for the current environment you are working on (e.g., development or testing) to save costs.
+
+- **Examples of environments**:
+  - **CI**: For Continuous Integration builds and automation.
+  - **Dev**: For active development and testing of new features.
+  - **Pentest**: For penetration and security testing.
+
+---
+
+### **Tools and Configurations**
+
+- **Nginx**: Configured as a **reverse proxy** for all environments.
+- **SonarQube**: Used for static code analysis.
+- **Artifactory**: Stores the build artifacts generated during the CI/CD pipeline.
+- **TODO WebApp**: A PHP-based application deployed across environments.
+
+---
+
+### **Environment Setup Table**
+
+The following table represents how the tools and configurations are distributed across the environments:
+
+| **Environment** | **Nginx** | **SonarQube** | **Artifactory** | **TODO WebApp** | **Jenkins** |
+|------------------|-----------|---------------|------------------|-----------------|-------------|
+| **CI**          | ✅        | ✅            | ✅               | ✅              | ✅          |
+| **Dev**         | ✅        | ✅            | ✅               | ✅              |             |
+| **SIT**         | ✅        | ✅            | ✅               | ✅              |             |
+| **UAT**         | ✅        | ✅            | ✅               | ✅              |             |
+| **Pentest**     | ✅        | ✅            | ✅               | ✅              |             |
+| **Preprod**     | ✅        | ✅            | ✅               | ✅              |             |
+| **Prod**        | ✅        | ✅            | ✅               | ✅              |             |
+
+### CI-Environment
+![Creating the React App](./self_study/images/ab.png)
+
+### Other Environment from Lower to Higher
+
+![Creating the React App](./self_study/images/ac.png)
+
+
+
 
 
 ### Ansible Inventory Should look like this
