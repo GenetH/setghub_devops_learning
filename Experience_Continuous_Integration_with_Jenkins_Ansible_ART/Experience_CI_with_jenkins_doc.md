@@ -49,7 +49,7 @@ In software engineering, Continuous Integration is the practice of merging all d
 
 ### Continuous Integration in the Real World
 
-![Creating the React App](./self_study/images/ss.png)
+![Creating the React App](./self_study/images/SS.png)
 
 - **Version Control**: Developers commit and push their code to a shared repository (e.g., Git). This ensures all team members can access and work on the latest code.
 
@@ -291,12 +291,12 @@ pentest-tooling
 **Ansible Roles for CI Environment**
    - You need to add **SonarQube** and **Artifactory** roles to your Ansible setup.
 
-    **SonarQube**:
+   **SonarQube**:
    - SonarQube is an open-source platform for continuous inspection of code quality.
    - It performs automatic reviews with static analysis of code to detect bugs, code smells, and security vulnerabilities.
    - To integrate SonarQube with Jenkins, refer to the instructions for SonarQube configuration in your Ansible playbooks.
    
-    **Artifactory**:
+   **Artifactory**:
    - Artifactory is a binary repository manager used to store and manage build artifacts.
    - It extends the source code repository to store build artifacts in a central location.
    - You will configure Artifactory to be used strictly for managing build artifacts as part of your CI/CD pipeline.
@@ -313,38 +313,38 @@ pentest-tooling
 
 In previous projects, you have been launching Ansible commands manually from a CLI. Now, with Jenkins, we will start running Ansible from Jenkins UI.
 
-### Step 1: **Navigated to Jenkins URL**
+### Step 1: Navigated to Jenkins URL
    - I opened my browser and went to the Jenkins URL.
 
-### Step 2: **Installed & Opened Blue Ocean Jenkins Plugin**
+### Step 2: Installed & Opened Blue Ocean Jenkins Plugin
    - I went to **Manage Jenkins**, clicked on **Manage Plugins**, and installed the **Blue Ocean** plugin.
    - After installation, I opened **Blue Ocean** from the Jenkins dashboard, which gave me a simplified interface for pipeline creation.
 
    ![Creating the React App](./self_study/images/a.png)
 
-### Step 3: **Created a New Pipeline**
+### Step 3: Created a New Pipeline
    - In **Blue Ocean**, I clicked on **New Pipeline** to begin the pipeline creation process.
 
-### Step 4: **Selected GitHub for Code Repository**
+### Step 4: Selected GitHub for Code Repository
    - When prompted to select the repository location, I chose **GitHub**.
    - Jenkins asked me to connect to my GitHub account, which I proceeded to do.
 
-### Step 5: **Connected Jenkins with GitHub**
+### Step 5: Connected Jenkins with GitHub
    - Jenkins required an **access token** to authenticate with GitHub.
    - I logged into GitHub, went to **Settings → Developer settings → Personal access tokens**, and generated a new token with the necessary permissions (`repo`).
    - I copied the generated token and pasted it into Jenkins.
 
-### Step 6: **Logged into GitHub & Generated an Access Token**
+### Step 6: Logged into GitHub & Generated an Access Token
    - I successfully generated the access token on GitHub and returned to Jenkins to paste it into the **Connect to GitHub** section.
    ![Creating the React App](./self_study/images/c.png)
 
-### Step 7: **Pasted the Token and Connected**
+### Step 7: Pasted the Token and Connected
    - After pasting the token, I clicked **Connect** to successfully link Jenkins with my GitHub account.
 
-### Step 8: **Chosen the Repository for the Pipeline**
+### Step 8: Chosen the Repository for the Pipeline
    - In Jenkins, I searched for my repository (e.g., `ansible-project`) and selected it.
 
-### Step 9: **Created the Pipeline**
+### Step 9: Created the Pipeline
    - After selecting the repository, I clicked on **Create Pipeline**, and Jenkins automatically set up the pipeline with my chosen GitHub repository.
 
 ### **Create a Directory for the Jenkinsfile**
