@@ -620,3 +620,125 @@ By following these steps, you can efficiently manage and scale your deployment p
 
 
 
+
+
+Certainly! Here's the updated section with the title added:
+
+---
+
+## **Parameterizing `Jenkinsfile` For Ansible Deployment**
+
+### **Step 1: Update the SIT Inventory**
+
+I updated the inventory file with new servers:
+
+```ini
+[tooling]
+<SIT-Tooling-Web-Server-Private-IP-Address>
+
+[todo]
+<SIT-Todo-Web-Server-Private-IP-Address>
+
+[nginx]
+<SIT-Nginx-Private-IP-Address>
+
+[db:vars]
+ansible_user=ec2-user
+ansible_python_interpreter=/usr/bin/python
+
+[db]
+<SIT-DB-Server-Private-IP-Address>
+```
+
+---
+
+### **Step 2: Parameterize the Jenkins Pipeline**
+
+I modified the `Jenkinsfile` to add a parameter for selecting the inventory dynamically:
+
+```groovy
+pipeline {
+    agent any
+
+    parameters {
+        string(
+            name: 'inventory',
+            defaultValue: 'dev',
+            description: 'This is the inventory file for the environment to deploy configuration'
+        )
+    }
+
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'main', url: 'https://github.com/GenetH/ansible-config-mgt.git'
+            }
+        }
+
+        stage('Run Ansible Playbook') {
+            steps {
+                sshagent(['private-key']) {
+                    ansiblePlaybook(
+                        playbook: "${WORKSPACE}/playbooks/site.yml",
+                        inventory: "${WORKSPACE}/inventory/${inventory}.yml",
+                        become: true,
+                        credentialsId: 'private-key'
+                    )
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+### **Step 3: Use the Parameterized Inventory**
+
+I replaced the hardcoded inventory path `inventory/dev.yml` in the `Run Ansible Playbook` stage with the parameterized inventory file `${inventory}`. This allows the user to specify the environment at runtime.
+
+---
+
+### **Step 4: Execute the Pipeline**
+
+1. Navigate to your Jenkins project and click on **Build with Parameters**.
+2. You will see a prompt for the `inventory` parameter. Provide the desired environment, e.g., `sit`, and click **Run**.
+
+Example:
+
+- Input `sit` into the field for the inventory parameter:
+   ![Input SIT Environment](./input-example.png)
+
+- Run the job, and Jenkins will use the inventory file `inventory/sit.yml`.
+
+---
+
+### **Step 5: Add Another Parameter for Tags**
+
+To run specific tasks using Ansible tags, enhance the `Jenkinsfile` as follows:
+
+```groovy
+parameters {
+    string(
+        name: 'tags',
+        defaultValue: '',
+        description: 'Ansible tags to run specific tasks'
+    )
+}
+```
+
+In the `Run Ansible Playbook` stage, include the `tags` parameter:
+
+```groovy
+ansiblePlaybook(
+    playbook: "${WORKSPACE}/playbooks/site.yml",
+    inventory: "${WORKSPACE}/inventory/${inventory}.yml",
+    tags: "${tags}",
+    become: true,
+    credentialsId: 'private-key'
+)
+```
+
+---
+
+This approach allows for flexibility in deploying configurations across multiple environments and specific roles or tasks using parameters in the Jenkins pipeline.
