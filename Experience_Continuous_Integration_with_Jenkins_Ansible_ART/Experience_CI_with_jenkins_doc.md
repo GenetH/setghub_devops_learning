@@ -193,8 +193,29 @@ The following table represents how the tools and configurations are distributed 
 ![Creating the React App](./self_study/images/ac.png)
 
 
+### **DNS Requirements**
 
+To configure DNS, create subdomain entries for each environment. Assuming your main domain is `darey.io`, the subdomains should be set as follows:
 
+| **Server**                   | **Domain**                                      |
+|-------------------------------|------------------------------------------------|
+| **Jenkins**                  | `https://ci.infradev.steghub.com`              |
+| **SonarQube**                | `https://sonar.infradev.steghub.com`           |
+| **Artifactory**              | `https://artifacts.infradev.steghub.com`       |
+| **Production Tooling**       | `https://tooling.steghub.com`                  |
+| **Pre-Prod Tooling**         | `https://tooling.preprod.steghub.com`          |
+| **Pentest Tooling**          | `https://tooling.pentest.steghub.com`          |
+| **UAT Tooling**              | `https://tooling.uat.steghub.com`              |
+| **SIT Tooling**              | `https://tooling.sit.steghub.com`              |
+| **Dev Tooling**              | `https://tooling.dev.steghub.com`              |
+| **Production TODO-WebApp**   | `https://todo.steghub.com`                     |
+| **Pre-Prod TODO-WebApp**     | `https://todo.preprod.steghub.com`             |
+| **Pentest TODO-WebApp**      | `https://todo.pentest.steghub.com`             |
+| **UAT TODO-WebApp**          | `https://todo.uat.steghub.com`                 |
+| **SIT TODO-WebApp**          | `https://todo.sit.steghub.com`                 |
+| **Dev TODO-WebApp**          | `https://todo.dev.steghub.com`                 |
+
+---
 
 ### Ansible Inventory Should look like this
 
@@ -253,20 +274,21 @@ pentest-tooling
 [pentest-tooling]
 <Pentest-Tooling-IP-Address>
 ```
+### **Observations**
+1. **Children Groups**  
+   - The `pentest:children` group combines `pentest-todo` and `pentest-tooling`.  
+   - This enables running Ansible tasks on both subgroups or individual groups as needed.
+
+2. **Group Variables**  
+   - Use `group_vars` for shared variables across `pentest-todo` and `pentest-tooling`.  
+   - This reduces redundancy and simplifies configuration.
+
+3. **Custom Setup for `db`**  
+   - The `db` group uses CentOS/Red Hat-specific configurations, such as setting the Python interpreter.  
+   - Adapt configurations based on the operating system.
 
 
-
-
-
-
-
-
-
-
-
-
-
-**Roles for CI Environment**
+**Ansible Roles for CI Environment**
    - You need to add **SonarQube** and **Artifactory** roles to your Ansible setup.
 
     **SonarQube**:
@@ -286,9 +308,6 @@ pentest-tooling
 **Why Do We Need Artifactory?**
    - Artifactory serves as the central repository for all build artifacts, ensuring they are stored in a secure and organized way.
    - It supports integration with various CI/CD tools like Jenkins to retrieve build artifacts and deploy them across different environments.
-
-
-
 
 ### **Configuring Ansible For Jenkins Deployment**
 
@@ -327,9 +346,6 @@ In previous projects, you have been launching Ansible commands manually from a C
 
 ### Step 9: **Created the Pipeline**
    - After selecting the repository, I clicked on **Create Pipeline**, and Jenkins automatically set up the pipeline with my chosen GitHub repository.
-
-
-
 
 ### **Create a Directory for the Jenkinsfile**
 1. Inside my Ansible project folder, I created a new directory called `deploy`:
@@ -394,7 +410,7 @@ To experience the effect of the **Jenkinsfile** setup, I triggered a build in Je
 ![Creating the React App](./self_study/images/ge.png)
 
 
-### *8Using the Blue Ocean Interface**
+### **Using the Blue Ocean Interface**
 I opened the **Blue Ocean** interface in Jenkins, selected my project, and clicked the play button next to the branch to trigger a build. The multibranch nature of the pipeline allowed Jenkins to scan all branches in the repository, making it easy to build each branch from the Blue Ocean interface.
 
 ### Create a New Branch
@@ -479,4 +495,128 @@ stage('Clean up') {
 ```
 
 After committing and pushing these changes, I confirmed that all stages ran successfully in the Blue Ocean interface.
+
+![Creating the React App](./self_study/images/de.png)
+
+I merged the feature branch into the main branch, completed the pipeline, and confirmed that the main branch has a successful pipeline with all stages visible in Blue Ocean.
+
+![Creating the React App](./self_study/images/see.png)
+
+### **Running Ansible Playbook from Jenkins**
+
+### **Steps for Setting Up Ansible on Jenkins**
+### **I Installed Ansible on Jenkins**
+
+1. **Installed Ansible on Jenkins Server (Ubuntu)**  
+   I successfully installed Ansible on the Jenkins server using the following steps:  
+   - Updated the system:  
+     ```bash
+     sudo apt update && sudo apt upgrade -y
+     ```
+   - Installed Ansible:  
+     ```bash
+     sudo apt install ansible -y
+     ```
+   - Verified the installation:  
+     ```bash
+     ansible --version
+     ```
+   ![Ansible Installed](./self_study/images/rre.png)
+
+2. **Installed the Ansible Plugin in Jenkins UI**  
+   - **Installed the Ansible Plugin**:  
+     - Navigated to **Dashboard > Manage Jenkins > Manage Plugins > Available Plugins**.  
+     - Installed the **Ansible Plugin** and restarted Jenkins.  
+     ![Ansible Plugin Installed](./self_study/images/ha.png)
+   
+   - **Configured Ansible in Global Tool Configuration**:  
+     - Navigated to **Dashboard > Manage Jenkins > Global Tool Configuration**.  
+     - Added a new Ansible tool by clicking **Add Ansible**.  
+     - Entered the name and path retrieved from the `which ansible` command into the configuration.  
+   
+      ![Ansible Plugin Installed](./self_study/images/fre.png)
+
+3. **Created a Fresh Jenkinsfile**  
+   - Deleted any pre-existing `Jenkinsfile` configurations.  
+   - Created a new pipeline script for running Ansible playbooks with parameterized deployments.  
+   ![Jenkinsfile Created](./self_study/images/jenkinsfile_created.png)  
+
+This completed the Ansible integration with Jenkins. The environment is ready for automated deployments!
+You can refer to this [video guide](#) for detailed instructions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### **Important Notes**
+- Ensure Ansible runs successfully on the **Dev environment** before extending configurations to other environments.  
+- Export the `ANSIBLE_CONFIG` environment variable to specify the location of the `.ansible.cfg` file, which contains crucial deployment configurations.
+
+### **Common Errors and Solutions**
+
+#### 1. **Incorrect SCM Branch Checkout**
+   - Ensure the `Jenkinsfile` checks out the correct SCM branch (e.g., `main` instead of `master` if the master branch has been deprecated).  
+   - GitHub no longer defaults to `master` as the primary branch. Learn more [here](#).
+
+#### 2. **Environment Variables Configuration**
+   - Make sure the `ansible.cfg` file is exported as an environment variable so Ansible can locate required roles and configurations.  
+   - When using multiple branches, dynamically update the `roles_path` with tools like **sed** to avoid branch-specific conflicts.
+
+#### 3. **Outdated Jenkins Workspace**
+   - If Jenkins fails after pushing changes to Git, the workspace may be outdated.  
+     - Add a `clean up` step in the pipeline to remove old files from the workspace.  
+     - This ensures the latest code is fetched and used for builds.
+
+#### 4. **Branch Mismatch**
+   - Verify the branch specified in the `Jenkinsfile` matches the intended branch.  
+   - Use `git branch` on the Jenkins server to confirm the active branch.
+
+---
+
+### **Deployment Beyond the Dev Environment**
+If the deployment to Dev is successful, consider the following options for other environments:  
+- **Manual Updates**: Update the `Jenkinsfile` manually for each environment (e.g., **SIT**, **UAT**, **Pentest**).  
+- **Dedicated Git Branches**: Use a dedicated branch for each environment with hardcoded inventory configurations.
+
+---
+
+### **Parameterizing Deployments**
+Avoid manual updates by parameterizing deployments in the `Jenkinsfile`.  
+- This approach allows you to dynamically set configurations for the target environment.  
+- Parameterized deployments streamline the process and reduce human error.
+
+By following these steps, you can efficiently manage and scale your deployment processes using Ansible and Jenkins.
+
+
+
 
