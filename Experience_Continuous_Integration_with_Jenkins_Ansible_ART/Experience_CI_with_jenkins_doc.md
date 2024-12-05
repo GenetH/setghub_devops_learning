@@ -313,41 +313,41 @@ pentest-tooling
 
 In previous projects, you have been launching Ansible commands manually from a CLI. Now, with Jenkins, we will start running Ansible from Jenkins UI.
 
-### Step 1: Navigated to Jenkins URL
+**Step 1: Navigated to Jenkins URL**
    - I opened my browser and went to the Jenkins URL.
 
-### Step 2: Installed & Opened Blue Ocean Jenkins Plugin
+**Step 2: Installed & Opened Blue Ocean Jenkins Plugin**
    - I went to **Manage Jenkins**, clicked on **Manage Plugins**, and installed the **Blue Ocean** plugin.
    - After installation, I opened **Blue Ocean** from the Jenkins dashboard, which gave me a simplified interface for pipeline creation.
 
    ![Creating the React App](./self_study/images/a.png)
 
-### Step 3: Created a New Pipeline
+**Step 3: Created a New Pipeline**
    - In **Blue Ocean**, I clicked on **New Pipeline** to begin the pipeline creation process.
 
-### Step 4: Selected GitHub for Code Repository
+**Step 4: Selected GitHub for Code Repository**
    - When prompted to select the repository location, I chose **GitHub**.
    - Jenkins asked me to connect to my GitHub account, which I proceeded to do.
 
-### Step 5: Connected Jenkins with GitHub
+**Step 5: Connected Jenkins with GitHub**
    - Jenkins required an **access token** to authenticate with GitHub.
    - I logged into GitHub, went to **Settings → Developer settings → Personal access tokens**, and generated a new token with the necessary permissions (`repo`).
    - I copied the generated token and pasted it into Jenkins.
 
-### Step 6: Logged into GitHub & Generated an Access Token
+**Step 6: Logged into GitHub & Generated an Access Token**
    - I successfully generated the access token on GitHub and returned to Jenkins to paste it into the **Connect to GitHub** section.
    ![Creating the React App](./self_study/images/c.png)
 
-### Step 7: Pasted the Token and Connected
+**Step 7: Pasted the Token and Connected**
    - After pasting the token, I clicked **Connect** to successfully link Jenkins with my GitHub account.
 
-### Step 8: Chosen the Repository for the Pipeline
+**Step 8: Chosen the Repository for the Pipeline**
    - In Jenkins, I searched for my repository (e.g., `ansible-project`) and selected it.
 
 **Step 9: Created the Pipeline**
    - After selecting the repository, I clicked on **Create Pipeline**, and Jenkins automatically set up the pipeline with my chosen GitHub repository.
 
-### *Create a Directory for the Jenkinsfile**
+### **Create a Directory for the Jenkinsfile**
 1. Inside my Ansible project folder, I created a new directory called `deploy`:
    ```bash
    mkdir deploy
@@ -504,8 +504,7 @@ I merged the feature branch into the main branch, completed the pipeline, and co
 
 ### **Running Ansible Playbook from Jenkins**
 
-### **Steps for Setting Up Ansible on Jenkins**
-### **I Installed Ansible on Jenkins**
+**Installe Ansible on Jenkins**
 
 1. **Installed Ansible on Jenkins Server (Ubuntu)**  
    I successfully installed Ansible on the Jenkins server using the following steps:  
@@ -539,8 +538,73 @@ I merged the feature branch into the main branch, completed the pipeline, and co
 3. **Created a Fresh Jenkinsfile**  
    - Deleted any pre-existing `Jenkinsfile` configurations.  
    - Created a new pipeline script for running Ansible playbooks with parameterized deployments.  
-   ![Jenkinsfile Created](./self_study/images/jenkinsfile_created.png)  
+```groovy
+pipeline {
+    agent any
 
+    environment {
+        ANSIBLE_CONFIG = "${WORKSPACE}/deploy/ansible.cfg"
+    }
+
+    stages {
+        stage('Initial cleanup') {
+            steps {
+                dir("${WORKSPACE}") {
+                    deleteDir() // Clean up the workspace
+                }
+            }
+        }
+
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'main', url: 'https://github.com/GenetH/ansible-config-mgt.git'
+            }
+        }
+
+        stage('Prepare Ansible For Execution') {
+            steps {
+                script {
+                    def cfgPath = "${WORKSPACE}/deploy/ansible.cfg"
+                    sh """
+                    if ! grep -q 'roles_path=${WORKSPACE}/roles' ${cfgPath}; then
+                        echo 'roles_path=${WORKSPACE}/roles' >> ${cfgPath}
+                    fi
+                    """
+                }
+            }
+        }
+
+        stage('Test SSH Connection') {
+            steps {
+                sshagent(['private-key']) { 
+                    sh 'ssh -o StrictHostKeyChecking=no -i /home/ubuntu/.ssh/id_rsa.pem ubuntu@172.31.42.10 exit'
+                }
+            }
+        }
+
+        stage('Run Ansible playbook') {
+            steps {
+                sshagent(['private-key']) { 
+                    ansiblePlaybook(
+                        become: true,
+                        credentialsId: 'private-key', // Replace with your Jenkins credential ID
+                        disableHostKeyChecking: true,
+                        installation: 'ansible',
+                        inventory: "${WORKSPACE}/inventory/dev.yml",
+                        playbook: "${WORKSPACE}/playbooks/site.yml"
+                    )
+                }
+            }
+        }
+
+        stage('Clean Workspace after build') {
+            steps {
+                cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenUnstable: true, deleteDirs: true)
+            }
+        }
+    }
+}
+```
 This completed the Ansible integration with Jenkins. The environment is ready for automated deployments!
 You can refer to this [video guide](#) for detailed instructions.
 
