@@ -344,7 +344,7 @@ In previous projects, you have been launching Ansible commands manually from a C
 ### Step 8: Chosen the Repository for the Pipeline
    - In Jenkins, I searched for my repository (e.g., `ansible-project`) and selected it.
 
-### Step 9: Created the Pipeline
+**Step 9: Created the Pipeline**
    - After selecting the repository, I clicked on **Create Pipeline**, and Jenkins automatically set up the pipeline with my chosen GitHub repository.
 
 ### *Create a Directory for the Jenkinsfile**
