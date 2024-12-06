@@ -45,8 +45,6 @@ In software engineering, Continuous Integration is the practice of merging all d
 **Deploy an Artifact from CI**  
    CI produces artifacts (e.g., built code or deployable packages) that can be manually deployed to users as part of **Continuous Delivery (CD)**. If deployment is automated, it moves into **Continuous Deployment**, making the process fully hands-off.
 
----
-
 ### Continuous Integration in the Real World
 
 ![Creating the React App](./self_study/images/SS.png)
@@ -68,6 +66,7 @@ In software engineering, Continuous Integration is the practice of merging all d
 
 **Common Best Practices of CI/CD**  
 
+  Principles that define a reliable and robust CI/CD pipeline:
 - Maintain a code repository  
 - Automate the build process  
 - Make builds self-tested  
@@ -107,9 +106,9 @@ As part of ongoing infrastructure development using **Ansible** (from **Project 
 
 ![Creating the React App](./self_study/images/sr.png)
 
-### **CI/CD Pipeline for a TODO PHP WebApp**
+**CI/CD Pipeline for a TODO PHP WebApp**
 
-#### **Pipeline Workflow**
+**Pipeline Workflow**
 1. **Code Commit & Push**  
    - Developers push their code to a Git repository.
 
@@ -138,8 +137,6 @@ As part of ongoing infrastructure development using **Ansible** (from **Project 
 
 9. **Production Release**  
    - After successful testing, the application is released to the production environment.
-
----
 
 #### **Legend for Tools in the Workflow**
 - **Git**: Code repository for managing versions.  
@@ -383,13 +380,11 @@ I added the following basic pipeline code:
    ```
 ![Creating the React App](./self_study/images/f.png)
 
-
 ### **Configure the Ansible Project in Jenkins**
 1. I opened Jenkins in my web browser.
 2. From the **Dashboard**, I selected my Ansible project (e.g., `ansible-project`).
 3. Then, I clicked on **Configure** in the left-hand menu.
 ![Creating the React App](./self_study/images/s.png)
----
 
 ### **Configure the Pipeline in Jenkins**
 1. Under the **Pipeline** section in the project configuration, I set the pipeline to use the `Jenkinsfile`:
@@ -402,7 +397,6 @@ I added the following basic pipeline code:
      ```
    ![Creating the React App](./self_study/images/r.png)
    - I saved the configuration.
-
 
 ### **Triggering a Build**
 To experience the effect of the **Jenkinsfile** setup, I triggered a build in Jenkins. By reviewing the console output, I was able to confirm the pipeline execution for the branch.
@@ -757,6 +751,8 @@ ansiblePlaybook(
     credentialsId: 'private-key'
 )
 ```
+![Creating the React App](./self_study/images/tag.png)
+
 ---
 
 ### CI/CD Pipeline for TODO Application
@@ -770,28 +766,30 @@ Our goal is to deploy the application directly from **Artifactory** instead of *
 ### Phase 1 - Prepare Jenkins
 
 1. **Fork the Repository**  
-   Fork the following repository to your GitHub account:  
+   I successfully forked the repository below into my GitHub account:
    ```plaintext
    https://github.com/StegTechHub/php-todo.git
    ```
    ![Creating the React App](./self_study/images/baa.png)
 
 2. **Install PHP and Composer Tool on Jenkins Server**  
-   Install PHP dependencies and the Composer tool manually or via automation (later update Ansible accordingly):  
+   I installed PHP dependencies and the Composer tool manually or via automation (later update Ansible accordingly):  
    ```bash
    sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mbstring,mysql,zip}
    ```
    ![Creating the React App](./self_study/images/ya.png)
-   
+
 3. **Install Jenkins Plugins**  
    - **Plot Plugin**: For visualizing test reports and code coverage.  
    - **Artifactory Plugin**: For uploading code artifacts to Artifactory servers.
+   ![Creating the React App](./self_study/images/pa.png)
 
 4. **Configure Artifactory in Jenkins**  
    Navigate to the Jenkins UI and configure Artifactory:
    - Go to **Configure System** under **System Configuration**.
    - Set the server **ID**, **URL**, and **credentials**.  
    - Click on **Test Connection** to verify settings.
+   ![Creating the React App](./self_study/images/yb.png)
 
 ---
 
