@@ -608,87 +608,62 @@ pipeline {
 This completed the Ansible integration with Jenkins. The environment is ready for automated deployments!
 You can refer to this [video guide](#) for detailed instructions.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### **Important Notes**
 - Ensure Ansible runs successfully on the **Dev environment** before extending configurations to other environments.  
 - Export the `ANSIBLE_CONFIG` environment variable to specify the location of the `.ansible.cfg` file, which contains crucial deployment configurations.
 
-### **Common Errors and Solutions**
+### **Possible Errors to Watch Out For:**
 
-#### 1. **Incorrect SCM Branch Checkout**
-   - Ensure the `Jenkinsfile` checks out the correct SCM branch (e.g., `main` instead of `master` if the master branch has been deprecated).  
-   - GitHub no longer defaults to `master` as the primary branch. Learn more [here](#).
+1. **SCM Branch Checking**:
+   - Ensure that the `git` module in `Jenkinsfile` checks out the **main** branch instead of **master**.  
+   - GitHub discontinued the use of **master** as the default branch. Update your SCM configuration accordingly.
+   - [Learn more here](https://github.com/github/renaming).
 
-#### 2. **Environment Variables Configuration**
-   - Make sure the `ansible.cfg` file is exported as an environment variable so Ansible can locate required roles and configurations.  
-   - When using multiple branches, dynamically update the `roles_path` with tools like **sed** to avoid branch-specific conflicts.
+2. **Export `ANSIBLE_CONFIG` Environment Variable**:
+   - Jenkins needs to export the `ANSIBLE_CONFIG` environment variable to locate your `ansible.cfg` file.
+   - Place your `ansible.cfg` in the **deploy** directory to keep deployment-related files organized.
+   - Use the **Pipeline Syntax** tool in Ansible to generate syntax for setting environment variables dynamically.  
+   - [Learn about Pipeline Syntax for Jenkins here](https://wiki.jenkins.io/display/JENKINS/Building+a+software+project).
 
-#### 3. **Outdated Jenkins Workspace**
-   - If Jenkins fails after pushing changes to Git, the workspace may be outdated.  
-     - Add a `clean up` step in the pipeline to remove old files from the workspace.  
-     - This ensures the latest code is fetched and used for builds.
+### **Possible Issues to Watch Out for When Implementing This:**
 
-#### 4. **Branch Mismatch**
-   - Verify the branch specified in the `Jenkinsfile` matches the intended branch.  
-   - Use `git branch` on the Jenkins server to confirm the active branch.
+1. **Dynamic Role Paths**:
+   - The location of `roles_path` may vary based on the branch Jenkins runs on. Dynamically update the `roles_path` in `ansible.cfg` for each execution.
+   - Use Linux Stream Editor (`sed`) to add the appropriate `roles_path` at runtime.
 
----
+2. **Changes Not Reflected**:
+   - If Jenkins fails due to missing changes:
+     - Always clean up the workspace (`deleteDir()`) before running a new build.
+     - Confirm the workspace reflects the expected files using `ls` or Git commands in the workspace directory.
 
-### **Deployment Beyond the Dev Environment**
-If the deployment to Dev is successful, consider the following options for other environments:  
-- **Manual Updates**: Update the `Jenkinsfile` manually for each environment (e.g., **SIT**, **UAT**, **Pentest**).  
-- **Dedicated Git Branches**: Use a dedicated branch for each environment with hardcoded inventory configurations.
+3. **Branch Mismatch**:
+   - Verify the branch being checked out matches the branch the pipeline expects.  
+   - Login to the Jenkins box and confirm the current branch with `git branch`.
 
----
-
-### **Parameterizing Deployments**
-Avoid manual updates by parameterizing deployments in the `Jenkinsfile`.  
-- This approach allows you to dynamically set configurations for the target environment.  
-- Parameterized deployments streamline the process and reduce human error.
-
-By following these steps, you can efficiently manage and scale your deployment processes using Ansible and Jenkins.
+### **Best Practices for Multiple Environments:**
+- Avoid manually updating `Jenkinsfile` for environments like `sit`, `uat`, or `prod`.
+- Use Jenkins pipeline parameters to dynamically select the environment.
 
 
+Updated `inventory/dev.yml` File:
 
+![Creating the React App](./self_study/images/ta.png)
 
+Updated `playbook/site.yml` File:
 
+![Creating the React App](./self_study/images/tb.png)
 
-Certainly! Here's the updated section with the title added:
+Updated ansible.cfg File:
 
----
+![Creating the React App](./self_study/images/tc.png)
+
+After fixing the files and resolving the errors, the pipeline executed successfully, as shown in the screenshot below:
+
+![Creating the React App](./self_study/images/ma.png)
+![Creating the React App](./self_study/images/mb.png)
+![Creating the React App](./self_study/images/mc.png)
+![Creating the React App](./self_study/images/md.png)
+
 
 ## **Parameterizing `Jenkinsfile` For Ansible Deployment**
 
@@ -713,6 +688,7 @@ ansible_python_interpreter=/usr/bin/python
 [db]
 <SIT-DB-Server-Private-IP-Address>
 ```
+![Creating the React App](./self_study/images/ba.png)
 
 ---
 
@@ -725,21 +701,16 @@ pipeline {
     agent any
 
     parameters {
-        string(
-            name: 'inventory',
-            defaultValue: 'dev',
-            description: 'This is the inventory file for the environment to deploy configuration'
-        )
+      string(name: 'inventory', defaultValue: 'dev',  description: 'This is the inventory file for the environment to deploy configuration')
     }
+...
+```
 
-    stages {
-        stage('Checkout SCM') {
-            steps {
-                git branch: 'main', url: 'https://github.com/GenetH/ansible-config-mgt.git'
-            }
-        }
+### **Step 3: Use the Parameterized Inventory**
 
-        stage('Run Ansible Playbook') {
+I replaced the hardcoded inventory path `inventory/dev.yml` in the `Run Ansible Playbook` stage with the parameterized inventory file `${inventory}`. This allows the user to specify the environment at runtime.
+```
+ stage('Run Ansible Playbook') {
             steps {
                 sshagent(['private-key']) {
                     ansiblePlaybook(
@@ -751,15 +722,9 @@ pipeline {
                 }
             }
         }
-    }
-}
+...
 ```
-
----
-
-### **Step 3: Use the Parameterized Inventory**
-
-I replaced the hardcoded inventory path `inventory/dev.yml` in the `Run Ansible Playbook` stage with the parameterized inventory file `${inventory}`. This allows the user to specify the environment at runtime.
+![Creating the React App](./self_study/images/bb.png)
 
 ---
 
@@ -768,14 +733,8 @@ I replaced the hardcoded inventory path `inventory/dev.yml` in the `Run Ansible 
 1. Navigate to your Jenkins project and click on **Build with Parameters**.
 2. You will see a prompt for the `inventory` parameter. Provide the desired environment, e.g., `sit`, and click **Run**.
 
-Example:
+![Creating the React App](./self_study/images/bc.png)
 
-- Input `sit` into the field for the inventory parameter:
-   ![Input SIT Environment](./input-example.png)
-
-- Run the job, and Jenkins will use the inventory file `inventory/sit.yml`.
-
----
 
 ### **Step 5: Add Another Parameter for Tags**
 
@@ -783,11 +742,7 @@ To run specific tasks using Ansible tags, enhance the `Jenkinsfile` as follows:
 
 ```groovy
 parameters {
-    string(
-        name: 'tags',
-        defaultValue: '',
-        description: 'Ansible tags to run specific tasks'
-    )
+    string(name: 'tags', defaultValue: '', description: 'Ansible tags to run specific tasks')
 }
 ```
 
@@ -802,7 +757,52 @@ ansiblePlaybook(
     credentialsId: 'private-key'
 )
 ```
+---
+
+### CI/CD Pipeline for TODO Application
+
+We already have the **tooling** website deployed through Ansible. Now, we introduce another PHP application to expand our managed infrastructure. This application includes unit tests, making it an ideal candidate for demonstrating an end-to-end CI/CD pipeline.
+
+Our goal is to deploy the application directly from **Artifactory** instead of **git**. If your Ansible setup lacks an Artifactory role, you can create one using [this guide](https://www.jfrog.com/confluence/display/RTF/Installing+and+Configuring+Artifactory).
 
 ---
 
-This approach allows for flexibility in deploying configurations across multiple environments and specific roles or tasks using parameters in the Jenkins pipeline.
+### Phase 1 - Prepare Jenkins
+
+1. **Fork the Repository**  
+   Fork the following repository to your GitHub account:  
+   ```plaintext
+   https://github.com/StegTechHub/php-todo.git
+   ```
+   ![Creating the React App](./self_study/images/baa.png)
+
+2. **Install PHP and Composer Tool on Jenkins Server**  
+   Install PHP dependencies and the Composer tool manually or via automation (later update Ansible accordingly):  
+   ```bash
+   sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mbstring,mysql,zip}
+   ```
+   ![Creating the React App](./self_study/images/ya.png)
+   
+3. **Install Jenkins Plugins**  
+   - **Plot Plugin**: For visualizing test reports and code coverage.  
+   - **Artifactory Plugin**: For uploading code artifacts to Artifactory servers.
+
+4. **Configure Artifactory in Jenkins**  
+   Navigate to the Jenkins UI and configure Artifactory:
+   - Go to **Configure System** under **System Configuration**.
+   - Set the server **ID**, **URL**, and **credentials**.  
+   - Click on **Test Connection** to verify settings.
+
+---
+
+### Jenkins UI Configuration Steps:
+
+#### **System Configuration**  
+1. Open **Jenkins Dashboard** → **Manage Jenkins** → **Configure System**.  
+2. Scroll to the **JFrog Artifactory Servers** section and click **Add Artifactory Server**.  
+
+#### **Artifactory Configuration**  
+- **Server ID**: Enter a unique identifier (e.g., `artifactory-server`).  
+- **URL**: Provide the Artifactory server URL (e.g., `http://35.183.249.202/artifactory`).  
+- **Credentials**: Add Jenkins credentials for authenticating Artifactory.  
+- Test the connection by clicking **Test Connection**.
