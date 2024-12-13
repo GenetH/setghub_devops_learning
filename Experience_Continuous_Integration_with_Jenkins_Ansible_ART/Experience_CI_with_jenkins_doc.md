@@ -820,15 +820,27 @@ I followed these steps to create an account and set up a repository in **Artifac
 - Using **Blue Ocean**, I created a multibranch Jenkins pipeline to manage branches automatically and integrate the repository with Jenkins.
 
 #### **3: Configure Database**
-On the database server, I created a database and user with appropriate privileges:
+
+- In jenkins server installed `mysql client`:
+
+- Update mysql role in `roles/mysql/vars/main.yml`:
+  
+ ![Creating the React App](./self_study/images/sdd.png)
+
+- Run ansible with jenkins to create the database:
+  ![Creating the React App](./self_study/images/qa.png)
+  ![Creating the React App](./self_study/images/qb.png)
+
+- On the database server, I created a database and user with appropriate privileges:
 
 ```sql
 CREATE DATABASE homestead;
 CREATE USER 'homestead'@'%' IDENTIFIED BY 'sePret^i';
 GRANT ALL PRIVILEGES ON *.* TO 'homestead'@'%';
 ```
+- Verified that database has been created:
 
----
+![Creating the React App](./self_study/images/ja.png)
 
 #### **4. Update Database Connectivity**
 - I updated the database connectivity requirements in the `.env.sample` file and renamed it to `.env` to match Laravel's configuration requirements.
@@ -1600,10 +1612,6 @@ stage ('Deploy to Production Environment') {
     }
 }
 ```
-
-- **Execution Example**: Successful deployment across environments using the pipeline script.  
-
-
 #### **4. Optional - Experience Pentesting in Pentest Environment**
 - **Configure Wireshark**:  
   Explore pentesting by configuring **Wireshark** in the pentest environment. This is purely for gaining insights into network packet analysis and penetration testing concepts.  
