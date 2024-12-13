@@ -18,10 +18,6 @@
 
 ---
 
-Here’s the text from the uploaded image transcribed for you:
-
----
-
 ### What is Continuous Integration?
 
 In software engineering, Continuous Integration (CI) is a practice of merging all developers’ working copies to a shared mainline (e.g., Git Repository or some other version control system) several times per day. Frequent merges reduce chances of any conflicts in code and allow to run tests more often to avoid massive rework if something goes wrong. This principle can be formulated as **Commit early, push often**.
@@ -1113,13 +1109,13 @@ sudo apt-get upgrade
      sudo apt-get -y install postgresql postgresql-contrib
      ```
 
-4. **Start PostgreSQL Database Server**:
+4. **Started PostgreSQL Database Server**:
    - I started the PostgreSQL service using this command:
      ```bash
      sudo systemctl start postgresql
      ```
 
-5. **Change the Password for Default `postgres` User**:
+5. **Changed the Password for Default `postgres` User**:
    - I changed the password for the default PostgreSQL `postgres` user:
      ```bash
      sudo passwd postgres
