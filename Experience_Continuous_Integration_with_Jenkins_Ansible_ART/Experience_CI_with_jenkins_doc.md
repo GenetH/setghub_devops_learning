@@ -1528,11 +1528,15 @@ stage('SonarQube Quality Gate') {
 ```
 ![Creating the React App](./self_study/images/qg.png)
 
+To test, create different branches and push to GitHub. You will realise that only branches other than `develop`, `hotfix`, `release`, `main`, or master will be able to deploy the code.
+
+![Creating the React App](./self_study/images/nostep.png)
+
+Notice that with the current state of the code, it cannot be deployed to integration environments due to its quality. In the real world, DevOps engineers will push this back to developers to work on the code further, based on the SonarQube quality report. Once everything meets the required code quality, the pipeline will pass and proceed with shipping the code to higher environments.
+
 If everything works, SonarQube will show a webhook entry for Jenkins under **Administration > Configuration > Webhooks**. 
 
 ![Creating the React App](./self_study/images/done.png)
-
-
 
 ### **Complete the following tasks to finish Project 14**
 
