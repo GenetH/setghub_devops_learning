@@ -18,14 +18,17 @@
 
 ---
 
-### **What is Continuous Integration?**
-In software engineering, Continuous Integration is the practice of merging all developers' working copies to a shared mainline (e.g., a Git repository) several times daily. This practice minimizes conflicts, facilitates frequent testing, and promotes early detection of issues. It follows the principle of **“Commit early, push often.”**
-
-#### **Avoiding Merge Hell**
-- Continuous Integration helps prevent **Merge Hell** or **Integration Hell**, which occurs when developers delay merging their branches with the mainline for extended periods. The further a branch drifts from the mainline, the more likely it is to have conflicts during integration.
-- Regular commits and pushes to the mainline mitigate this issue, ensuring smooth collaboration.
+Here’s the text from the uploaded image transcribed for you:
 
 ---
+
+### What is Continuous Integration?
+
+In software engineering, Continuous Integration (CI) is a practice of merging all developers’ working copies to a shared mainline (e.g., Git Repository or some other version control system) several times per day. Frequent merges reduce chances of any conflicts in code and allow to run tests more often to avoid massive rework if something goes wrong. This principle can be formulated as **Commit early, push often**.
+
+The general idea behind multiple commits is to avoid what is generally considered as **Merge Hell** or **Integration hell**. When a new developer joins a new project, he or she must create a copy of the main codebase by starting a new feature branch from the **mainline** to develop his own features (in some organization or team, this could be called a **develop**, **main**, or **master** branch). If there are tens of developers working on the same project, they will all have their own branches created from **mainline** at different points in time. Once they make a copy of the repository it starts drifting away from the mainline with every new merge of other developers’ codes. If this lingers on for a very long time without reconciling the code, then this will cause a lot of code conflict or **Merge Hell**, as rightly said. Imagine such a **hell** from tens of developers or worse, hundreds. 
+
+So, the best thing to do is to continuously commit & push your code to the **mainline**. As many times as tens times per day. With this practice, you can avoid **Merge Hell** or **Integration hell**.
 
 ### **CI Workflow**
 **Run Tests Locally**  
