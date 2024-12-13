@@ -1619,8 +1619,6 @@ stage ('Deploy to Production Environment') {
 #### **4. Optional - Experience Pentesting in Pentest Environment**
 - **Configure Wireshark**:  
   Explore pentesting by configuring **Wireshark** in the pentest environment. This is purely for gaining insights into network packet analysis and penetration testing concepts.  
-  👉 Watch the **[Wireshark Tutorial here](https://github.com/melkamu372/StegHub-DevOps-Cloud-Engineering/assets/47281626)**  
-
 #### **Ansible Role for Wireshark**:  
 You can use these Ansible roles for automated Wireshark setup:
 - **Ubuntu**: [ymajik/ansible-role-wireshark](https://github.com/ymajik/ansible-role-wireshark)
