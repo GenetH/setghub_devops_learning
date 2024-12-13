@@ -766,7 +766,7 @@ Our goal is to deploy the application directly from **Artifactory** instead of *
 ### Phase 1 - Prepare Jenkins
 
 1. **Fork the Repository**  
-   I successfully forked the repository below into my GitHub account:
+   I have already forked the repository into my GitHub account from [https://github.com/StegTechHub/php-todo.git](https://github.com/StegTechHub/php-todo.git).
    ```plaintext
    https://github.com/StegTechHub/php-todo.git
    ```
@@ -780,27 +780,108 @@ Our goal is to deploy the application directly from **Artifactory** instead of *
    ![Creating the React App](./self_study/images/ya.png)
 
 3. **Install Jenkins Plugins**  
-   - **Plot Plugin**: For visualizing test reports and code coverage.  
+   I have successfully installed the required Jenkins plugins:
+   - **Plot Plugin**: For visualizing test reports and code coverage. 
+   ![Creating the React App](./self_study/images/pa.png) 
    - **Artifactory Plugin**: For uploading code artifacts to Artifactory servers.
-   ![Creating the React App](./self_study/images/pa.png)
+   ![Creating the React App](./self_study/images/yb.pnga.png)
 
 4. **Configure Artifactory in Jenkins**  
-   Navigate to the Jenkins UI and configure Artifactory:
-   - Go to **Configure System** under **System Configuration**.
-   - Set the server **ID**, **URL**, and **credentials**.  
-   - Click on **Test Connection** to verify settings.
-   ![Creating the React App](./self_study/images/yb.png)
+   In the Jenkins UI:
+   - I navigated to `Manage Jenkins > Configure System`.
+   - Under the **JFrog** section:
+   - Set up the **Server ID**, **Artifactory URL**, and **Credentials**.
+   - Ran the **Test Connection**, and it was successful.
+
+   ![Creating the React App](./self_study/images/ybb.png)
 
 ---
 
-### Jenkins UI Configuration Steps:
+### Phase 2 - Integrate Artifactory Repository with Jenkins
 
-#### **System Configuration**  
-1. Open **Jenkins Dashboard** → **Manage Jenkins** → **Configure System**.  
-2. Scroll to the **JFrog Artifactory Servers** section and click **Add Artifactory Server**.  
+#### **1: Create a Dummy Jenkinsfile**
+- I created a dummy `Jenkinsfile` in the repository to define the initial pipeline structure.
 
-#### **Artifactory Configuration**  
-- **Server ID**: Enter a unique identifier (e.g., `artifactory-server`).  
-- **URL**: Provide the Artifactory server URL (e.g., `http://35.183.249.202/artifactory`).  
-- **Credentials**: Add Jenkins credentials for authenticating Artifactory.  
-- Test the connection by clicking **Test Connection**.
+---
+
+#### **2: Set Up a Multibranch Jenkins Pipeline**
+- Using **Blue Ocean**, I created a multibranch Jenkins pipeline to manage branches automatically and integrate the repository with Jenkins.
+
+#### **3: Configure Database**
+On the database server, I created a database and user with appropriate privileges:
+
+```sql
+CREATE DATABASE homestead;
+CREATE USER 'homestead'@'%' IDENTIFIED BY 'sePret^i';
+GRANT ALL PRIVILEGES ON *.* TO 'homestead'@'%';
+```
+
+---
+
+#### **4: Update Database Connectivity**
+- I updated the database connectivity requirements in the `.env.sample` file and renamed it to `.env` to match Laravel's configuration requirements.
+
+![Creating the React App](./self_study/images/envf.png)
+
+#### **5: Update Jenkinsfile**
+I updated the `Jenkinsfile` with the proper pipeline configuration, as follows:
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage("Initial cleanup") {
+            steps {
+                dir("${WORKSPACE}") {
+                    deleteDir() // Clean up the workspace
+                }
+            }
+        }
+
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'main', url: 'https://github.com/StegTechHub/php-todo.git'
+            }
+        }
+
+        stage('Prepare Dependencies') {
+            steps {
+                sh 'mv .env.sample .env'
+                sh 'composer install'
+                sh 'php artisan migrate'
+                sh 'php artisan db:seed'
+                sh 'php artisan key:generate'
+            }
+        }
+    }
+}
+```
+![Creating the React App](./self_study/images/ki.png)
+
+---
+
+### Prepare Dependencies Section:
+1. **Renaming `.env.sample` to `.env`**:
+   - PHP requires the `.env` file to define environment-specific configurations.
+   
+2. **Install Dependencies with Composer**:
+   - Composer is used to install all required libraries for the PHP application.
+
+3. **Set Up Database Objects with `php artisan`**:
+   - The `.env` file is used by `php artisan` to configure the database objects.
+   - After running this step, logging into the database and executing `SHOW TABLES` displays the created tables.
+
+---
+
+#### **Adding Unit Tests to the Jenkinsfile**
+I updated the `Jenkinsfile` to include a unit testing stage:
+
+```groovy
+stage('Execute Unit Tests') {
+    steps {
+        sh './vendor/bin/phpunit'
+    }
+}
+```
+
