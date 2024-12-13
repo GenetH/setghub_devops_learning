@@ -1560,8 +1560,9 @@ Let me know if you'd like me to refine this further!
   ![Instance Setup](./self_study/images/connected.png) 
   ![Instance Setup](./self_study/images/slavecon.png) 
 
-- Repeat same steps for `slave_2`
-  ![Instance Setup](./self_study/images/salve4.png) 
+- Repeat same steps for `slave_2`:
+
+ ![Instance Setup](./self_study/images/salve4.png) 
 
 
 #### 2. **Configure Webhook Between Jenkins and GitHub**
