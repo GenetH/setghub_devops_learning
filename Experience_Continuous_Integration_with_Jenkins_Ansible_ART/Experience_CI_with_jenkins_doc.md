@@ -799,12 +799,12 @@ Our goal is to deploy the application directly from **Artifactory** instead of *
 
 ### Phase 2 - Integrate Artifactory Repository with Jenkins
 
-#### **1: Create a Dummy Jenkinsfile**
+#### **1. Create a Dummy Jenkinsfile**
 - I created a dummy `Jenkinsfile` in the repository to define the initial pipeline structure.
 
 ---
 
-#### **2: Set Up a Multibranch Jenkins Pipeline**
+#### **2. Set Up a Multibranch Jenkins Pipeline**
 - Using **Blue Ocean**, I created a multibranch Jenkins pipeline to manage branches automatically and integrate the repository with Jenkins.
 
 #### **3: Configure Database**
@@ -818,7 +818,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'homestead'@'%';
 
 ---
 
-#### **4: Update Database Connectivity**
+#### **4. Update Database Connectivity**
 - I updated the database connectivity requirements in the `.env.sample` file and renamed it to `.env` to match Laravel's configuration requirements.
 
 ![Creating the React App](./self_study/images/envf.png)
@@ -884,4 +884,200 @@ stage('Execute Unit Tests') {
     }
 }
 ```
+
+### Phase 3 - Code Quality Analysis
+
+This is one of the areas where developers, architects, and many stakeholders are mostly interested in as far as product development is concerned. As a DevOps engineer, you also have a role to play, especially when it comes to setting up the tools.
+
+For **PHP**, the most commonly used tool for code quality analysis is **phploc**. [Read the article here for more](https://phpqa.io/projects/phploc.html).
+
+The data produced by **phploc** can be plotted onto graphs in Jenkins.
+
+1. Added the code analysis step in `Jenkinsfile`. The output of the data will be saved in `build/logs/phploc.csv` file.
+
+```groovy
+stage('Code Analysis') {
+    steps {
+        sh 'phploc app/ --log-csv build/logs/phploc.csv'
+    }
+}
+```
+![Creating the React App](./self_study/images/woa.png)
+
+2. **Visualize Results with the Plot Plugin**
+   - Jenkins provides the **Plot Plugin** to visualize data such as **phploc** metrics. These plots can show variations across builds, helping to track trends in code quality metrics.
+   - Below is an example stage for setting up a plot configuration in Jenkins:
+![Creating the React App](./self_study/images/ftg.png)
+
+#### **How to Visualize in Jenkins**
+- After executing these stages, navigate to the **Plot** menu in the Jenkins UI to view the generated graphs.
+
+![Creating the React App](./self_study/images/pls.png)
+
+- The plotted data will represent various code quality metrics such as:
+  - Lines of Code (LOC)
+  - Average Method Length
+  - Cyclomatic Complexity
+  - Number of Methods
+
+![Creating the React App](./self_study/images/rere.png)
+
+3.**Bundle Application Code as Artifact**
+To ensure that the PHP application is packaged for deployment, we add a **Package Artifact** stage in the `Jenkinsfile`.
+
+```groovy
+stage('Package Artifact') {
+    steps {
+        sh 'zip -qr php-todo.zip ${WORKSPACE}/*'
+    }
+}
+```
+![Creating the React App](./self_study/images/fgf.png)
+
+- **Purpose**: This stage compresses the application code into a `.zip` file named `php-todo.zip`. This artifact will later be uploaded to Artifactory for version control and easy retrieval.
+- **Output**: A zipped file (`php-todo.zip`) is created, containing the entire workspace.
+
+---
+
+### **Step 4 - Upload Artifact to Artifactory**
+Once the artifact is created, it is uploaded to an Artifactory repository.
+
+```groovy
+stage('Upload Artifact to Artifactory') {
+    steps {
+        script {
+            def server = Artifactory.server 'artifactory-server'
+            def uploadSpec = """{
+                "files": [
+                    {
+                        "pattern": "php-todo.zip",
+                        "target": "<name-of-artifact-repository>/php-todo",
+                        "props": "type=zip;status=ready"
+                    }
+                ]
+            }"""
+            server.upload spec: uploadSpec
+        }
+    }
+}
+```
+![Creating the React App](./self_study/images/sty.png)
+
+- **Purpose**: This stage uses the Artifactory plugin to upload the zipped artifact (`php-todo.zip`) to a designated repository in Artifactory.
+- **Key Details**:
+  - `pattern`: Specifies the artifact to upload.
+  - `target`: The destination repository and path in Artifactory.
+  - `props`: Metadata properties for the artifact.
+
+### **Step 5 - Deploy the Application to the Dev Environment**
+
+Deployment to the development environment is executed by triggering an Ansible pipeline.
+
+```groovy
+stage('Deploy to Dev Environment') {
+    steps {
+        build job: 'ansible-project/main', 
+              parameters: [[
+                  $class: 'StringParameterValue', 
+                  name: 'env', 
+                  value: 'dev'
+              ]],
+              propagate: false, 
+              wait: true
+    }
+}
+```
+![Creating the React App](./self_study/images/deploytodev.png)
+
+
+The `build` job used in this step tells Jenkins to start another job. In this case, it is the `ansible-project` job, and we are targeting the `main` branch. Hence, we have `ansible-project/main`. Since the Ansible project requires parameters to be passed in, we have included this by specifying the `parameters` section. The name of the parameter is `env` and its value is `dev`. Meaning, deploy to the Development environment.
+
+But how are we certain that the code being deployed has the quality that meets corporate and customer requirements? Even though we have implemented **Unit Tests** and **Code Coverage** Analysis with `phpunit` and `phploc`, we still need to implement **Quality Gate** to ensure that ONLY code with the required code coverage, and other quality standards make it through to the environments.
+
+To achieve this, we need to configure **SonarQube** - An open-source platform developed by **SonarSource** for continuous inspection of code quality to perform automatic reviews with static analysis of code to detect bugs, code smells, and security vulnerabilities.
+
+---
+
+### SonarQube Installation
+
+#### **Before We Begin**
+Before we start getting hands-on with **SonarQube** configuration, it is incredibly important to understand a few key concepts:
+
+- **Software Quality**: The degree to which a software component, system, or process meets specified requirements based on user needs and expectations.
+- **Software Quality Gates**: Quality gates are acceptance criteria presented as predefined quality standards. These ensure that a software development project must meet the required quality to proceed to the next lifecycle stage.
+
+**SonarQube** is a tool used to create quality gates for software projects, ensuring only high-quality software code is shipped. Despite the fast delivery facilitated by the DevOps CI/CD pipeline, ensuring the quality of such delivery is equally important. Using **SonarQube**, we can set up **Quality Gates** to enforce these standards.
+
+---
+
+### Install SonarQube on Ubuntu 20.04 with PostgreSQL as the Backend Database
+
+#### **Step 1: Manual Installation Overview**
+Here’s a step-by-step guide for installing **SonarQube 7.9.3**:
+- Java must be installed as SonarQube is Java-based.
+- MySQL support is deprecated; PostgreSQL will be used.
+- Linux Kernel configuration changes are required for optimal performance, such as increasing `vm.max_map_count`, file descriptors, and `ulimit`.
+
+---
+
+### Tune Linux Kernel
+
+#### **Apply Temporary Changes**
+Run the following commands to apply session changes:
+```bash
+sudo sysctl -w vm.max_map_count=262144
+sudo sysctl -w fs.file-max=65536
+ulimit -n 65536
+ulimit -u 4096
+```
+
+#### **Make Changes Permanent**
+Edit the `/etc/security/limits.conf` file and append:
+```bash
+sonarqube   -   nofile   65536
+sonarqube   -   nproc    4096
+```
+
+---
+
+### **Update and Upgrade Packages**
+Run the following commands:
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+```
+
+---
+
+### Install Required Packages
+
+1. **Install `wget` and `unzip`:**
+   ```bash
+   sudo apt-get install wget unzip -y
+   ```
+
+2. **Install OpenJDK and Java Runtime Environment (JRE) 11:**
+   ```bash
+   sudo apt-get install openjdk-11-jdk -y
+   sudo apt-get install openjdk-11-jre -y
+   ```
+
+3. **Set the Default JDK:**
+   ```bash
+   sudo update-alternatives --config java
+   ```
+
+   Output Example:
+   ```
+   Selection    Path                                 Priority   Status
+   ---------------------------------------------------------------
+   0            /usr/lib/jvm/java-11-openjdk/bin/java 1111      auto mode
+   1            /usr/lib/jvm/java-11-openjdk/bin/java 1111      manual mode
+   2            /usr/lib/jvm/java-8-openjdk/bin/java  1081      manual mode
+   ```
+
+4. Select the required option to switch to OpenJDK 11. Verify the Java version:
+   ```bash
+   java -version
+   ```
 
