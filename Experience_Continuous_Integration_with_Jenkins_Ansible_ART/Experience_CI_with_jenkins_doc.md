@@ -340,6 +340,7 @@ In previous projects, you have been launching Ansible commands manually from a C
 
 **Step 7: Pasted the Token and Connected**
    - After pasting the token, I clicked **Connect** to successfully link Jenkins with my GitHub account.
+   ![Creating the React App](./self_study/images/b.png)
 
 **Step 8: Chosen the Repository for the Pipeline**
    - In Jenkins, I searched for my repository (e.g., `ansible-project`) and selected it.
@@ -763,6 +764,27 @@ ansiblePlaybook(
 We already have the **tooling** website deployed through Ansible. Now, we introduce another PHP application to expand our managed infrastructure. This application includes unit tests, making it an ideal candidate for demonstrating an end-to-end CI/CD pipeline.
 
 Our goal is to deploy the application directly from **Artifactory** instead of **git**. If your Ansible setup lacks an Artifactory role, you can create one using [this guide](https://www.jfrog.com/confluence/display/RTF/Installing+and+Configuring+Artifactory).
+
+
+Here’s the updated explanation, including that you followed these steps and plan to add screenshots:
+
+---
+
+### Steps to Create Artifactory Account and Repository
+
+I followed these steps to create an account and set up a repository in **Artifactory Cloud**:
+
+1. **Create an Artifactory Cloud Account**:
+   - I visited the **Artifactory Cloud** website ([jfrog.com](https://jfrog.com/start-free/)).
+   - Signed up by providing my email, organization name, and other necessary details.
+   - Confirmed my email and logged in to the newly created account.
+   ![Creating the React App](./self_study/images/af.png)
+  
+2. **Create a Repository in Artifactory**:
+   - After logging in, I navigated to the **"Repositories"** section.
+   - Clicked on **"Create Repository"** and selected the type of repository (e.g., Generic).
+   - Named the repository `Todo-dev-local`and saved the settings.
+    ![Creating the React App](./self_study/images/addd.png)
 
 ---
 
