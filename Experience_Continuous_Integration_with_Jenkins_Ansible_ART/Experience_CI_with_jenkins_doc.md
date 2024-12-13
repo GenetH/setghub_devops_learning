@@ -765,11 +765,6 @@ We already have the **tooling** website deployed through Ansible. Now, we introd
 
 Our goal is to deploy the application directly from **Artifactory** instead of **git**. If your Ansible setup lacks an Artifactory role, you can create one using [this guide](https://www.jfrog.com/confluence/display/RTF/Installing+and+Configuring+Artifactory).
 
-
-Here’s the updated explanation, including that you followed these steps and plan to add screenshots:
-
----
-
 ### Steps to Create Artifactory Account and Repository
 
 I followed these steps to create an account and set up a repository in **Artifactory Cloud**:
@@ -786,7 +781,6 @@ I followed these steps to create an account and set up a repository in **Artifac
    - Named the repository `Todo-dev-local`and saved the settings.
     ![Creating the React App](./self_study/images/addd.png)
 
----
 
 ### Phase 1 - Prepare Jenkins
 
@@ -820,14 +814,11 @@ I followed these steps to create an account and set up a repository in **Artifac
 
    ![Creating the React App](./self_study/images/ybb.png)
 
----
-
 ### Phase 2 - Integrate Artifactory Repository with Jenkins
 
 #### **1. Create a Dummy Jenkinsfile**
 - I created a dummy `Jenkinsfile` in the repository to define the initial pipeline structure.
 
----
 
 #### **2. Set Up a Multibranch Jenkins Pipeline**
 - Using **Blue Ocean**, I created a multibranch Jenkins pipeline to manage branches automatically and integrate the repository with Jenkins.
@@ -1106,3 +1097,540 @@ sudo apt-get upgrade
    java -version
    ```
 
+
+
+
+Here’s the updated explanation with the phrasing adjusted as you requested:
+
+---
+
+### **Steps to Install and Set Up PostgreSQL 10 Database for SonarQube**
+
+1. **Add PostgreSQL Repository**:
+   - I added the PostgreSQL repository to the `sources.list` using this command:
+     ```bash
+     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+     ```
+
+2. **Download PostgreSQL Software Key**:
+   - I downloaded and added the repository key with the following command:
+     ```bash
+     wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+     ```
+
+3. **Install PostgreSQL Database Server**:
+   - I installed PostgreSQL and its contrib package:
+     ```bash
+     sudo apt-get -y install postgresql postgresql-contrib
+     ```
+
+4. **Start PostgreSQL Database Server**:
+   - I started the PostgreSQL service using this command:
+     ```bash
+     sudo systemctl start postgresql
+     ```
+
+5. **Change the Password for Default `postgres` User**:
+   - I changed the password for the default PostgreSQL `postgres` user:
+     ```bash
+     sudo passwd postgres
+     ```
+
+6. **Switch to the PostgreSQL User**:
+   - I logged in as the `postgres` user:
+     ```bash
+     su - postgres
+     ```
+   ![Creating the React App](./self_study/images/pass.png)
+
+7. **Create a New User for SonarQube**:
+   - I created a new user named `sonar`:
+     ```bash
+     createuser sonar
+     ```
+
+8. **Switch to PostgreSQL Shell**:
+   - I entered the PostgreSQL command-line interface:
+     ```bash
+     psql
+     ```
+
+9. **Set a Password for the `sonar` User**:
+   - Inside the PostgreSQL shell, I set a password for the `sonar` user:
+     ```sql
+     ALTER USER sonar WITH ENCRYPTED password 'sonar';
+     ```
+
+10. **Create a New Database for SonarQube**:
+    - I created a database owned by the `sonar` user:
+      ```sql
+      CREATE DATABASE sonarqube OWNER sonar;
+      ```
+
+11. **Grant All Privileges to the `sonar` User**:
+    - I granted the `sonar` user all privileges on the `sonarqube` database:
+      ```sql
+      GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonar;
+      ```
+
+12. **Exit the PostgreSQL Shell**:
+    - I exited the PostgreSQL shell:
+      ```bash
+      \q
+      ```
+
+13. **Switch Back to the `sudo` User**:
+    - Finally, I switched back to the `sudo` user:
+      ```bash
+      exit
+      ```
+
+
+### Install and Configure SonarQube on Ubuntu 20.04 LTS
+
+---
+
+#### **Step 1: Download SonarQube**
+
+1. Navigate to the `/tmp` directory and download the SonarQube installation files:
+   ```bash
+   cd /tmp && sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.9.3.zip
+   ```
+
+2. Extract the archive setup to the `/opt` directory:
+   ```bash
+   sudo unzip sonarqube-7.9.3.zip -d /opt
+   ```
+
+3. Move the extracted setup to the `/opt/sonarqube` directory:
+   ```bash
+   sudo mv /opt/sonarqube-7.9.3 /opt/sonarqube
+   ```
+
+---
+
+#### **Step 2: Configure SonarQube**
+
+1. Create a dedicated group and user for SonarQube:
+   ```bash
+   sudo groupadd sonar
+   sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
+   sudo chown sonar:sonar /opt/sonarqube -R
+   ```
+
+2. Edit the SonarQube configuration file using your preferred editor (e.g., `vim` or `nano`):
+   ```bash
+   sudo vim /opt/sonarqube/conf/sonar.properties
+   ```
+
+3. In the configuration file:
+   - Uncomment and configure the PostgreSQL database properties:
+     ```properties
+     sonar.jdbc.username=sonar
+     sonar.jdbc.password=sonar
+     sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+     ```
+
+---
+
+#### **Step 3: Set Up the Script to Run SonarQube**
+
+1. Edit the `sonar.sh` script file to set the `RUN_AS_USER` variable:
+   ```bash
+   sudo nano /opt/sonarqube/bin/linux-x86-64/sonar.sh
+   ```
+
+2. In the file, find and update:
+   ```bash
+   RUN_AS_USER=sonar
+   ```
+
+---
+
+#### **Step 4: Start SonarQube**
+
+1. Switch to the `sonar` user:
+   ```bash
+   sudo su sonar
+   ```
+
+2. Navigate to the SonarQube script directory:
+   ```bash
+   cd /opt/sonarqube/bin/linux-x86-64/
+   ```
+
+3. Start SonarQube using the script:
+   ```bash
+   ./sonar.sh start
+   ```
+
+4. Check SonarQube status:
+   ```bash
+   ./sonar.sh status
+   ```
+
+---
+
+#### **Step 5: Verify SonarQube Logs**
+
+- To check logs for any errors or for confirming the server is running:
+  ```bash
+  tail /opt/sonarqube/logs/sonar.log
+  ```
+- Output
+![Creating the React App](./self_study/images/run.png)
+
+### Steps to Configure SonarQube as a systemd Service
+
+1. **Stop the Currently Running SonarQube Service**  
+   Navigate to the `SonarQube` bin directory and stop the service:
+   ```bash
+   cd /opt/sonarqube/bin/linux-x86-64/
+   ./sonar.sh stop
+   ```
+   ![Creating the React App](./self_study/images/rara.png)
+
+2. **Create a systemd Service File**  
+   I created a service file to manage SonarQube as a systemd service:
+   ```bash
+   sudo nano /etc/systemd/system/sonar.service
+   ```
+
+3. **Add the Configuration for SonarQube Service**  
+   Below is the configuration I used to define how systemd manages the SonarQube service:
+   ```ini
+   [Unit]
+   Description=SonarQube service
+   After=syslog.target network.target
+
+   [Service]
+   Type=forking
+   ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+   ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+
+   User=sonar
+   Group=sonar
+   Restart=always
+
+   LimitNOFILE=65536
+   LimitNPROC=4096
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+4. **Save the File and Enable the Service**  
+   Once the service file was created, I saved it and used the following commands to control the SonarQube service:
+   ```bash
+   sudo systemctl start sonar
+   sudo systemctl enable sonar
+   sudo systemctl status sonar
+   ```
+   ![Creating the React App](./self_study/images/faar.png)
+
+
+### Access SonarQube
+
+- I accessed **SonarQube** using a browser by typing the server's IP address followed by port `9000`.  
+  Example:  
+  ```
+  http://server_IP:9000 OR http://localhost:9000
+  ```
+
+- After opening the URL, I logged in using the **default administrator credentials**:  
+  ```
+  Username: admin  
+  Password: admin
+  ```
+  ![Creating the React App](./self_study/images/soad.png)
+
+- Once I successfully logged in, I was able to see the SonarQube dashboard, where I can manage projects, analyze code, and set up **Quality Gates**.
+
+ ![Creating the React App](./self_study/images/asonar.png)
+
+
+
+
+ ### Configure SonarQube and Jenkins for Quality Gate Integration
+
+I followed these steps to successfully configure SonarQube and Jenkins for Quality Gate:
+
+1. **Installed the SonarScanner Plugin in Jenkins**  
+   - I went to `Manage Jenkins > Manage Plugins`.  
+   - Searched for **SonarScanner**, then installed the plugin.
+    ![Creating the React App](./self_study/images/sonara.png)
+
+2. **Configured SonarQube Server in Jenkins**  
+   - Next, I navigated to `Manage Jenkins > Configure System`.  
+   - Scrolled down to the **SonarQube servers** section.  
+   - Clicked on `Add SonarQube` and filled in the following details:
+     - **Name**: I used `sonarqube`.
+     - **Server URL**: Added my SonarQube server's address `http://<sonarqube_server_ip>:9000`.
+     - **Authentication Token**: I generated this in SonarQube (explained in the next step).
+     ![Creating the React App](./self_study/images/goo.png)
+
+3. **Generated Authentication Token in SonarQube**  
+   - Logged into SonarQube using the admin credentials.  
+   - Went to `User > My Account > Security > Generate Tokens`.  
+   - Entered a token name (`sonar-jenkins`) and clicked generate.  
+   - Copied the token and added it to the **SonarQube servers** section in Jenkins.
+   ![Creating the React App](./self_study/images/generate.png)
+
+4. **Set Up the Quality Gate Webhook in SonarQube**  
+   - Opened `Administration > Configuration > Webhooks > Create`.  
+   - Added a webhook pointing to Jenkins with the URL:  
+     `http://<jenkins_host>/sonarqube-webhook/`.  
+   - Saved the configuration.
+   ![Creating the React App](./self_study/images/fttt.png)
+
+### Update Jenkins Pipeline to Include SonarQube Scanning and Quality Gate
+
+I followed these steps to update the Jenkins pipeline with **SonarQube scanning and Quality Gate** integration.
+
+1. **Add Quality Gate Stage to Jenkinsfile**  
+   - I added the following stage to the Jenkinsfile to include SonarQube scanning:
+   ```groovy
+   stage('SonarQube Quality Gate') {
+       environment {
+           scannerHome = tool 'SonarQubeScanner'
+       }
+       steps {
+           withSonarQubeEnv('sonarqube') {
+               sh "${scannerHome}/bin/sonar-scanner"
+           }
+       }
+   }
+   ```
+   ![Creating the React App](./self_study/images/sory.png)
+
+2. **Initial Pipeline Setup Issue**  
+   - At this point, I ran the pipeline, but it failed because the `sonar-scanner.properties` file was not configured.
+
+    ![Creating the React App](./self_study/images/fail.png)
+
+3. **Configure `sonar-scanner.properties` File**  
+   - I navigated to the scanner configuration directory on the Jenkins server:
+     ```bash
+     cd /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQubeScanner/conf/
+     ```
+   - I edited the `sonar-scanner.properties` file:
+     ```bash
+     sudo vi sonar-scanner.properties
+     ```
+   - I added the project-specific configuration:
+     ```properties
+     sonar.host.url=http://<SonarQube-Server-IP-address>:9000
+     sonar.projectKey=php-todo
+     sonar.sourceEncoding=UTF-8
+     sonar.php.exclusions=**/vendor/**
+     sonar.php.coverage.reportPaths=build/logs/clover.xml
+     sonar.php.tests.reportPath=build/logs/junit.xml
+     ```
+    ![Creating the React App](./self_study/images/fail.png)
+
+4. **Validate the Scanner Installation**  
+   - I verified the scanner tool by listing the contents of its `bin` directory:
+     ```bash
+     cd /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQubeScanner/bin
+     ls -latr
+     ```
+   - Output:
+     ```
+     -rwxr-xr-x 1 jenkins jenkins 2550 Oct 2 12:42 sonar-scanner.bat
+     -rwxr-xr-x 1 jenkins jenkins 1823 Oct 2 12:42 sonar-scanner
+     ```
+    ![Creating the React App](./self_study/images/lst.png)
+
+5. **Generate Pipeline Script Snippet in Jenkins**  
+   - I went to **Pipeline Syntax** in Jenkins for my pipeline and selected **withSonarQubeEnv** from the dropdown to generate the required block.  
+   - Dashboard path:
+     ```
+     Dashboard > php-todo > Pipeline Syntax
+     ```
+   - Example of the generated snippet:
+     ```groovy
+     withSonarQubeEnv {
+         // some block
+     }
+     ```
+
+### **End-to-End Pipeline Overview**
+
+After completing all the configurations, I ran the pipeline and verified the output. As expected, the pipeline executed successfully. Below is a screenshot of the completed pipeline workflow.
+
+![Creating the React App](./self_study/images/suc.png)
+
+Each stage is marked green, indicating that all processes worked as intended.
+
+### **SonarQube Analysis Results**
+
+Next, I checked the **SonarQube dashboard** to validate the code quality after the pipeline execution. 
+
+![Creating the React App](./self_study/images/php.png)
+![Creating the React App](./self_study/images/bh.png)
+
+**Key Findings**:
+- **13 Bugs** were identified.
+- **43 Code Smells** were detected.
+- **0% Code Coverage**, as unit tests were not yet added for this project.
+
+SonarQube also highlighted the **technical debt**, totaling **6 hours**, which provides an estimated time to fix issues.
+
+---
+
+**Why This Result Matters**:
+In the **development environment**, having such issues is acceptable because developers are continuously iterating and improving the code. However, as a **DevOps engineer**, it's crucial to ensure the **Quality Gate** step in the pipeline enforces strict standards. If the set quality conditions are not met, the pipeline should **fail** to prevent poor-quality code from moving further.
+
+
+
+### Conditionally Deploy to Higher Environments
+In the real-world development environment, teams follow branching strategies like **GitFlow** to manage releases. Branches in a repository (e.g., GitHub or GitLab) include:
+
+- **Develop**
+- **Master or Main** (which may include placeholders for version numbers like `Release-1.0.0`)
+- **Feature/**
+- **Release/**
+- **Hotfix/**
+
+Each branch type has a distinct role in controlling software releases.
+
+---
+
+### Update Jenkinsfile to Reflect GitFlow Strategy
+To implement a basic GitFlow approach, let’s assume only the **develop** branch is allowed to deploy code to the **Integration (SIT)** environment.
+
+#### Steps:
+1. Add a **`when` condition** to run the Quality Gate only for specific branches: `develop`, `hotfix`, `release`, `main`, or `master`.
+
+```groovy
+when { 
+  branch pattern: "^develop*|^hotfix*|^release*|^main*", comparator: "REGEXP"
+}
+```
+
+2. Introduce a **timeout step** to ensure the pipeline waits for SonarQube’s analysis. If the code fails quality checks, the pipeline aborts.
+
+```groovy
+timeout(time: 1, unit: 'MINUTES') { 
+  waitForQualityGate abortPipeline: true 
+}
+```
+
+3. The updated **Quality Gate** stage will look like this:
+
+```groovy
+stage('SonarQube Quality Gate') {
+  when { 
+    branch pattern: "^develop*|^hotfix*|^release*|^main*", comparator: "REGEXP"
+  }
+  environment {
+    scannerHome = tool 'SonarQubeScanner'
+  }
+  steps {
+    withSonarQubeEnv('sonarqube') {
+      sh "${scannerHome}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
+    }
+    timeout(time: 1, unit: 'MINUTES') {
+      waitForQualityGate abortPipeline: true
+    }
+  }
+}
+```
+![Creating the React App](./self_study/images/qg.png)
+
+If everything works, SonarQube will show a webhook entry for Jenkins under **Administration > Configuration > Webhooks**. 
+
+![Creating the React App](./self_study/images/done.png)
+
+
+
+### **Complete the following tasks to finish Project 14**
+
+#### 1. **Introduce Jenkins Agents/Slaves**
+- Added **two new EC2 instances** to act as Jenkins slaves.  
+ ![Instance Setup](./self_study/images/instance.png)  
+
+- Installed **Java** on both instances to support Jenkins agents.  
+  ```
+  sudo apt update
+  sudo yum install java-11-openjdk-devel -y
+  ```
+
+- Configure Jenkins to Run Pipeline Jobs Randomly on Available Slave Nodes**  
+Navigate to **Dashboard** > **Manage Jenkins** > **Nodes**, click on **New Node** and enter a **Name** and click on **Create**. 
+
+   ![Instance Setup](./self_study/images/slaveone.png)
+
+Let me know if you'd like me to refine this further!
+- Connect slave_1, click on slave_1 and completed this fields then save.
+
+  ![Instance Setup](./self_study/images/instance.png) 
+
+- Connected the 'slave_1' by running the Jenkins agent script: 
+
+  ![Instance Setup](./self_study/images/ser.png)
+  ```
+  sudo mkdir /opt/build
+  sudo chmod 777 /opt/build
+  # Download agent.jar to /opt/build. Make sure it has Jenkins IP here
+  curl -sO http://<Jenkins-IP>:8080/jnlpJars/agent.jar
+  ```
+  ```
+  java -jar agent.jar -webSocket -url http://<Jenkins-IP>:8080/ -secret @secret-file -name "slave_one" -workDir "/opt/build" &
+  ```
+
+  ![Instance Setup](./self_study/images/connected.png) 
+  ![Instance Setup](./self_study/images/slavecon.png) 
+
+- Repeat same steps for `slave_2`
+  ![Instance Setup](./self_study/images/salve4.png) 
+
+
+#### 2. **Configure Webhook Between Jenkins and GitHub**
+- Set up a webhook to trigger Jenkins pipeline automatically on a GitHub code push. 
+
+#### 3. **Deploy the Application to All Environments**
+- Added stages to the Jenkins pipeline script for **Development**, **Test**, and **Production** environments.
+
+**Development Environment**
+```
+stage ('Deploy to Dev Environment') {
+    agent { label 'slave_1' }
+    steps {
+        build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
+    }
+}
+```
+
+**Test Environment**
+```
+stage ('Deploy to Test Environment') {
+    agent { label 'slave_2' }
+    steps {
+        build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'pentest']], propagate: false, wait: true
+    }
+}
+```
+
+**Production Environment**
+```
+stage ('Deploy to Production Environment') {
+    agent any
+    steps {
+        build job: 'ansible-config-mgt/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'ci']], propagate: false, wait: true
+    }
+}
+```
+
+- **Execution Example**: Successful deployment across environments using the pipeline script.  
+
+
+#### **4. Optional - Experience Pentesting in Pentest Environment**
+- **Configure Wireshark**:  
+  Explore pentesting by configuring **Wireshark** in the pentest environment. This is purely for gaining insights into network packet analysis and penetration testing concepts.  
+  👉 Watch the **[Wireshark Tutorial here](https://github.com/melkamu372/StegHub-DevOps-Cloud-Engineering/assets/47281626)**  
+
+#### **Ansible Role for Wireshark**:  
+You can use these Ansible roles for automated Wireshark setup:
+- **Ubuntu**: [ymajik/ansible-role-wireshark](https://github.com/ymajik/ansible-role-wireshark)
+- **RedHat**: [wtanaka/ansible-role-wireshark](https://github.com/wtanaka/ansible-role-wireshark)  
