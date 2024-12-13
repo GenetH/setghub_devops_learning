@@ -1054,16 +1054,12 @@ sonarqube   -   nofile   65536
 sonarqube   -   nproc    4096
 ```
 
----
-
 ### **Update and Upgrade Packages**
 Run the following commands:
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
 ```
-
----
 
 ### Install Required Packages
 
@@ -1096,13 +1092,6 @@ sudo apt-get upgrade
    ```bash
    java -version
    ```
-
-
-
-
-Here’s the updated explanation with the phrasing adjusted as you requested:
-
----
 
 ### **Steps to Install and Set Up PostgreSQL 10 Database for SonarQube**
 
@@ -1185,7 +1174,6 @@ Here’s the updated explanation with the phrasing adjusted as you requested:
       exit
       ```
 
-
 ### Install and Configure SonarQube on Ubuntu 20.04 LTS
 
 ---
@@ -1206,8 +1194,6 @@ Here’s the updated explanation with the phrasing adjusted as you requested:
    ```bash
    sudo mv /opt/sonarqube-7.9.3 /opt/sonarqube
    ```
-
----
 
 #### **Step 2: Configure SonarQube**
 
@@ -1231,8 +1217,6 @@ Here’s the updated explanation with the phrasing adjusted as you requested:
      sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
      ```
 
----
-
 #### **Step 3: Set Up the Script to Run SonarQube**
 
 1. Edit the `sonar.sh` script file to set the `RUN_AS_USER` variable:
@@ -1244,32 +1228,29 @@ Here’s the updated explanation with the phrasing adjusted as you requested:
    ```bash
    RUN_AS_USER=sonar
    ```
-
----
+   ![Creating the React App](./self_study/images/Nat.png)
 
 #### **Step 4: Start SonarQube**
 
-1. Switch to the `sonar` user:
+1. Switched to the `sonar` user:
    ```bash
    sudo su sonar
    ```
 
-2. Navigate to the SonarQube script directory:
+2. Navigated to the SonarQube script directory:
    ```bash
    cd /opt/sonarqube/bin/linux-x86-64/
    ```
 
-3. Start SonarQube using the script:
+3. Started SonarQube using the script:
    ```bash
    ./sonar.sh start
    ```
 
-4. Check SonarQube status:
+4. Checked SonarQube status:
    ```bash
    ./sonar.sh status
    ```
-
----
 
 #### **Step 5: Verify SonarQube Logs**
 
@@ -1319,7 +1300,7 @@ Here’s the updated explanation with the phrasing adjusted as you requested:
    WantedBy=multi-user.target
    ```
 
-4. **Save the File and Enable the Service**  
+4. **Saved the File and Enable the Service**  
    Once the service file was created, I saved it and used the following commands to control the SonarQube service:
    ```bash
    sudo systemctl start sonar
@@ -1426,7 +1407,7 @@ I followed these steps to update the Jenkins pipeline with **SonarQube scanning 
      sonar.php.coverage.reportPaths=build/logs/clover.xml
      sonar.php.tests.reportPath=build/logs/junit.xml
      ```
-    ![Creating the React App](./self_study/images/fail.png)
+    ![Creating the React App](./self_study/images/uff.png)
 
 4. **Validate the Scanner Installation**  
    - I verified the scanner tool by listing the contents of its `bin` directory:
@@ -1453,6 +1434,7 @@ I followed these steps to update the Jenkins pipeline with **SonarQube scanning 
          // some block
      }
      ```
+    ![Creating the React App](./self_study/images/uf.png)
 
 ### **End-to-End Pipeline Overview**
 
@@ -1557,9 +1539,9 @@ If everything works, SonarQube will show a webhook entry for Jenkins under **Adm
   ```
 
 - Configure Jenkins to Run Pipeline Jobs Randomly on Available Slave Nodes**  
-Navigate to **Dashboard** > **Manage Jenkins** > **Nodes**, click on **New Node** and enter a **Name** and click on **Create**. 
+- Navigate to **Dashboard** > **Manage Jenkins** > **Nodes**, click on **New Node** and enter a **Name** and click on **Create**. 
 
-   ![Instance Setup](./self_study/images/slaveone.png)
+  ![Instance Setup](./self_study/images/slaveone.png)
 
 Let me know if you'd like me to refine this further!
 - Connect slave_1, click on slave_1 and completed this fields then save.
