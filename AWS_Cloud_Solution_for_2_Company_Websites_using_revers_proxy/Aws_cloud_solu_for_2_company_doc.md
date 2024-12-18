@@ -377,9 +377,9 @@ Here’s a detailed step-by-step breakdown of the entire process to **provision 
    - Create an **SNS topic** to send auto-scaling notifications:
      - Go to **SNS Dashboard** > **Topics > Create Topic**.
      - Link the SNS topic to your ASG for alerts.
-    ![AWS Cloud Solutions](./self_study/images/oa.png)
-    ![AWS Cloud Solutions](./self_study/images/ob.png)
-    ![AWS Cloud Solutions](./self_study/images/oc.png)
+   ![AWS Cloud Solutions](./self_study/images/oa.png)
+   ![AWS Cloud Solutions](./self_study/images/ob.png)
+   ![AWS Cloud Solutions](./self_study/images/oc.png)
    ![AWS Cloud Solutions](./self_study/images/od.png)
    ![AWS Cloud Solutions](./self_study/images/oe.png)
    ![AWS Cloud Solutions](./self_study/images/of.png)
