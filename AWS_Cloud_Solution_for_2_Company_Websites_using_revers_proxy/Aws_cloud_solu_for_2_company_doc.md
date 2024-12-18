@@ -221,23 +221,10 @@ Create the following **Security Groups**:
 
 
 ### **Provision EC2 Instances for NGINX**  
-1. **Create EC2 Instances**:  
-   - Use a **CentOS Amazon Machine Image (AMI)**.  
-   - Deploy in **two Availability Zones (AZ)** for redundancy.  
-   - Select **T2 family instances** (e.g., `t2.micro`) for cost efficiency.  
-   ![AWS Cloud Solutions](./self_study/images/am.png)
+
 
 2. **Install Required Software**:  
-   Ensure the following software is installed on the EC2 instance:  
-   - `python`  
-   - `ntp`  
-   - `net-tools`  
-   - `vim`  
-   - `wget`  
-   - `telnet`  
-   - `epel-release`  
-   - `htop`  
-
+ 
 3. **Create an AMI**:  
    - After configuring the instance, create an **AMI (Amazon Machine Image)** for reuse.  
 
@@ -275,3 +262,127 @@ Create the following **Security Groups**:
 7. Configure the scaling policy:  
    - **Scale Out** if CPU utilization reaches **90%**.  
 8. Enable an **SNS Topic** for scaling notifications.  
+
+
+
+
+Here’s a detailed step-by-step breakdown of the entire process to **provision EC2 instances for Nginx**, **prepare launch templates**, and configure target groups and autoscaling.
+
+---
+
+## **Step 1: Provision EC2 Instances for Nginx**
+1. **Create EC2 Instances**:  
+   - Use a **CentOS Amazon Machine Image (AMI)**.  
+   - Deploy in **two Availability Zones (AZ)** for redundancy.  
+   - Select **T2 family instances** (e.g., `t2.micro`) for cost efficiency.  
+   ![AWS Cloud Solutions](./self_study/images/am.png)
+
+2. **Install Required Software**
+   Ensure the following software is installed on the EC2 instance:  
+   - `python`  
+   - `ntp`  
+   - `net-tools`  
+   - `vim`  
+   - `wget`  
+   - `telnet`  
+   - `epel-release`  
+   - `htop`  
+
+   - Connect to the EC2 instance using SSH:
+     ```bash
+     ssh -i <your-key.pem> user@<instance-public-ip>
+     ```
+   - Install the following packages:
+     ```bash
+     sudo yum update -y
+     sudo yum install -y python ntp net-tools vim wget telnet epel-release htop
+     ```
+   - Verify the installations:
+     ```bash
+     python --version
+     htop
+     ```
+
+3. **Create an AMI from the Configured EC2 Instance**
+   - Go to **EC2 Dashboard** > **Instances**.
+   - Select the instance and click **Actions > Image and Templates > Create Image**.
+   - Provide a name (e.g., `nginx-ami`) and description, then create the AMI.
+   ![AWS Cloud Solutions](./self_study/images/ami1.png)
+
+## **Step 2: Prepare a Launch Template for Nginx**
+
+1. **Create a Launch Template**
+   - Go to: **EC2 Dashboard > Launch Templates > Create Launch Template**.
+   - Use the AMI created earlier.
+   - Specify the instance type (e.g., t2.micro), key pair, and security group.
+
+2. **Configure Public Subnet**
+   - Ensure the instance is launched in a **public subnet**.
+   - Assign an **Elastic IP** to ensure persistent access.
+
+3. **Assign a Security Group**
+   - Create a security group with the following inbound rules:
+     - **HTTP** (Port 80): Anywhere (0.0.0.0/0).
+     - **HTTPS** (Port 443): Anywhere (0.0.0.0/0).
+     - **SSH** (Port 22): Your IP for secure access.
+
+4. **Use User Data to Install Nginx**
+   - Add the following **User Data** script in the launch template to automate Nginx installation:
+     ```bash
+     #!/bin/bash
+     yum update -y
+     yum install -y nginx
+     systemctl enable nginx
+     systemctl start nginx
+     echo "Nginx server is up and running" > /usr/share/nginx/html/index.html
+     ```
+  ![AWS Cloud Solutions](./self_study/images/na.png)
+   ![AWS Cloud Solutions](./self_study/images/nb.png)
+   ![AWS Cloud Solutions](./self_study/images/nc.png)
+   ![AWS Cloud Solutions](./self_study/images/nd.png)
+
+## **Step 3: Configure Target Groups**
+
+1. **Create a Target Group**
+   - Go to **EC2 Dashboard > Load Balancing > Target Groups**.
+   - Click **Create Target Group**.
+   - Choose **Instances** as the target type.
+   - Configure:
+     - **Protocol**: HTTPS  
+     - **Port**: 443  
+     - **Health Check Path**: `/healthstatus`
+![AWS Cloud Solutions](./self_study/images/ta.png)
+![AWS Cloud Solutions](./self_study/images/tb.png)
+2. **Register Nginx Instances**
+   - Add your EC2 instances to the target group.
+   - Confirm that health checks pass.
+![AWS Cloud Solutions](./self_study/images/tc.png)
+
+## **Step 4: Configure Auto Scaling for Nginx**
+
+1. **Set Up Auto Scaling Group (ASG)**
+   - Go to: **EC2 Dashboard > Auto Scaling > Create Auto Scaling Group**.
+   - Select the **Launch Template** you created earlier.
+2. **Configure VPC and Subnets**
+   - Select your **VPC** and both **public subnets**.
+3. **Set Scaling Configuration**
+   - **Desired Capacity**: 2  
+   - **Minimum Capacity**: 2  
+   - **Maximum Capacity**: 4  
+4. **Set Scaling Policies**
+   - Add a scaling policy to **scale out** when CPU utilization reaches **90%**:
+     - Select **Target Tracking Scaling Policy**.
+     - Configure CPU utilization threshold to 90%.
+5. **Enable Notifications**
+   - Create an **SNS topic** to send auto-scaling notifications:
+     - Go to **SNS Dashboard** > **Topics > Create Topic**.
+     - Link the SNS topic to your ASG for alerts.
+   ![AWS Cloud Solutions](./self_study/images/oa.png)
+   ![AWS Cloud Solutions](./self_study/images/ob.png)
+   ![AWS Cloud Solutions](./self_study/images/oc.png)
+   ![AWS Cloud Solutions](./self_study/images/od.png)
+   ![AWS Cloud Solutions](./self_study/images/oe.png)
+   ![AWS Cloud Solutions](./self_study/images/of.png)
+   ![AWS Cloud Solutions](./self_study/images/og.png)
+   ![AWS Cloud Solutions](./self_study/images/oh.png)
+
