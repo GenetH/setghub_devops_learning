@@ -351,12 +351,12 @@ Here’s a detailed step-by-step breakdown of the entire process to **provision 
      - **Protocol**: HTTPS  
      - **Port**: 443  
      - **Health Check Path**: `/healthstatus`
-![AWS Cloud Solutions](./self_study/images/ta.png)
-![AWS Cloud Solutions](./self_study/images/tb.png)
+    ![AWS Cloud Solutions](./self_study/images/ta.png)
+    ![AWS Cloud Solutions](./self_study/images/tb.png)
 2. **Register Nginx Instances**
    - Add your EC2 instances to the target group.
-   - Confirm that health checks pass.
-![AWS Cloud Solutions](./self_study/images/tc.png)
+   - Confirm that health checks pass.   
+    ![AWS Cloud Solutions](./self_study/images/tc.png)
 
 ## **Step 4: Configure Auto Scaling for Nginx**
 
@@ -377,9 +377,9 @@ Here’s a detailed step-by-step breakdown of the entire process to **provision 
    - Create an **SNS topic** to send auto-scaling notifications:
      - Go to **SNS Dashboard** > **Topics > Create Topic**.
      - Link the SNS topic to your ASG for alerts.
-   ![AWS Cloud Solutions](./self_study/images/oa.png)
-   ![AWS Cloud Solutions](./self_study/images/ob.png)
-   ![AWS Cloud Solutions](./self_study/images/oc.png)
+    ![AWS Cloud Solutions](./self_study/images/oa.png)
+    ![AWS Cloud Solutions](./self_study/images/ob.png)
+    ![AWS Cloud Solutions](./self_study/images/oc.png)
    ![AWS Cloud Solutions](./self_study/images/od.png)
    ![AWS Cloud Solutions](./self_study/images/oe.png)
    ![AWS Cloud Solutions](./self_study/images/of.png)
