@@ -386,3 +386,319 @@ Here’s a detailed step-by-step breakdown of the entire process to **provision 
    ![AWS Cloud Solutions](./self_study/images/og.png)
    ![AWS Cloud Solutions](./self_study/images/oh.png)
 
+
+
+Based on the screenshots provided, here's a detailed demonstration to configure compute resources for the **Bastion Host**, **Launch Templates**, **Target Groups**, and **Auto Scaling**.
+
+---
+
+### **1. Set Up Compute Resources for Bastion**
+
+#### **Step 1: Create an EC2 Instance**
+1. Log in to the **AWS Management Console**.
+2. Navigate to the **EC2 Dashboard** → **Launch Instances**.
+3. Select a **CentOS-based AMI** and ensure it is in the **same Region** and **Availability Zone** as your Nginx server.
+4. Choose the instance type (e.g., `t2.micro` for lightweight workloads).
+5. Configure instance details:
+   - Attach to the same **VPC** and **Subnet** as the Nginx server.
+6. Launch the instance.
+
+#### **Step 2: Install Required Software**
+Once the instance is running:
+1. Connect via SSH:
+   ```bash
+   ssh -i <your-key.pem> centos@<instance-public-ip>
+   ```
+2. Install required software:
+   ```bash
+   sudo yum update -y
+   sudo yum install -y python ntp net-tools vim wget telnet epel-release htop
+   ```
+3. Start and enable NTP:
+   ```bash
+   sudo systemctl start ntpd
+   sudo systemctl enable ntpd
+   ```
+
+#### **Step 3: Associate Elastic IP**
+1. Navigate to **Elastic IPs** in the EC2 Dashboard.
+2. Allocate a new Elastic IP and associate it with the bastion instance.
+
+#### **Step 4: Create an AMI**
+1. Select the configured bastion instance.
+2. Navigate to **Actions → Image → Create Image**.
+3. Provide a name and description for the AMI, then create the image.
+
+---
+
+### **2. Prepare a Launch Template for Bastion**
+
+1. Navigate to **Launch Templates** in the EC2 Dashboard.
+2. Create a **new launch template**:
+   - **AMI**: Use the AMI created in Step 4.
+   - **Network**: Public subnet and associated VPC.
+   - **User Data**:
+     ```bash
+     #!/bin/bash
+     sudo yum update -y
+     sudo yum install -y ansible git
+     ```
+3. Save the launch template.
+
+---
+
+### **3. Configure Target Groups**
+
+1. Go to **Target Groups** in the EC2 Dashboard.
+2. Create a new target group:
+   - **Target Type**: Instances.
+   - **Protocol**: TCP.
+   - **Port**: 22 (SSH).
+   - **VPC**: Same VPC as the bastion host.
+3. Register bastion instances as targets.
+4. Configure **Health Checks**:
+   - Use the default TCP health check.
+
+---
+
+### **4. Configure Auto Scaling for Bastion**
+
+#### **Step 1: Create an Auto Scaling Group**
+1. Navigate to **Auto Scaling Groups**.
+2. Create a new Auto Scaling Group using the **Launch Template** created earlier.
+
+#### **Step 2: Configure Auto Scaling Group Details**
+1. **VPC and Subnets**:
+   - Choose the VPC and both public subnets.
+2. **Target Group**:
+   - Attach the target group created earlier.
+3. **Scaling Policies**:
+   - **Desired Capacity**: 2
+   - **Minimum Capacity**: 2
+   - **Maximum Capacity**: 4
+   - Set a scale-out policy when **CPU utilization reaches 90%**.
+
+#### **Step 3: Add Notifications**
+1. Set up an **SNS Topic** to send scaling notifications.
+2. Subscribe to the topic with your email address.
+
+---
+
+### Summary
+
+This workflow includes:
+- Creating and configuring a bastion host.
+- Setting up AMI, launch templates, and auto-scaling.
+- Ensuring public access via Elastic IP and securing it via SSH protocols.
+
+Let me know if you need further clarification! 😊
+
+
+
+
+
+Based on the images provided, here's how to implement the setup for **web servers** and prepare the launch template as outlined in the instructions:
+
+---
+
+### **1. Set Up Compute Resources for Web Servers**
+
+#### **Step 1: Create EC2 Instances**
+1. **Log in to AWS Management Console**.
+2. Go to the **EC2 Dashboard** → **Launch Instances**.
+3. Create two separate EC2 instances (CentOS):
+   - One for the **WordPress** website.
+   - One for the **Tooling** website.
+4. Ensure both instances are launched in the **same region** and **availability zone** as required.
+5. Choose an appropriate instance type (e.g., `t2.micro` for lightweight workloads).
+
+#### **Step 2: Install Required Software**
+After launching the instances:
+1. Connect to each instance via SSH:
+   ```bash
+   ssh -i <your-key.pem> centos@<instance-public-ip>
+   ```
+2. Install the necessary software:
+   ```bash
+   sudo yum update -y
+   sudo yum install -y python ntp net-tools vim wget telnet epel-release htop php
+   ```
+
+#### **Step 3: Create an AMI**
+1. Navigate to the **Instances** section of the EC2 Dashboard.
+2. Select each configured instance and create an AMI:
+   - For the WordPress website.
+   - For the Tooling website.
+3. Go to **Actions → Image → Create Image** and fill in the necessary details.
+
+---
+
+### **2. Prepare Launch Template for Web Servers**
+
+#### **Step 1: Create Launch Templates**
+1. Navigate to **Launch Templates** in the EC2 Dashboard.
+2. Create two launch templates:
+   - **WordPress Launch Template**.
+   - **Tooling Launch Template**.
+
+#### **Step 2: Configure Launch Template**
+1. Use the respective AMIs created earlier for each template.
+2. Ensure the instances are launched into a **public subnet**.
+3. Assign appropriate **security groups**:
+   - Allow HTTP (80), HTTPS (443), and SSH (22) access.
+4. Add **User Data** for the WordPress template to install WordPress:
+   ```bash
+   #!/bin/bash
+   sudo yum update -y
+   sudo yum install -y wordpress
+   ```
+
+---
+
+### **3. Configure TLS Certificates from AWS ACM**
+
+#### **Step 1: Request a Certificate**
+1. Go to **AWS Certificate Manager (ACM)** in the AWS Console.
+2. Click on **Request a Certificate**.
+3. Select **Request a public certificate**.
+
+#### **Step 2: Configure Certificate Details**
+1. Enter the wildcard domain name registered in Freenom:
+   - Example: `*.yourdomain.com`.
+2. Use **DNS Validation**:
+   - AWS will provide DNS records to be added to your domain’s DNS settings.
+
+#### **Step 3: Validate and Tag**
+1. Add the DNS records to validate ownership of the domain.
+2. After validation, tag the certificate resource for easier management.
+
+---
+
+### **Summary of Steps**
+1. Provision EC2 instances for **WordPress** and **Tooling** with required software.
+2. Create AMIs for both instances.
+3. Set up separate launch templates for each website.
+4. Use AWS ACM to configure and validate TLS certificates for secured connectivity.
+
+Let me know if you'd like more specific details on any of the steps! 😊
+
+
+### Configure Application Load Balancer (ALB) to Route Traffic to NGINX
+
+Follow these steps to configure an **Application Load Balancer (ALB)** to route traffic to NGINX EC2 instances:
+
+---
+
+### **1. Create an Internet-facing ALB**
+1. Log in to the **AWS Management Console**.
+2. Navigate to **EC2 Dashboard** → **Load Balancers** → **Create Load Balancer**.
+3. Choose **Application Load Balancer**.
+4. Set the following:
+   - **Name**: Provide a meaningful name for the ALB (e.g., `nginx-alb`).
+   - **Scheme**: Choose **Internet-facing**.
+   - **Listeners**: Add a listener for HTTPS (TCP port 443).
+   - **Availability Zones**: Select the VPC, and then choose at least two public subnets in different Availability Zones.
+
+---
+
+### **2. Ensure HTTPS Listener**
+- Add an HTTPS listener (port 443) during the ALB setup.
+- Configure the listener to forward traffic to a **target group** that contains the NGINX instances.
+
+---
+
+### **3. Ensure Proper VPC, AZ, and Subnet Selection**
+- Select the appropriate **VPC**, **Availability Zones**, and **Subnets** where your NGINX instances are hosted.
+
+---
+
+### **4. Choose Certificate from ACM**
+1. In the HTTPS listener settings, select **Add Certificate**.
+2. Choose the TLS certificate that you created earlier in **AWS ACM**.
+3. This will offload SSL/TLS termination to the ALB, reducing the processing overhead on the NGINX servers.
+
+---
+
+### **5. Select Security Group**
+- Attach a security group to the ALB that allows traffic on port 443 (HTTPS) from any IP (or specific IP ranges if restricted).
+
+---
+
+### **6. Select NGINX Instances as the Target Group**
+1. Create a **Target Group** in the ALB configuration:
+   - **Target Type**: Instances.
+   - **Protocol**: TCP.
+   - **Port**: 80 (HTTP).
+2. Register the NGINX EC2 instances as targets.
+3. Configure **Health Checks**:
+   - **Protocol**: HTTP.
+   - **Path**: `/` (or a specific health check endpoint on your NGINX server).
+
+### **Application Load Balancer to Route Traffic to Web Servers**
+
+#### **Steps to Configure an Internal Application Load Balancer (ALB):**
+
+1. **Create an Internal ALB**:
+   - Go to **AWS Management Console** → **EC2 Dashboard** → **Load Balancers**.
+   - Click on **Create Load Balancer** and choose **Application Load Balancer**.
+   - Configure the following:
+     - **Name**: Provide a meaningful name (e.g., `internal-alb-webservers`).
+     - **Scheme**: Select **Internal**.
+     - **Listeners**: Add an HTTPS listener on port 443.
+     - **Availability Zones**: Select the appropriate **VPC** and private subnets.
+
+2. **Ensure HTTPS Listener**:
+   - Add a listener for HTTPS (TCP port 443).
+   - Later, configure it to forward traffic to a target group containing your web servers.
+
+3. **Set the Appropriate VPC, AZ, and Subnets**:
+   - Ensure the ALB is created in the same **VPC**, **Availability Zones**, and **private subnets** as the web servers.
+
+4. **Choose a Certificate from ACM**:
+   - Attach the SSL/TLS certificate created in **AWS ACM** to the HTTPS listener to handle secure communication.
+
+5. **Select Security Group**:
+   - Attach a security group to the ALB that allows traffic on port 443 from trusted sources (like NGINX servers).
+
+6. **Select Web Server Instances as the Target Group**:
+   - Create a **Target Group** for the web servers.
+   - Target Type: Instances.
+   - Protocol: HTTP.
+   - Port: 80.
+   - Register all web server instances with this target group.
+
+7. **Ensure Health Checks**:
+   - Configure health checks for the target group:
+     - Protocol: HTTP.
+     - Path: `/` (or a specific health check endpoint).
+
+---
+
+### **Setup Amazon Elastic File System (EFS)**
+
+#### **Steps to Configure EFS:**
+
+1. **Create an EFS Filesystem**:
+   - Go to **AWS Management Console** → **EFS Dashboard**.
+   - Click **Create File System**.
+   - Provide a name and ensure it's in the correct **VPC**.
+
+2. **Create an EFS Mount Target**:
+   - For each Availability Zone (AZ) in your VPC:
+     - Create mount targets.
+     - Associate the mount targets with the subnets dedicated to the data layer.
+
+3. **Associate Security Groups**:
+   - Use the security groups created earlier for the **data layer** to ensure proper access permissions for EFS.
+
+4. **Create an EFS Access Point**:
+   - Create an access point for EFS.
+   - Provide a name and leave all other settings as default.
+
+---
+
+### **Note:**
+- The above process must be repeated for both **WordPress** and **Tooling** websites.
+- Ensure the security and connectivity settings align with your private network configurations.
+
+Let me know if you need help with further steps or configurations! 😊
