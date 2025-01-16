@@ -234,7 +234,7 @@ Create the following **Security Groups**:
 1. Use the newly created **AMI** to set up a **Launch Template**.  
 2. Ensure instances are launched into a **public subnet**.  
 3. Assign the appropriate **Security Group** to allow access.  
-4. Use **User Data** to:  
+4. Use **User Data** to:  g=
    - Update the package repository.  
    - Install and configure **NGINX** automatically.  
 
@@ -710,4 +710,25 @@ This guide walks through the steps to set up an RDS instance with **MySQL 8.x.x*
 ### **Notes**
 - Multi-AZ setups provide high availability but increase costs.
 - For testing purposes, disable standby instances to reduce costs.
+
+### Configuring DNS with Route 53
+
+### **Types of Records Explained**
+
+- **Alias Record**:
+  - Points directly to AWS resources (like ALB) without additional resolution.
+  - Faster and more integrated with AWS.
+
+- **CNAME Record**:
+  - Points one domain name to another (e.g., `www.example.com` → `example.com`).
+  - Cannot coexist with other records for the same name.
+### **Testing Your Configuration**
+
+- Wait for the DNS changes to propagate (usually a few minutes to 48 hours).
+- Test the domain and subdomain by entering them into a browser:
+  - `example.com` → Should open the WordPress site.
+  - `tooling.example.com` → Should open the Tooling website.
+### **Notes**
+- Use **Alias Records** where possible for faster resolution and seamless integration with AWS resources.
+- Ensure your ALB has listeners and rules configured to forward traffic to the correct targets based on the domain.
 
