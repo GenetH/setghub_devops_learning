@@ -386,10 +386,6 @@ Here’s a detailed step-by-step breakdown of the entire process to **provision 
    ![AWS Cloud Solutions](./self_study/images/og.png)
    ![AWS Cloud Solutions](./self_study/images/oh.png)
 
-
-
-Based on the screenshots provided, here's a detailed demonstration to configure compute resources for the **Bastion Host**, **Launch Templates**, **Target Groups**, and **Auto Scaling**.
-
 ---
 
 ### **1. Set Up Compute Resources for Bastion**
@@ -426,10 +422,10 @@ Once the instance is running:
 
 #### **Step 4: Create an AMI**
 1. Select the configured bastion instance.
-2. Navigate to **Actions → Image → Create Image**.
+2. Navigate to **Actions →  Image and templates → Create Image**.
 3. Provide a name and description for the AMI, then create the image.
+![AWS Cloud Solutions](./self_study/images/baa.png)
 
----
 
 ### **2. Prepare a Launch Template for Bastion**
 
@@ -444,8 +440,10 @@ Once the instance is running:
      sudo yum install -y ansible git
      ```
 3. Save the launch template.
-
----
+  ![AWS Cloud Solutions](./self_study/images/bzc.png)
+  ![AWS Cloud Solutions](./self_study/images/bzd.png)
+  ![AWS Cloud Solutions](./self_study/images/bze.png)
+  ![AWS Cloud Solutions](./self_study/images/bzf.png)
 
 ### **3. Configure Target Groups**
 
@@ -458,8 +456,8 @@ Once the instance is running:
 3. Register bastion instances as targets.
 4. Configure **Health Checks**:
    - Use the default TCP health check.
-
----
+   ![AWS Cloud Solutions](./self_study/images/bza.png)
+   ![AWS Cloud Solutions](./self_study/images/bzb.png)
 
 ### **4. Configure Auto Scaling for Bastion**
 
@@ -477,30 +475,16 @@ Once the instance is running:
    - **Minimum Capacity**: 2
    - **Maximum Capacity**: 4
    - Set a scale-out policy when **CPU utilization reaches 90%**.
+4. **Add Notifications**
+   - Set up an **SNS Topic** to send scaling notifications.
+   - Subscribe to the topic with your email address.
 
-#### **Step 3: Add Notifications**
-1. Set up an **SNS Topic** to send scaling notifications.
-2. Subscribe to the topic with your email address.
-
----
-
-### Summary
-
-This workflow includes:
-- Creating and configuring a bastion host.
-- Setting up AMI, launch templates, and auto-scaling.
-- Ensuring public access via Elastic IP and securing it via SSH protocols.
-
-Let me know if you need further clarification! 😊
-
-
-
-
-
-Based on the images provided, here's how to implement the setup for **web servers** and prepare the launch template as outlined in the instructions:
+    ![AWS Cloud Solutions](./self_study/images/bya.png)
+    ![AWS Cloud Solutions](./self_study/images/byb.png)
+    ![AWS Cloud Solutions](./self_study/images/byd.png)
+    ![AWS Cloud Solutions](./self_study/images/bye.png)
 
 ---
-
 ### **1. Set Up Compute Resources for Web Servers**
 
 #### **Step 1: Create EC2 Instances**
@@ -531,8 +515,6 @@ After launching the instances:
    - For the Tooling website.
 3. Go to **Actions → Image → Create Image** and fill in the necessary details.
 
----
-
 ### **2. Prepare Launch Template for Web Servers**
 
 #### **Step 1: Create Launch Templates**
@@ -561,10 +543,12 @@ After launching the instances:
 1. Go to **AWS Certificate Manager (ACM)** in the AWS Console.
 2. Click on **Request a Certificate**.
 3. Select **Request a public certificate**.
+![AWS Cloud Solutions](./self_study/images/sza.png)
 
 #### **Step 2: Configure Certificate Details**
 1. Enter the wildcard domain name registered in Freenom:
    - Example: `*.yourdomain.com`.
+![AWS Cloud Solutions](./self_study/images/szb.png)
 2. Use **DNS Validation**:
    - AWS will provide DNS records to be added to your domain’s DNS settings.
 
@@ -574,20 +558,7 @@ After launching the instances:
 
 ---
 
-### **Summary of Steps**
-1. Provision EC2 instances for **WordPress** and **Tooling** with required software.
-2. Create AMIs for both instances.
-3. Set up separate launch templates for each website.
-4. Use AWS ACM to configure and validate TLS certificates for secured connectivity.
-
-Let me know if you'd like more specific details on any of the steps! 😊
-
-
 ### Configure Application Load Balancer (ALB) to Route Traffic to NGINX
-
-Follow these steps to configure an **Application Load Balancer (ALB)** to route traffic to NGINX EC2 instances:
-
----
 
 ### **1. Create an Internet-facing ALB**
 1. Log in to the **AWS Management Console**.
@@ -598,41 +569,23 @@ Follow these steps to configure an **Application Load Balancer (ALB)** to route 
    - **Scheme**: Choose **Internet-facing**.
    - **Listeners**: Add a listener for HTTPS (TCP port 443).
    - **Availability Zones**: Select the VPC, and then choose at least two public subnets in different Availability Zones.
-
----
-
 ### **2. Ensure HTTPS Listener**
 - Add an HTTPS listener (port 443) during the ALB setup.
 - Configure the listener to forward traffic to a **target group** that contains the NGINX instances.
-
----
-
 ### **3. Ensure Proper VPC, AZ, and Subnet Selection**
 - Select the appropriate **VPC**, **Availability Zones**, and **Subnets** where your NGINX instances are hosted.
-
----
-
 ### **4. Choose Certificate from ACM**
 1. In the HTTPS listener settings, select **Add Certificate**.
 2. Choose the TLS certificate that you created earlier in **AWS ACM**.
 3. This will offload SSL/TLS termination to the ALB, reducing the processing overhead on the NGINX servers.
-
----
-
 ### **5. Select Security Group**
 - Attach a security group to the ALB that allows traffic on port 443 (HTTPS) from any IP (or specific IP ranges if restricted).
+![AWS Cloud Solutions](./self_study/images/lya.png)
+![AWS Cloud Solutions](./self_study/images/lyb.png)
+![AWS Cloud Solutions](./self_study/images/lyc.png)
+![AWS Cloud Solutions](./self_study/images/lyd.png)
+![AWS Cloud Solutions](./self_study/images/lye.png)
 
----
-
-### **6. Select NGINX Instances as the Target Group**
-1. Create a **Target Group** in the ALB configuration:
-   - **Target Type**: Instances.
-   - **Protocol**: TCP.
-   - **Port**: 80 (HTTP).
-2. Register the NGINX EC2 instances as targets.
-3. Configure **Health Checks**:
-   - **Protocol**: HTTP.
-   - **Path**: `/` (or a specific health check endpoint on your NGINX server).
 
 ### **Application Load Balancer to Route Traffic to Web Servers**
 
@@ -660,17 +613,10 @@ Follow these steps to configure an **Application Load Balancer (ALB)** to route 
 5. **Select Security Group**:
    - Attach a security group to the ALB that allows traffic on port 443 from trusted sources (like NGINX servers).
 
-6. **Select Web Server Instances as the Target Group**:
-   - Create a **Target Group** for the web servers.
-   - Target Type: Instances.
-   - Protocol: HTTP.
-   - Port: 80.
-   - Register all web server instances with this target group.
-
-7. **Ensure Health Checks**:
-   - Configure health checks for the target group:
-     - Protocol: HTTP.
-     - Path: `/` (or a specific health check endpoint).
+![AWS Cloud Solutions](./self_study/images/wya.png)
+![AWS Cloud Solutions](./self_study/images/wyb.png)
+![AWS Cloud Solutions](./self_study/images/wyc.png)
+![AWS Cloud Solutions](./self_study/images/wyd.png)
 
 ---
 
@@ -694,11 +640,74 @@ Follow these steps to configure an **Application Load Balancer (ALB)** to route 
 4. **Create an EFS Access Point**:
    - Create an access point for EFS.
    - Provide a name and leave all other settings as default.
-
----
+![AWS Cloud Solutions](./self_study/images/efs.png)
+![AWS Cloud Solutions](./self_study/images/efsa.png)
 
 ### **Note:**
 - The above process must be repeated for both **WordPress** and **Tooling** websites.
-- Ensure the security and connectivity settings align with your private network configurations.
 
-Let me know if you need help with further steps or configurations! 😊
+
+
+
+
+
+### Setting Up Amazon RDS (Relational Database Service)
+
+This guide walks through the steps to set up an RDS instance with **MySQL 8.x.x**, ensuring high availability with a **multi-AZ deployment**.
+
+---
+
+### **Prerequisites**
+- **KMS Key**: Create a **KMS Key** from **AWS Key Management Service (KMS)** to encrypt the database instance.
+![AWS Cloud Solutions](./self_study/images/kya.png)
+![AWS Cloud Solutions](./self_study/images/kyb.png)
+![AWS Cloud Solutions](./self_study/images/kyc.png)
+![AWS Cloud Solutions](./self_study/images/kyd.png)
+
+### **Steps to Set Up RDS**
+
+#### **1. Create a Subnet Group**
+- Go to **RDS Dashboard** → **Subnet Groups** → **Create Subnet Group**.
+- Add at least **2 private subnets** (1 in each availability zone).
+![AWS Cloud Solutions](./self_study/images/rya.png)
+
+#### **2. Create an RDS Instance**
+- In the **RDS Dashboard**, click **Create Database**.
+- Select:
+  - **Engine**: MySQL 8.x.x.
+  - **Deployment Option**: Multi-AZ (high availability).
+  - **Instance Class**: Select according to your use case (e.g., `db.t3.micro` for testing).
+  - **Storage**: Start with **20GB** or more.
+  - **Sample Template**:
+    - For production: Use **Production Template** (enables Multi-AZ by default).
+    - For testing: Use **Dev/Test Template** and disable **standby instance** to save costs.
+- Under **Availability & Durability**, select **Do not create a standby instance** for cost optimization during testing.
+![AWS Cloud Solutions](./self_study/images/ryb.png)
+#### **3. Configure Database Settings**
+- **Database Name**: Specify your DB name.
+- **Master Username**: Set a username (e.g., `admin`).
+- **Password**: Create a secure password.
+- **Subnet Group**: Select the one created in Step 1.
+- **VPC Security Group**:
+  - Ensure the database is not accessible from the internet.
+  - Allow traffic only from application servers or bastion hosts.
+#### **4. Configure Additional Settings**
+- **Backups**: Enable automated backups and set the retention period (e.g., 7 days).
+- **Monitoring**: Enable **CloudWatch Enhanced Monitoring** and configure alarms for CPU, memory, and storage.
+- **Encryption**: Use the **KMS key** created earlier to encrypt the database.
+#### **5. Finalize and Launch**
+- Review your settings.
+- Launch the RDS instance.
+![AWS Cloud Solutions](./self_study/images/ryb.png)
+![AWS Cloud Solutions](./self_study/images/ryc.png)
+![AWS Cloud Solutions](./self_study/images/ryd.png)
+![AWS Cloud Solutions](./self_study/images/rye.png)
+![AWS Cloud Solutions](./self_study/images/ryf.png)
+![AWS Cloud Solutions](./self_study/images/ryg.png)
+![AWS Cloud Solutions](./self_study/images/ryh.png)
+![AWS Cloud Solutions](./self_study/images/ryi.png)
+
+### **Notes**
+- Multi-AZ setups provide high availability but increase costs.
+- For testing purposes, disable standby instances to reduce costs.
+
