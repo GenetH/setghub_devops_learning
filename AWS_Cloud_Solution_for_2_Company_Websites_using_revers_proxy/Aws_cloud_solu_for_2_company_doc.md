@@ -726,9 +726,11 @@ This guide walks through the steps to set up an RDS instance with **MySQL 8.x.x*
 
 - Wait for the DNS changes to propagate (usually a few minutes to 48 hours).
 - Test the domain and subdomain by entering them into a browser:
-  - `example.com` → Should open the WordPress site.
-  - `tooling.example.com` → Should open the Tooling website.
-### **Notes**
-- Use **Alias Records** where possible for faster resolution and seamless integration with AWS resources.
-- Ensure your ALB has listeners and rules configured to forward traffic to the correct targets based on the domain.
+**Tooling Website**
+![AWS Cloud Solutions](./self_study/images/ufte.png)
+
+**Wordpress Website**
+![AWS Cloud Solutions](./self_study/images/tata.png)
+![AWS Cloud Solutions](./self_study/images/tata1.png)
+![AWS Cloud Solutions](./self_study/images/tatab.png)
 
