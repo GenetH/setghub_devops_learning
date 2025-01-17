@@ -265,12 +265,6 @@ Create the following **Security Groups**:
 8. Enable an **SNS Topic** for scaling notifications.  
 
 
-
-
-Here’s a detailed step-by-step breakdown of the entire process to **provision EC2 instances for Nginx**, **prepare launch templates**, and configure target groups and autoscaling.
-
----
-
 ## **Step 1: Provision EC2 Instances for Nginx**
 1. **Create EC2 Instances**:  
    - Use a **CentOS Amazon Machine Image (AMI)**.  
@@ -721,10 +715,15 @@ This guide walks through the steps to set up an RDS instance with **MySQL 8.x.x*
 - **CNAME Record**:
   - Points one domain name to another (e.g., `www.example.com` → `example.com`).
   - Cannot coexist with other records for the same name.
-### **Testing Your Configuration**
+
+  ![AWS Cloud Solutions](./self_study/images/ra.png)
+  ![AWS Cloud Solutions](./self_study/images/rb.png)
+
+### **Testing My Configuration**
 
 - Wait for the DNS changes to propagate (usually a few minutes to 48 hours).
-- Test the domain and subdomain by entering them into a browser:
+- Test the domain and subdomain by entering them into a browser
+
 **Tooling Website**
 ![AWS Cloud Solutions](./self_study/images/ufte.png)
 ![AWS Cloud Solutions](./self_study/images/tatac.png)
