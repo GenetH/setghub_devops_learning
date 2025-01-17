@@ -115,6 +115,7 @@ Create subnets as shown in the architecture:
    - **IPv4 CIDR block**: Use the values provided above (e.g., `10.0.1.0/24` for Public Subnet 1).  
 4. Click **Create Subnet**.  
 5. Repeat this process for all **public** and **private** subnets listed above.  
+
 ![AWS Cloud Solutions](./self_study/images/n.png)  
 ![AWS Cloud Solutions](./self_study/images/o.png)  
 ![AWS Cloud Solutions](./self_study/images/p.png)  
@@ -355,8 +356,7 @@ Here’s a detailed step-by-step breakdown of the entire process to **provision 
     ![AWS Cloud Solutions](./self_study/images/tb.png)
 2. **Register Nginx Instances**
    - Add your EC2 instances to the target group.
-   - Confirm that health checks pass.   
-    ![AWS Cloud Solutions](./self_study/images/tc.png)
+   - Confirm that health checks pass.  
 
 ## **Step 4: Configure Auto Scaling for Nginx**
 
@@ -682,7 +682,6 @@ This guide walks through the steps to set up an RDS instance with **MySQL 8.x.x*
     - For production: Use **Production Template** (enables Multi-AZ by default).
     - For testing: Use **Dev/Test Template** and disable **standby instance** to save costs.
 - Under **Availability & Durability**, select **Do not create a standby instance** for cost optimization during testing.
-![AWS Cloud Solutions](./self_study/images/ryb.png)
 #### **3. Configure Database Settings**
 - **Database Name**: Specify your DB name.
 - **Master Username**: Set a username (e.g., `admin`).
@@ -728,6 +727,8 @@ This guide walks through the steps to set up an RDS instance with **MySQL 8.x.x*
 - Test the domain and subdomain by entering them into a browser:
 **Tooling Website**
 ![AWS Cloud Solutions](./self_study/images/ufte.png)
+![AWS Cloud Solutions](./self_study/images/tatac.png)
+
 
 **Wordpress Website**
 ![AWS Cloud Solutions](./self_study/images/tata.png)
