@@ -2,8 +2,8 @@
 # Automate Infrastructure With IaC using Terraform
 
 ---
-**Prerequisites before we begin to write Terraform code**
-### **Create IAM User**
+### **Prerequisites before we begin to write Terraform code**
+**Create IAM User**
 - Create an **IAM User** in AWS named `terraform`:
   1. Go to **IAM Console**.
   2. Create a user with **programmatic access**.
