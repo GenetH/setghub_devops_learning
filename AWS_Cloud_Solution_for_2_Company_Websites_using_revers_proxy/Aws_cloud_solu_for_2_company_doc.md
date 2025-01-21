@@ -542,7 +542,6 @@ After launching the instances:
 #### **Step 2: Configure Certificate Details**
 1. Enter the wildcard domain name registered in Freenom:
    - Example: `*.yourdomain.com`.
-![AWS Cloud Solutions](./self_study/images/szb.png)
 2. Use **DNS Validation**:
    - AWS will provide DNS records to be added to your domain’s DNS settings.
 
