@@ -1,4 +1,4 @@
-# Automate Infrastructure With IaC using Terraform
+# Automate Infrastructure With IaC using Terraform 1
 ---
 ### **Prerequisites before we begin to write Terraform code**
 **Create IAM User**
