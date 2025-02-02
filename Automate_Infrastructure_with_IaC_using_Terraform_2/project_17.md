@@ -1023,6 +1023,7 @@ resource "aws_autoscaling_attachment" "asg_attachment_nginx" {
  alb_target_group_arn   = aws_lb_target_group.nginx-tgt.arn
 }
 ```
+![Access Application](./self_study/images/gu.png)
 
 Create `asg-wordpress-tooling.tf` and paste the code below:
 ```hcl
@@ -1173,6 +1174,8 @@ resource "aws_autoscaling_attachment" "asg_attachment_tooling" {
   alb_target_group_arn   = aws_lb_target_group.tooling-tgt.arn
 }
 ```
+![Access Application](./self_study/images/guu.png)
+
 ### Storage and Database
 
 Useful Documentation:
@@ -1476,7 +1479,7 @@ MYSQL RDS:
 Now let's destroy them right away to avoid massive costs:
 ![AWS Solution](./self_study/images/da.png)
 ![AWS Solution](./self_study/images/db.png)
-![AWS Solution](./self_study/images/dc.png)
+![AWS Solution](./self_study/images/dcc.png)
 
 ### Conclusion
 
