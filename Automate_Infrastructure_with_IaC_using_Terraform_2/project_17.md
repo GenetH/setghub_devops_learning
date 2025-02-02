@@ -564,10 +564,6 @@ resource "aws_security_group_rule" "inbound-mysql-webserver" {
 ![AWS Solution](./self_study/images/sa.png)
 ![AWS Solution](./self_study/images/sb.png)
 
-Certainly! Here's the full content from the images you provided:
-
----
-
 ### 2. Create Certificate From Amazon Certificate Manager
 
 Create a file named **cert.tf** and add the following code snippets to it.
@@ -761,3 +757,703 @@ resource "aws_lb" "ialb" {
 }
 ``` 
 ![AWS Solution](./self_study/images/xd.png)
+
+To inform our ALB where to route the traffic, we need to create a [Target Group](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html) to point to its targets:
+```hcl
+# --- target group for wordpress -------
+resource "aws_lb_target_group" "wordpress-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+
+  name        = "wordpress-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+
+# --- target group for tooling -------
+resource "aws_lb_target_group" "tooling-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+
+  name        = "tooling-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+```
+![AWS Solution](./self_study/images/xf.png)
+
+Then we will need to create a [Listener](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html) for this target Group
+```hcl
+# For this aspect a single listener was created for the wordpress which is default,
+# A rule was created to route traffic to tooling when the host header changes
+
+resource "aws_lb_listener" "web-listener" {
+  load_balancer_arn = aws_lb.ialb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate_validation.oyindamola.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.wordpress-tgt.arn
+  }
+}
+
+# Listener rule for tooling target
+resource "aws_lb_listener_rule" "tooling-listener" {
+  listener_arn = aws_lb_listener.web-listener.arn
+  priority     = 99
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tooling-tgt.arn
+  }
+
+  condition {
+    host_header {
+      values = ["tooling.oyindamola.gq"]
+    }
+  }
+}
+```
+
+![AWS Solution](./self_study/images/xm.png)
+
+---
+### Create an Auto Scaling Group (ASG)
+
+Now, we need to configure our ASG to be able to scale the EC2s in and out, depending on the application traffic.
+
+Before we start configuring an ASG, we need to create the launch template and the AMI needed. For now, we are going to use a random AMI from AWS; then, in project 19, we will use **Packer** to create our AMI.
+
+Based on the architecture we need for Auto Scaling groups for bastion, nginx, WordPress, and tooling, we will create two files:
+1. `asg-bastion-nginx.tf` will contain Launch Template and Autoscaling group for Bastion and Nginx.
+2. `asg-wordpress-tooling.tf` will contain Launch Template and Autoscaling group for WordPress and Tooling.
+
+**Useful Terraform Documentation:** Go through this documentation and understand the argument needed for each of the resources:
+- [SNS-topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic)
+- [SNS-notification](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_notification)
+- [Autoscaling](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group)
+- [Launch-template](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template)
+
+Create `asg-bastion-nginx.tf` and paste the code below:
+```hcl
+# creating sns topic for all the auto scaling groups
+resource "aws_sns_topic" "david-sns" {
+ name = "Default_CloudWatch_Alarms_Topic"
+}
+
+
+# creating notification for all the auto scaling groups
+resource "aws_autoscaling_notification" "david_notifications" {
+ group_names = [
+   aws_autoscaling_group.bastion-asg.name,
+   aws_autoscaling_group.nginx-asg.name,
+   aws_autoscaling_group.wordpress-asg.name,
+   aws_autoscaling_group.tooling-asg.name,
+ ]
+ notifications = [
+   "autoscaling:EC2_INSTANCE_LAUNCH",
+   "autoscaling:EC2_INSTANCE_TERMINATE",
+   "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+   "autoscaling:EC2_INSTANCE_TERMINATE_ERROR",
+ ]
+
+ topic_arn = aws_sns_topic.david-sns.arn
+}
+
+
+resource "random_shuffle" "az_list" {
+ input        = data.aws_availability_zones.available.names
+}
+
+
+# launch template for bastion
+
+resource "aws_launch_template" "bastion-launch-template" {
+ image_id               = var.ami
+ instance_type          = "t2.micro"
+ vpc_security_group_ids = [aws_security_group.bastion_sg.id]
+
+ iam_instance_profile {
+   name = aws_iam_instance_profile.ip.id
+ }
+
+ key_name = var.keypair
+
+ placement {
+   availability_zone = "random_shuffle.az_list.result"
+ }
+
+ lifecycle {
+   create_before_destroy = true
+ }
+
+ tag_specifications {
+   resource_type = "instance"
+
+  tags = merge(
+   var.tags,
+   {
+     Name = "bastion-launch-template"
+   },
+ )
+ }
+
+# create a file called bastion.sh and copy the bastion userdata from project 15 into it
+ user_data = filebase64("${path.module}/bastion.sh")
+}
+
+# ---- Autoscaling for bastion  hosts
+
+
+resource "aws_autoscaling_group" "bastion-asg" {
+ name                      = "bastion-asg"
+ max_size                  = 2
+ min_size                  = 1
+ health_check_grace_period = 300
+ health_check_type         = "ELB"
+ desired_capacity          = 1
+
+ vpc_zone_identifier = [
+   aws_subnet.public[0].id,
+   aws_subnet.public[1].id
+ ]
+
+
+ launch_template {
+   id      = aws_launch_template.bastion-launch-template.id
+   version = "$Latest"
+ }
+ tag {
+   key                 = "Name"
+   value               = "bastion-launch-template"
+   propagate_at_launch = true
+ }
+
+}
+
+
+# launch template for nginx
+
+resource "aws_launch_template" "nginx-launch-template" {
+ image_id               = var.ami
+ instance_type          = "t2.micro"
+ vpc_security_group_ids = [aws_security_group.nginx-sg.id]
+
+ iam_instance_profile {
+   name = aws_iam_instance_profile.ip.id
+ }
+
+ key_name =  var.keypair
+
+ placement {
+   availability_zone = "random_shuffle.az_list.result"
+ }
+
+ lifecycle {
+   create_before_destroy = true
+ }
+
+ tag_specifications {
+   resource_type = "instance"
+
+   tags = merge(
+   var.tags,
+   {
+     Name = "nginx-launch-template"
+   },
+ )
+ }
+
+  # create a file called nginx.sh and copy the nginx userdata from project 15 into it
+ user_data = filebase64("${path.module}/nginx.sh")
+}
+
+
+# ------ Autoscslaling group for reverse proxy nginx ---------
+
+resource "aws_autoscaling_group" "nginx-asg" {
+ name                      = "nginx-asg"
+ max_size                  = 2
+ min_size                  = 1
+ health_check_grace_period = 300
+ health_check_type         = "ELB"
+ desired_capacity          = 1
+
+ vpc_zone_identifier = [
+   aws_subnet.public[0].id,
+   aws_subnet.public[1].id
+ ]
+
+ launch_template {
+   id      = aws_launch_template.nginx-launch-template.id
+   version = "$Latest"
+ }
+
+ tag {
+   key                 = "Name"
+   value               = "nginx-launch-template"
+   propagate_at_launch = true
+ }
+
+}
+
+# attaching autoscaling group of nginx to external load balancer
+
+resource "aws_autoscaling_attachment" "asg_attachment_nginx" {
+ autoscaling_group_name = aws_autoscaling_group.nginx-asg.id
+ alb_target_group_arn   = aws_lb_target_group.nginx-tgt.arn
+}
+```
+
+Create `asg-wordpress-tooling.tf` and paste the code below:
+```hcl
+# launch template for wordpress
+
+resource "aws_launch_template" "wordpress-launch-template" {
+  image_id               = var.ami
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.webserver-sg.id]
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ip.id
+  }
+
+  key_name = var.keypair
+
+
+  placement {
+    availability_zone = "random_shuffle.az_list.result"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = merge(
+    var.tags,
+    {
+      Name = "wordpress-launch-template"
+    },
+  )
+
+  }
+
+    # create a file called wordpress.sh and copy the wordpress userdata from project 15 into it.
+  user_data = filebase64("${path.module}/wordpress.sh")
+}
+
+
+# ---- Autoscaling for wordpress application
+
+resource "aws_autoscaling_group" "wordpress-asg" {
+  name                      = "wordpress-asg"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+  vpc_zone_identifier = [
+
+    aws_subnet.private[0].id,
+    aws_subnet.private[1].id
+  ]
+
+
+  launch_template {
+    id      = aws_launch_template.wordpress-launch-template.id
+    version = "$Latest"
+  }
+  tag {
+    key                 = "Name"
+    value               = "wordpress-asg"
+    propagate_at_launch = true
+  }
+}
+
+
+# attaching autoscaling group of wordpress application to internal loadbalancer
+resource "aws_autoscaling_attachment" "asg_attachment_wordpress" {
+  autoscaling_group_name = aws_autoscaling_group.wordpress-asg.id
+  alb_target_group_arn   = aws_lb_target_group.wordpress-tgt.arn
+}
+
+
+# launch template for tooling
+resource "aws_launch_template" "tooling-launch-template" {
+  image_id               = var.ami
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.webserver-sg.id]
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ip.id
+  }
+
+  key_name = var.keypair
+
+
+  placement {
+    availability_zone = "random_shuffle.az_list.result"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "tooling-launch-template"
+    },
+  )
+
+  }
+
+  # create a file called tooling.sh and copy the tooling userdata from project 15 into it
+  user_data = filebase64("${path.module}/tooling.sh")
+}
+
+
+
+# ---- Autoscaling for tooling -----
+
+resource "aws_autoscaling_group" "tooling-asg" {
+  name                      = "tooling-asg"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+
+  vpc_zone_identifier = [
+
+    aws_subnet.private[0].id,
+    aws_subnet.private[1].id
+  ]
+
+  launch_template {
+    id      = aws_launch_template.tooling-launch-template.id
+    version = "$Latest"
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "tooling-launch-template"
+    propagate_at_launch = true
+  }
+}
+
+# attaching autoscaling group of  tooling application to internal loadbalancer
+resource "aws_autoscaling_attachment" "asg_attachment_tooling" {
+  autoscaling_group_name = aws_autoscaling_group.tooling-asg.id
+  alb_target_group_arn   = aws_lb_target_group.tooling-tgt.arn
+}
+```
+### Storage and Database
+
+Useful Documentation:
+- [RDS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance)
+- [EFS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/efs_file_system)
+- [KMS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key)
+
+### Create Elastic File System (EFS)
+
+To create an Elastic File System (EFS), you first need a KMS key for encryption. AWS Key Management Service (KMS) allows you to create and manage cryptographic keys for enhanced security.
+
+Add the following code to `efs.tf`:
+
+```hcl
+# create key from key management system
+resource "aws_kms_key" "g-kms" {
+  description = "KMS key "
+  policy      = <<EOF
+  {
+  "Version": "2012-10-17",
+  "Id": "kms-key-policy",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::${var.account_no}:user/terraform" },
+      "Action": "kms:*",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+# create key alias
+resource "aws_kms_alias" "alias" {
+  name          = "alias/kms"
+  target_key_id = aws_kms_key.g-kms.key_id
+}
+```
+Let us create EFS and it's mount targets: Add the following code to efs.tf
+```hcl
+# create Elastic file system
+resource "aws_efs_file_system" "g-efs" {
+  encrypted  = true
+  kms_key_id = aws_kms_key.g-kms.arn
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "g-efs"
+    },
+  )
+}
+
+# set first mount target for the EFS
+resource "aws_efs_mount_target" "subnet-1" {
+  file_system_id  = aws_efs_file_system.g-efs.id
+  subnet_id       = aws_subnet.private[2].id
+  security_groups = [aws_security_group.datalayer-sg.id]
+}
+
+
+# set second mount target for the EFS
+resource "aws_efs_mount_target" "subnet-2" {
+  file_system_id  = aws_efs_file_system.g-efs.id
+  subnet_id       = aws_subnet.private[3].id
+  security_groups = [aws_security_group.datalayer-sg.id]
+}
+
+# create access point for wordpress
+resource "aws_efs_access_point" "wordpress" {
+  file_system_id = aws_efs_file_system.g-efs.id
+
+  posix_user {
+    gid = 0
+    uid = 0
+  }
+
+  root_directory {
+    path = "/wordpress"
+
+    creation_info {
+      owner_gid   = 0
+      owner_uid   = 0
+      permissions = 0755
+    }
+
+  }
+
+}
+
+# create access point for tooling
+resource "aws_efs_access_point" "tooling" {
+  file_system_id = aws_efs_file_system.g-efs.id
+  posix_user {
+    gid = 0
+    uid = 0
+  }
+
+  root_directory {
+
+    path = "/tooling"
+
+    creation_info {
+      owner_gid   = 0
+      owner_uid   = 0
+      permissions = 0755
+    }
+
+  }
+}
+```
+![Creating the React App](./self_study/images/ba.png)
+
+### Create MYSQL RDS
+
+Let us create the RDS itself using this snippet of code in the `rds.tf` file:
+
+```hcl
+# This section will create the subnet group for the RDS instance using the private subnet
+resource "aws_db_subnet_group" "g-rds" {
+  name       = "g-rds"
+  subnet_ids = [aws_subnet.private[2].id, aws_subnet.private[3].id]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "g-rds"
+    },
+  )
+}
+
+# create the RDS instance with the subnets group
+resource "aws_db_instance" "g-rds" {
+  allocated_storage      = 50
+  storage_type           = "gp3"
+  engine                 = "mysql"
+  engine_version         = "8.0.35"
+  instance_class         = "db.t3.micro"
+  db_name                = "gdb"
+  username               = var.master-username
+  password               = var.master-password
+  parameter_group_name   = "default.mysql8.0"
+  db_subnet_group_name   = aws_db_subnet_group.g-rds.name
+  skip_final_snapshot    = true
+  vpc_security_group_ids = [aws_security_group.datalayer-sg.id]
+  multi_az               = "true"
+}
+```
+![Creating the React App](./self_study/images/bc.png)
+
+Before applying, please note that we gave reference to some variables in our resources that have not been declared in the `variables.tf` file. Go through the entire code and spot these variables and declare them in the variables.tf file.
+
+If we have done that well, our file should look like this one below.
+```hcl
+variable "region" {
+  type = string
+  description = "The region to deploy resources"
+}
+
+variable "vpc_cidr" {
+  type = string
+  description = "The VPC cidr"
+}
+
+variable "enable_dns_support" {
+  type = bool
+}
+
+variable "enable_dns_hostnames" {
+  type = bool
+}
+
+variable "enable_classiclink" {
+  type = bool
+}
+
+variable "enable_classiclink_dns_support" {
+  type = bool
+}
+
+variable "preferred_number_of_public_subnets" {
+  type        = number
+  description = "Number of public subnets"
+}
+
+variable "preferred_number_of_private_subnets" {
+  type        = number
+  description = "Number of private subnets"
+}
+
+variable "name" {
+  type    = string
+  default = "ACS"
+
+}
+
+variable "tags" {
+  description = "A mapping of tags to assign to all resources."
+  type        = map(string)
+  default     = {}
+}
+
+
+variable "ami" {
+  type        = string
+  description = "AMI ID for the launch template"
+}
+
+
+variable "keypair" {
+  type        = string
+  description = "key pair for the instances"
+}
+
+variable "account_no" {
+  type        = number
+  description = "the account number"
+}
+
+
+variable "master-username" {
+  type        = string
+  description = "RDS admin username"
+}
+
+variable "master-password" {
+  type        = string
+  description = "RDS master password"
+}
+```
+![Creating the React App](./self_study/images/dc.png)
+
+We are almost done but we need to update the last file which is `terraform.tfvars` file. In this file we are going to declare the values for the variables in our varibales.tf file.
+
+Open the `terraform.tfvars` file and add the code below:
+```hcl
+region = "us-east-1"
+
+vpc_cidr = "172.16.0.0/16"
+
+enable_dns_support = "true"
+
+enable_dns_hostnames = "true"
+
+enable_classiclink = "false"
+
+enable_classiclink_dns_support = "false"
+
+preferred_number_of_public_subnets = "2"
+
+preferred_number_of_private_subnets = "4"
+
+environment = "production"
+
+ami = "ami-0b0af3577fe5e3532"
+
+keypair = "devops"
+
+# Ensure to change this to your acccount number
+account_no = "your_account_number"
+
+
+db-username = "genet"
+
+
+db-password = "devopspbl"
+
+
+tags = {
+  Enviroment      = "production"
+  Owner-Email     = "genethagoswe@gmail.com"
+  Managed-By      = "terraform"
+  Billing-Account = "Billing-number"
+}
+```
+![AWS Solution](./self_study/images/zb.png)
+
+At this point, we shall have pretty much all the infrastructure elements ready to be deployed automatically. Let's try to  `plan` and `apply` our Terraform codes, explore the resources in AWS console and make sure we destroy them right away to avoid massive costs.
+
+
+![AWS Solution](./self_study/images/za.png)
+![AWS Solution](./self_study/images/aa.png)
+![AWS Solution](./self_study/images/az.png)
