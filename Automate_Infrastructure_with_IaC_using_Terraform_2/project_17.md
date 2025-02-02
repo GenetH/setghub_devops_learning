@@ -636,6 +636,7 @@ resource "aws_route53_record" "wordpress" {
 }
 ```
 ![AWS Solution](./self_study/images/fa.png)
+![AWS Solution](./self_study/images/aa.png)
 ![AWS Solution](./self_study/images/fb.png)
 
 ### 3. Create an external (Internet-facing) Application Load Balancer (ALB)
@@ -1455,5 +1456,23 @@ At this point, we shall have pretty much all the infrastructure elements ready t
 
 
 ![AWS Solution](./self_study/images/za.png)
-![AWS Solution](./self_study/images/aa.png)
-![AWS Solution](./self_study/images/az.png)
+
+Target Groups:
+![AWS Solution](./self_study/images/ta.png)
+
+Security Groups:
+![AWS Solution](./self_study/images/sq.png)
+
+Loadbalancer:
+![AWS Solution](./self_study/images/ca.png)
+
+Instances:
+![AWS Solution](./self_study/images/la.png)
+
+File systems:
+![AWS Solution](./self_study/images/ra.png)
+![AWS Solution](./self_study/images/rb.png)
+
+MYSQL RDS:
+![AWS Solution](./self_study/images/ma.png)
+
