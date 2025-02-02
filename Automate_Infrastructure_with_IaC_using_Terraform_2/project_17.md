@@ -19,9 +19,9 @@ WARNING: You may initially feel overwhelmed by the information provided in these
 - [Networking Part 2](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#netmasks-and-subnets)
 
 **Continue Infrastructure Automation with Terraform**  
-Let us continue from where we stopped in the previous project.  
+Let us continue from where we stopped in the [previous project](https://github.com/GenetH/setghub_devops_learning/tree/main/Automate_Infrastructure_with_IaC_using_Terraform_1).  
 
-Based on my knowledge from the previous project, I can continue creating AWS resources!  
+Based on my knowledge from the previous project, We can continue creating AWS resources!  
 
 ### **Networking: Private Subnets & Best Practices**
 
@@ -1460,9 +1460,6 @@ At this point, we shall have pretty much all the infrastructure elements ready t
 Target Groups:
 ![AWS Solution](./self_study/images/ta.png)
 
-Security Groups:
-![AWS Solution](./self_study/images/sq.png)
-
 Loadbalancer:
 ![AWS Solution](./self_study/images/ca.png)
 
@@ -1476,3 +1473,11 @@ File systems:
 MYSQL RDS:
 ![AWS Solution](./self_study/images/ma.png)
 
+Now let's destroy them right away to avoid massive costs:
+![AWS Solution](./self_study/images/da.png)
+![AWS Solution](./self_study/images/db.png)
+![AWS Solution](./self_study/images/dc.png)
+
+### Conclusion
+
+We automated the creation and management of AWS infrastructure using Terraform, including networking, security, load balancers, auto-scaling groups, storage (EFS), and database (RDS), ensuring efficient, secure, and scalable resource deployment while following AWS best practices.
