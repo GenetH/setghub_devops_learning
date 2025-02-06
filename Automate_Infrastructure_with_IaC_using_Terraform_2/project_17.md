@@ -307,7 +307,7 @@ resource "aws_iam_role_policy_attachment" "test-attach" {
   policy_arn = aws_iam_policy.policy.arn
 }
 ```
-**"4. Create an [Instance Profile](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html) and associate it with the IAM Role."**
+**4. Create an [Instance Profile](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html) and associate it with the IAM Role.**
 ```hcl
 resource "aws_iam_instance_profile" "ip" {
   name = "aws_instance_profile_test"
