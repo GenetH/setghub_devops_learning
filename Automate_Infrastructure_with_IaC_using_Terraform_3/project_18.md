@@ -272,8 +272,6 @@ Break down your Terraform codes to have all resources in their respective module
   - VPC
   - security
 ```
-![image](./images/modules-folders.png)
-
 Each module shall contain following files:
 
 ```css
