@@ -253,6 +253,33 @@ resource "aws_elb" "example" {
 ```
 In the example above, you will have to have module 'servers' to have output file to expose variables for this resource.
 
+(as we learned before - it is a good practice not to hard code the values and use variables)
+```
+It is also recommended to configure `providers` and `backends` sections in separate files.
+
+__NOTE:__ It is not compulsory to use this naming convention.
+
+After you have given it a try, you can check out this [repository](https://github.com/dareyio/PBL-project-18)
+
+It is not compulsory to use this naming convention for guidiance or to fix your errors.
+
+In the configuration sample from the repository, you can observe two examples of referencing the module:
+
+a. Import module as a `source` and have access to its variables via `var` keyword:
+
+```hcl
+module "VPC" {
+  source = "./modules/VPC"
+  region = var.region
+  ...
+```
+
+b. Refer to a module's output by specifying the full path to the output variable by using __`module.%module_name%.%output_name%`__ construction:
+
+```hcl
+subnets-compute = module.network.public_subnets-1
+```
+
 **Complete the Terraform configuration**
 
 Complete the rest of the codes yourself, so, the resulted configuration structure in your working directory may look like this:
@@ -282,7 +309,22 @@ Complete the rest of the codes yourself, so, the resulted configuration structur
     ├── terraform.tfvars
     ├── variables.tf
 ```
+![AWS Solution](./self_study/images/af.png)
+
 Now, the code is much more well-structured and can be easily read, edited, and reused by your DevOps team members.
+
+### Run `terraform apply`
+
+![AWS Solution](./self_study/images/ya.png)
+![AWS Solution](./self_study/images/yb.png)
+
+### Example output
+
+![AWS Solution](./self_study/images/sa.png)
+
+### Run `terraform state list`
+
+![AWS Solution](./self_study/images/ay.png)
 
 **BLOCKERS**: Your website would not be available because the userdata scripts we added to the launch template do not contain the latest endpoints for EFS, ALB, and RDS, and also our AMI is not properly configured, so how do we fix this?
 
@@ -294,3 +336,8 @@ We will also see how to use Terraform Cloud for our backends.
 1. You can validate your codes before running `terraform plan` with the [terraform validate](https://developer.hashicorp.com/terraform/cli/commands/validate) command. It will check if your code is syntactically valid and internally consistent.
 2. In order to make your configuration files more readable and follow canonical format and style - use the [terraform fmt](https://developer.hashicorp.com/terraform/cli/commands/fmt) command. It will apply Terraform language style conventions and format your `.tf` files in accordance with them.
 
+## Conclusion  
+
+We have successfully refactored our Terraform infrastructure by introducing an **S3 backend** with **DynamoDB state locking**, improving collaboration and security. Modularizing the code made it **more structured, reusable, and scalable**, while **dynamic blocks** and **lookup functions** enhanced flexibility.  
+
+However, challenges remain, such as missing **latest endpoints for EFS, ALB, and RDS** and an **improperly configured AMI**.  
