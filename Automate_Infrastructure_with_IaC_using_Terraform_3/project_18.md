@@ -253,8 +253,34 @@ resource "aws_elb" "example" {
 ```
 In the example above, you will have to have module 'servers' to have output file to expose variables for this resource.
 
-(as we learned before - it is a good practice not to hard code the values and use variables)
 
+## Refactor your project using Modules
+
+Let us review the [repository](https://github.com/francdomain/Automate_Infrastructure_With_IaC_using_Terraform_2)of project 17, you will notice that we had a single lsit of long file for creating all of our resources, but that is not the best way to go about it because it maks our code base vey hard to read and understand, and making future changes can bring a lot of pain.
+
+## QUICK TASK:
+
+Break down your Terraform codes to have all resources in their respective modules. Combine resources of a similar type into directories within a 'modules' directory, for example, like this:
+
+```css
+- modules
+  - ALB
+  - EFS
+  - RDS
+  - Autoscaling
+  - compute
+  - VPC
+  - security
+```
+![image](./images/modules-folders.png)
+
+Each module shall contain following files:
+
+```css
+- main.tf (or %resource_name%.tf) file(s) with resources blocks
+- outputs.tf (optional, if you need to refer outputs from any of these resources in your root module)
+- variables.tf (as we learned before - it is a good practice not to hard code the values and use variables)
+```
 It is also recommended to configure `providers` and `backends` sections in separate files.
 
 __NOTE:__ It is not compulsory to use this naming convention.
