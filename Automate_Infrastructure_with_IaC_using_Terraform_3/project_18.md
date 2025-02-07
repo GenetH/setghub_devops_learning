@@ -254,7 +254,7 @@ resource "aws_elb" "example" {
 In the example above, you will have to have module 'servers' to have output file to expose variables for this resource.
 
 (as we learned before - it is a good practice not to hard code the values and use variables)
-```
+
 It is also recommended to configure `providers` and `backends` sections in separate files.
 
 __NOTE:__ It is not compulsory to use this naming convention.
