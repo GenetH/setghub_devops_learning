@@ -259,7 +259,7 @@ It is also recommended to configure `providers` and `backends` sections in separ
 
 __NOTE:__ It is not compulsory to use this naming convention.
 
-After you have given it a try, you can check out this [repository](https://github.com/dareyio/PBL-project-18)
+After you have given it a try, you can check out this [repository](https://github.com/StegTechHub/PBL-project-19/)
 
 It is not compulsory to use this naming convention for guidiance or to fix your errors.
 
