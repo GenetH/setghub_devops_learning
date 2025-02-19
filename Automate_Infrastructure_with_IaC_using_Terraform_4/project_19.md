@@ -133,13 +133,14 @@ packer build web.pkr.hcl
 ```hcl
 packer build ubuntu.pkr.hcl
 ```
-![AWS Solution](./self_study/images/pa.png)
-![AWS Solution](./self_study/images/pa.png)
+![AWS Solution](./self_study/images/ua.png)
+![AWS Solution](./self_study/images/ub.png)
+![AWS Solution](./self_study/images/uc.png)
 
 
 ## 6. Run `terraform plan` and `terraform apply` from web console
 
-- Switch to `Runs` tab and click on `Queue plan manualy` button.
+- Switch to `Runs` tab and click on `Queue plan manually` button.
 
 ![AWS Solution](./self_study/images/pa.png)
 ![AWS Solution](./self_study/images/pb.png)
@@ -148,20 +149,21 @@ packer build ubuntu.pkr.hcl
 ![AWS Solution](./self_study/images/pe.png)
 ![AWS Solution](./self_study/images/pf.png)
 
-- If planning has been successfull, you can proceed and confirm Apply - press `Confirm and apply`, provide a comment and `Confirm plan`
+- If planning has been successful, you can proceed and confirm Apply - press `Confirm and apply`, provide a comment and `Confirm plan`
 
-![AWS Solution](./self_study/images/pa.png)
-![AWS Solution](./self_study/images/pb.png)
-![AWS Solution](./self_study/images/pc.png)
-![AWS Solution](./self_study/images/pd.png)
-![AWS Solution](./self_study/images/pe.png)
-![AWS Solution](./self_study/images/pf.png)
+![AWS Solution](./self_study/images/ya.png)
+![AWS Solution](./self_study/images/yb.png)
+![AWS Solution](./self_study/images/yc.png)
+![AWS Solution](./self_study/images/yd.png)
+![AWS Solution](./self_study/images/ye.png)
 
-Check the logs and verify that everything has run correctly. Note that Terraform Cloud has generated a unique state version that you can open and see the codes applied and the changes made since the last run.
+- Check the logs and verify that everything has run correctly. Note that Terraform Cloud has generated a unique state version that you can open and see the codes applied and the changes made since the last run.
 
-![AWS Solution](./self_study/images/pa.png)
-![AWS Solution](./self_study/images/pb.png)
-![AWS Solution](./self_study/images/pc.png)
-![AWS Solution](./self_study/images/pd.png)
-![AWS Solution](./self_study/images/pe.png)
-![AWS Solution](./self_study/images/pf.png)
+![AWS Solution](./self_study/images/la.png)
+![AWS Solution](./self_study/images/lb.png)
+![AWS Solution](./self_study/images/lc.png)
+![AWS Solution](./self_study/images/ld.png)
+![AWS Solution](./self_study/images/le.png)
+![AWS Solution](./self_study/images/lf.png)
+![AWS Solution](./self_study/images/lg.png)
+![AWS Solution](./self_study/images/lk.png)
