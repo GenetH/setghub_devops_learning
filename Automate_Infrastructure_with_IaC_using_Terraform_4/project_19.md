@@ -167,3 +167,148 @@ packer build ubuntu.pkr.hcl
 ![AWS Solution](./self_study/images/lf.png)
 ![AWS Solution](./self_study/images/lg.png)
 ![AWS Solution](./self_study/images/lk.png)
+
+## 7. Test automated `terraform plan`
+
+By now, you have tried to launch `plan` and `apply` manually from Terraform Cloud web console. But since we have an integration with GitHub, the process can be triggered automatically. Try to change something in any of `.tf` files and look at `Runs` tab again - `plan` must be launched automatically, but to `apply` you still need to approve manually.
+
+Since provisioning of new Cloud resources might incur significant costs. Even though you can configure `Auto apply`, it is always a good idea to verify your `plan` results before pushing it to `apply` to avoid any misconfigurations that can cause 'bill shock'.
+
+### **✅ Steps to Test Automated `terraform plan` in Terraform Cloud**
+This guide will walk you through **automating Terraform plan** execution when changes are pushed to GitHub.
+
+---
+
+## **🔹 Step 1: Configure GitHub as a Version Control System (VCS) in Terraform Cloud**
+- **Go to Terraform Cloud** → **Settings** → **VCS Providers**.
+- **Click on "Add a VCS Provider"**.
+- **Select GitHub** and follow the authorization steps.
+- **Go to your Terraform Cloud workspace**.
+- Click **"Version Control"** → **"Change Source"**.
+- **Select "GitHub.com (Custom)"**.
+- **Choose your repository** where your Terraform configuration files are stored.
+
+![AWS Solution](./self_study/images/va.png)
+![AWS Solution](./self_study/images/vb.png)
+![AWS Solution](./self_study/images/vc.png)
+![AWS Solution](./self_study/images/vd.png)
+![AWS Solution](./self_study/images/ve.png)
+![AWS Solution](./self_study/images/vf.png)
+
+## **🔹 Step 2: Make a Change to a `.tf` File**
+- **Modify any Terraform configuration file** (e.g., `variables.tf`).
+- **Commit and push the change** to the repository:
+## **🔹 Step 3: Check Terraform Cloud for an Automated Plan**
+- **Go to Terraform Cloud** → **Your Workspace**.
+- Click the **"Runs"** tab.
+- **Observe an automatically triggered Terraform plan**.
+![AWS Solution](./self_study/images/raa.png)
+
+## **🔹 Step 4: Manually Approve `terraform apply`**
+- **Review the plan output** in Terraform Cloud.
+- Click **"Confirm & Apply"** to execute changes.
+
+---
+
+## **🔹 Step 5: Configure Infrastructure with Ansible**
+Once Terraform `apply` is successful, configure the infrastructure using **Ansible**.
+
+### **1️⃣ SSH into the Bastion Server**
+1. **Forward your SSH private key**:
+   ```sh
+   eval `ssh-agent -s`
+   ssh-add <private-key.pem>
+   ssh-add -l
+   ```
+2. **Connect to the Bastion server**:
+   ```sh
+   ssh -A ec2-user@<bastion-public-ip>
+   ```
+
+### **2️⃣ Update Configuration Files**
+- **Modify `nginx.conf.j2`** with the internal load balancer DNS.
+- **Update `setup-db.yml`** with:
+  - RDS endpoints
+  - Database name
+  - Username/password (for `tooling` and `wordpress`)
+- **Update EFS Access Point IDs** in `main.yml` for:
+  - **Tooling**
+  - **WordPress**
+
+### **3️⃣ Verify Ansible Installation**
+```sh
+ansible --version
+```
+
+### **4️⃣ Run Ansible Playbook**
+```sh
+export ANSIBLE_CONFIG=/home/ec2-user/terraform-cloud/ansible/roles/ansible.cfg
+
+ansible-playbook -i inventory/aws_ec2.yml playbook/site.yml
+```
+## **🔹 Step 6: Access Deployed Applications**
+Once Ansible has configured the infrastructure:
+
+- **Tooling Website:** Open in browser.
+- **WordPress Website:** Open in browser.
+
+---
+
+### **✅ Steps to Complete Practice Task №1**
+This guide will help you configure **Terraform Cloud** for `dev`, `test`, and `prod` environments, set up automatic runs, notifications, and apply `destroy` from the web console.
+
+## **🔹 Step 1: Configure 3 Branches for `dev`, `test`, and `prod`**
+- Navigate to your **Terraform Cloud repository** (`terraform-cloud`) in **GitHub**.
+- Create three branches:
+   - `dev`
+   - `test`
+   - `prod`
+   ```sh
+   git checkout -b dev
+   git push origin dev
+
+   git checkout -b test
+   git push origin test
+
+   git checkout -b prod
+   git push origin prod
+   ```
+![AWS Solution](./self_study/images/gaa.png)
+
+## **🔹 Step 2: Configure Automatic Runs Only for `dev` Environment**
+### **Configure Terraform Cloud Workspaces**
+- Go to **Terraform Cloud** (**https://app.terraform.io/**).
+- Click **"Workspaces"** and create three workspaces:
+![AWS Solution](./self_study/images/wo.png)
+
+### **Enable Auto-Apply for `dev` Only**
+- **Go to `terraform-dev` workspace** → **Settings** → **General**.
+- **Enable** `Automatic Run Triggering` and **Auto-Apply**.
+- **For `test` and `prod`**, disable Auto-Apply to prevent automatic changes.
+![AWS Solution](./self_study/images/woa.png)
+
+## **🔹 Step 3: Create Email and Slack Notifications**
+### **Create Notifications in Terraform Cloud**
+- **Go to Terraform Cloud** → **Settings** → **Notifications**.
+- **Click "Create Notification"** and select:
+   - **Email**: Enter your email to receive notifications.
+     ![AWS Solution](./self_study/images/caa.png)
+
+   - **Slack**: Get the **Slack Webhook URL** for notifications.
+   
+3. **Set Event Triggers**:
+   - `Plan started`
+   - `Run errored`
+4. **Test Notifications**:
+   - **Trigger a plan** and verify the email/Slack notification.
+   ![AWS Solution](./self_study/images/email.png)
+   ![AWS Solution](./self_study/images/slack.png)
+
+---
+
+## **🔹 Step 4: Apply `destroy` from Terraform Cloud Web Console**
+1. **Go to Terraform Cloud**.
+2. **Select a workspace** (e.g., `terraform-dev`).
+3. **Click "Actions"** → **"Queue destroy plan"**.
+4. **Confirm** and apply the destroy action.
+
