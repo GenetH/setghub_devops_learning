@@ -174,12 +174,9 @@ By now, you have tried to launch `plan` and `apply` manually from Terraform Clou
 
 Since provisioning of new Cloud resources might incur significant costs. Even though you can configure `Auto apply`, it is always a good idea to verify your `plan` results before pushing it to `apply` to avoid any misconfigurations that can cause 'bill shock'.
 
-### **✅ Steps to Test Automated `terraform plan` in Terraform Cloud**
-This guide will walk you through **automating Terraform plan** execution when changes are pushed to GitHub.
+### **Steps to Test Automated `terraform plan` in Terraform Cloud**
 
----
-
-## **🔹 Step 1: Configure GitHub as a Version Control System (VCS) in Terraform Cloud**
+## **Step 1: Configure GitHub as a Version Control System (VCS) in Terraform Cloud**
 - **Go to Terraform Cloud** → **Settings** → **VCS Providers**.
 - **Click on "Add a VCS Provider"**.
 - **Select GitHub** and follow the authorization steps.
@@ -195,69 +192,21 @@ This guide will walk you through **automating Terraform plan** execution when ch
 ![AWS Solution](./self_study/images/ve.png)
 ![AWS Solution](./self_study/images/vf.png)
 
-## **🔹 Step 2: Make a Change to a `.tf` File**
+## **Step 2: Make a Change to a `.tf` File**
 - **Modify any Terraform configuration file** (e.g., `variables.tf`).
 - **Commit and push the change** to the repository:
-## **🔹 Step 3: Check Terraform Cloud for an Automated Plan**
+## **Step 3: Check Terraform Cloud for an Automated Plan**
 - **Go to Terraform Cloud** → **Your Workspace**.
 - Click the **"Runs"** tab.
 - **Observe an automatically triggered Terraform plan**.
 ![AWS Solution](./self_study/images/raa.png)
 
-## **🔹 Step 4: Manually Approve `terraform apply`**
+## **Step 4: Manually Approve `terraform apply`**
 - **Review the plan output** in Terraform Cloud.
 - Click **"Confirm & Apply"** to execute changes.
 
----
-
-## **🔹 Step 5: Configure Infrastructure with Ansible**
-Once Terraform `apply` is successful, configure the infrastructure using **Ansible**.
-
-### **1️⃣ SSH into the Bastion Server**
-1. **Forward your SSH private key**:
-   ```sh
-   eval `ssh-agent -s`
-   ssh-add <private-key.pem>
-   ssh-add -l
-   ```
-2. **Connect to the Bastion server**:
-   ```sh
-   ssh -A ec2-user@<bastion-public-ip>
-   ```
-
-### **2️⃣ Update Configuration Files**
-- **Modify `nginx.conf.j2`** with the internal load balancer DNS.
-- **Update `setup-db.yml`** with:
-  - RDS endpoints
-  - Database name
-  - Username/password (for `tooling` and `wordpress`)
-- **Update EFS Access Point IDs** in `main.yml` for:
-  - **Tooling**
-  - **WordPress**
-
-### **3️⃣ Verify Ansible Installation**
-```sh
-ansible --version
-```
-
-### **4️⃣ Run Ansible Playbook**
-```sh
-export ANSIBLE_CONFIG=/home/ec2-user/terraform-cloud/ansible/roles/ansible.cfg
-
-ansible-playbook -i inventory/aws_ec2.yml playbook/site.yml
-```
-## **🔹 Step 6: Access Deployed Applications**
-Once Ansible has configured the infrastructure:
-
-- **Tooling Website:** Open in browser.
-- **WordPress Website:** Open in browser.
-
----
-
-### **✅ Steps to Complete Practice Task №1**
-This guide will help you configure **Terraform Cloud** for `dev`, `test`, and `prod` environments, set up automatic runs, notifications, and apply `destroy` from the web console.
-
-## **🔹 Step 1: Configure 3 Branches for `dev`, `test`, and `prod`**
+### **Practice Task №1**
+## **Step 1: Configure 3 Branches for `dev`, `test`, and `prod`**
 - Navigate to your **Terraform Cloud repository** (`terraform-cloud`) in **GitHub**.
 - Create three branches:
    - `dev`
@@ -275,7 +224,7 @@ This guide will help you configure **Terraform Cloud** for `dev`, `test`, and `p
    ```
 ![AWS Solution](./self_study/images/gaa.png)
 
-## **🔹 Step 2: Configure Automatic Runs Only for `dev` Environment**
+## **Step 2: Configure Automatic Runs Only for `dev` Environment**
 ### **Configure Terraform Cloud Workspaces**
 - Go to **Terraform Cloud** (**https://app.terraform.io/**).
 - Click **"Workspaces"** and create three workspaces:
@@ -287,7 +236,7 @@ This guide will help you configure **Terraform Cloud** for `dev`, `test`, and `p
 - **For `test` and `prod`**, disable Auto-Apply to prevent automatic changes.
 ![AWS Solution](./self_study/images/woa.png)
 
-## **🔹 Step 3: Create Email and Slack Notifications**
+## **Step 3: Create Email and Slack Notifications**
 ### **Create Notifications in Terraform Cloud**
 - **Go to Terraform Cloud** → **Settings** → **Notifications**.
 - **Click "Create Notification"** and select:
@@ -295,20 +244,155 @@ This guide will help you configure **Terraform Cloud** for `dev`, `test`, and `p
      ![AWS Solution](./self_study/images/caa.png)
 
    - **Slack**: Get the **Slack Webhook URL** for notifications.
+     ![AWS Solution](./self_study/images/sla.png)
+     ![AWS Solution](./self_study/images/slb.png)
    
 3. **Set Event Triggers**:
    - `Plan started`
    - `Run errored`
 4. **Test Notifications**:
    - **Trigger a plan** and verify the email/Slack notification.
+   ![AWS Solution](./self_study/images/dev.png)
    ![AWS Solution](./self_study/images/email.png)
    ![AWS Solution](./self_study/images/slack.png)
 
+## **Step 4: Apply `destroy` from Terraform Cloud Web Console**
+- **Go to Terraform Cloud**.
+- **Select a workspace** (e.g., `terraform-dev`).
+- **Click "Actions"** → **"Queue destroy plan"**.
+- **Confirm** and apply the destroy action.
+![AWS Solution](./self_study/images/dest.png)
+
+### **Steps to Work with a Private Terraform Module Registry**
+
+This guide will help you complete **Practice Task №2: Working with a Private Repository** in **Terraform Cloud**.
+
 ---
 
-## **🔹 Step 4: Apply `destroy` from Terraform Cloud Web Console**
-1. **Go to Terraform Cloud**.
-2. **Select a workspace** (e.g., `terraform-dev`).
-3. **Click "Actions"** → **"Queue destroy plan"**.
-4. **Confirm** and apply the destroy action.
+## **1️⃣ Create a Simple Terraform Module Repository**
+1. **Create a new GitHub repository** to store your Terraform module.
+   - Example repo name: **`terraform-aws-module`**
+2. **Clone the repository** to your local machine:
+   ```sh
+   git clone https://github.com/your-username/terraform-aws-module.git
+   cd terraform-aws-module
+   ```
+3. **Create a Terraform module structure**:
+   ```sh
+   mkdir -p modules/network
+   cd modules/network
+   ```
+4. **Add module files** (`main.tf`, `variables.tf`, `outputs.tf`).
 
+   - **`main.tf`** (Example: AWS VPC Module)
+     ```hcl
+     resource "aws_vpc" "main" {
+       cidr_block = var.cidr_block
+     }
+     ```
+   - **`variables.tf`**
+     ```hcl
+     variable "cidr_block" {
+       description = "VPC CIDR block"
+       type        = string
+     }
+     ```
+   - **`outputs.tf`**
+     ```hcl
+     output "vpc_id" {
+       value = aws_vpc.main.id
+     }
+     ```
+
+5. **Commit and push the changes**:
+   ```sh
+   git add .
+   git commit -m "Initial Terraform module"
+   git push origin main
+   ```
+
+---
+
+## **2️⃣ Import the Module into Your Private Registry**
+1. **Go to Terraform Cloud** → **Registry** → **Private Registry**.
+2. Click **"Add Module"** and select **your GitHub repository**.
+3. Terraform Cloud will **import the module** and make it available in your private registry.
+
+---
+
+## **3️⃣ Create a Configuration That Uses the Module**
+1. **Create a new Terraform project directory**:
+   ```sh
+   mkdir ~/terraform-project
+   cd ~/terraform-project
+   ```
+2. **Create a Terraform configuration file (`main.tf`)**:
+   ```hcl
+   terraform {
+     required_providers {
+       aws = {
+         source  = "hashicorp/aws"
+         version = "~> 4.0"
+       }
+     }
+   }
+
+   provider "aws" {
+     region = "us-east-1"
+   }
+
+   module "network" {
+     source     = "app.terraform.io/your-org/terraform-aws-module/aws"
+     version    = "1.0.0"
+     cidr_block = "10.0.0.0/16"
+   }
+
+   output "vpc_id" {
+     value = module.network.vpc_id
+   }
+   ```
+3. **Initialize the project**:
+   ```sh
+   terraform init
+   ```
+
+---
+
+## **4️⃣ Create a Workspace for the Configuration**
+1. **Go to Terraform Cloud** → **Workspaces** → **Create a Workspace**.
+2. Select **"Version Control Workflow"** and connect it to your GitHub repository.
+3. Choose **the main branch** and create the workspace.
+
+---
+
+## **5️⃣ Deploy the Infrastructure**
+1. **Run Terraform Plan**:
+   ```sh
+   terraform plan
+   ```
+2. **Apply the changes**:
+   ```sh
+   terraform apply -auto-approve
+   ```
+3. Terraform will **deploy the infrastructure** using the module.
+
+---
+
+## **6️⃣ Destroy Your Deployment**
+1. **Run Terraform Destroy**:
+   ```sh
+   terraform destroy -auto-approve
+   ```
+2. This will **remove all resources** created.
+
+---
+
+### **🎯 Summary**
+✅ **Step 1:** Create a Terraform module repository on GitHub.  
+✅ **Step 2:** Import the module into Terraform Cloud's Private Registry.  
+✅ **Step 3:** Create a Terraform configuration that uses the module.  
+✅ **Step 4:** Create a workspace in Terraform Cloud.  
+✅ **Step 5:** Deploy the infrastructure using `terraform apply`.  
+✅ **Step 6:** Destroy the infrastructure when done.  
+
+🚀 Now you have successfully worked with a **private Terraform module repository**! Let me know if you need help.
