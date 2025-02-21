@@ -76,7 +76,7 @@ Before we proceed, we need to ensure we have the following tools installed on ou
 
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
-  ![AWS Solution](./self_study/images/aa.png)
+  ![AWS Solution](./self_study/images/gg.png)
 
 Refer to this [repository](https://github.com/StegTechHub/PBL-project-19) for guidance on how to refactor your environment to meet the new changes above and ensure you go through the `README.md` file.
 
@@ -107,7 +107,7 @@ Packer template is a `JSON` or `HCL` file that defines the configurations for cr
 ```hcl
 packer build bastion.pkr.hcl
 ```
-![AWS Solution](./self_study/images/pa.png)
+![AWS Solution](./self_study/images/baa.png)
 
 ### For Nginx
 
@@ -261,11 +261,10 @@ Since provisioning of new Cloud resources might incur significant costs. Even th
 - **Select a workspace** (e.g., `terraform-dev`).
 - **Click "Actions"** → **"Queue destroy plan"**.
 - **Confirm** and apply the destroy action.
-![AWS Solution](./self_study/images/dest.png)
 
 ### Public Module Registry vs Private Module Registry
 
-Terraform has a quite strong community of contributors (individual developers and 3rd party companies) that along with HashiCorp maintain a [Public Registry](https://developer.hashicorp.com/terraform/registry), where you can find reusable configuration packages ([modules](https://developer.hashicorp.com/terraform/registry/modules/use)). We strongly encourage you to explore modules shared to the public registry, specifically for this project - you can check out this [AWS provider registy page](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest).
+Terraform has a quite strong community of contributors (individual developers and 3rd party companies) that along with HashiCorp maintain a [Public Registry](https://developer.hashicorp.com/terraform/registry), where you can find reusable configuration packages ([modules](https://developer.hashicorp.com/terraform/registry/modules/use)). We strongly encourage you to explore modules shared to the public registry, specifically for this project - you can check out this [AWS provider registry page](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest).
 
 As your Terraform code base grows, your DevOps team might want to create you own library of reusable components - [Private Registry](https://developer.hashicorp.com/terraform/registry/private) can help with that.
 
@@ -284,12 +283,24 @@ As your Terraform code base grows, your DevOps team might want to create you own
 - Click **"Add Module"** and select **your GitHub repository**.
 - Terraform Cloud will **import the module** and make it available in your private registry.
  ![AWS Solution](./self_study/images/ma.png)
- ![AWS Solution](./self_study/images/tf.png)
+ ![AWS Solution](./self_study/images/tg.png)
 
 ## Create a Configuration That Uses the Module
 -  **Create a Terraform configuration file (`main.tf`)**:
    ![AWS Solution](./self_study/images/gen.png)
 
+- **To authenticate Terraform Cloud in the CLI, we used a personal API token**
+- Run the command to start the login process:  
+   ```sh
+   terraform login
+   ```
+- Terraform prompted us to visit a URL to generate an API token.  
+- We opened the provided link in a browser, logged into Terraform Cloud, and created a new API token.  
+- After copying the token, we pasted it into the terminal when prompted.  
+- Terraform confirmed the authentication, allowing us to run Terraform commands with Terraform Cloud.  
+ ![AWS Solution](./self_study/images/lfa.png)
+ ![AWS Solution](./self_study/images/lfb.png)
+ 
 - **Initialize the project**:
    ```sh
    terraform init
