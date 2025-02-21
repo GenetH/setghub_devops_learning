@@ -100,6 +100,30 @@ To follow file structure create a new folder and name it `AMI`. In this folder, 
 
 Packer template is a `JSON` or `HCL` file that defines the configurations for creating an AMI. Each AMI Bastion, Nginx and Web (for Tooling and WordPress) will have its own Packer template, or we can use a single template with multiple builders.
 
+**Initialize Plugins**
+```
+packer init bastion.pkr.hcl
+packer init nginx.pkr.hcl
+packer init ubuntu.pkr.hcl
+packer init web.pkr.hcl
+```
+
+**Validate and Build the AMI**
+
+Validate: For each template, run:
+```
+packer validate bastion.pkr.hcl
+packer validate nginx.pkr.hcl
+packer validate ubuntu.pkr.hcl
+packer validate web.pkr.hcl
+``
+Build the AMI: For each template, run:
+```
+packer build bastion.pkr.hcl
+packer build nginx.pkr.hcl
+packer build ubuntu.pkr.hcl
+packer build web.pkr.hcl
+
 ### Run the packer commands to build AMI for Bastion server, Nginx server and webserver
 
 ### For Bastion
@@ -300,7 +324,7 @@ As your Terraform code base grows, your DevOps team might want to create you own
 - Terraform confirmed the authentication, allowing us to run Terraform commands with Terraform Cloud.  
  ![AWS Solution](./self_study/images/lfa.png)
  ![AWS Solution](./self_study/images/lfb.png)
- 
+
 - **Initialize the project**:
    ```sh
    terraform init
