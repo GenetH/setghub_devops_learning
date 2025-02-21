@@ -174,9 +174,9 @@ By now, you have tried to launch `plan` and `apply` manually from Terraform Clou
 
 Since provisioning of new Cloud resources might incur significant costs. Even though you can configure `Auto apply`, it is always a good idea to verify your `plan` results before pushing it to `apply` to avoid any misconfigurations that can cause 'bill shock'.
 
-### **Steps to Test Automated `terraform plan` in Terraform Cloud**
+## **Steps to Test Automated `terraform plan` in Terraform Cloud**
 
-## **Step 1: Configure GitHub as a Version Control System (VCS) in Terraform Cloud**
+### **Step 1: Configure GitHub as a Version Control System (VCS) in Terraform Cloud**
 - **Go to Terraform Cloud** → **Settings** → **VCS Providers**.
 - **Click on "Add a VCS Provider"**.
 - **Select GitHub** and follow the authorization steps.
@@ -205,8 +205,8 @@ Since provisioning of new Cloud resources might incur significant costs. Even th
 - **Review the plan output** in Terraform Cloud.
 - Click **"Confirm & Apply"** to execute changes.
 
-### **Practice Task №1**
-## **Step 1: Configure 3 Branches for `dev`, `test`, and `prod`**
+## **Practice Task №1**
+### **Step 1: Configure 3 Branches for `dev`, `test`, and `prod`**
 - Navigate to your **Terraform Cloud repository** (`terraform-cloud`) in **GitHub**.
 - Create three branches:
    - `dev`
@@ -224,7 +224,7 @@ Since provisioning of new Cloud resources might incur significant costs. Even th
    ```
 ![AWS Solution](./self_study/images/gaa.png)
 
-## **Step 2: Configure Automatic Runs Only for `dev` Environment**
+### **Step 2: Configure Automatic Runs Only for `dev` Environment**
 ### **Configure Terraform Cloud Workspaces**
 - Go to **Terraform Cloud** (**https://app.terraform.io/**).
 - Click **"Workspaces"** and create three workspaces:
@@ -236,7 +236,7 @@ Since provisioning of new Cloud resources might incur significant costs. Even th
 - **For `test` and `prod`**, disable Auto-Apply to prevent automatic changes.
 ![AWS Solution](./self_study/images/woa.png)
 
-## **Step 3: Create Email and Slack Notifications**
+### **Step 3: Create Email and Slack Notifications**
 ### **Create Notifications in Terraform Cloud**
 - **Go to Terraform Cloud** → **Settings** → **Notifications**.
 - **Click "Create Notification"** and select:
@@ -256,143 +256,88 @@ Since provisioning of new Cloud resources might incur significant costs. Even th
    ![AWS Solution](./self_study/images/email.png)
    ![AWS Solution](./self_study/images/slack.png)
 
-## **Step 4: Apply `destroy` from Terraform Cloud Web Console**
+### **Step 4: Apply `destroy` from Terraform Cloud Web Console**
 - **Go to Terraform Cloud**.
 - **Select a workspace** (e.g., `terraform-dev`).
 - **Click "Actions"** → **"Queue destroy plan"**.
 - **Confirm** and apply the destroy action.
 ![AWS Solution](./self_study/images/dest.png)
 
-### **Steps to Work with a Private Terraform Module Registry**
+### Public Module Registry vs Private Module Registry
 
-This guide will help you complete **Practice Task №2: Working with a Private Repository** in **Terraform Cloud**.
+Terraform has a quite strong community of contributors (individual developers and 3rd party companies) that along with HashiCorp maintain a [Public Registry](https://developer.hashicorp.com/terraform/registry), where you can find reusable configuration packages ([modules](https://developer.hashicorp.com/terraform/registry/modules/use)). We strongly encourage you to explore modules shared to the public registry, specifically for this project - you can check out this [AWS provider registy page](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest).
 
----
+As your Terraform code base grows, your DevOps team might want to create you own library of reusable components - [Private Registry](https://developer.hashicorp.com/terraform/registry/private) can help with that.
 
-## **1️⃣ Create a Simple Terraform Module Repository**
-1. **Create a new GitHub repository** to store your Terraform module.
-   - Example repo name: **`terraform-aws-module`**
-2. **Clone the repository** to your local machine:
-   ```sh
-   git clone https://github.com/your-username/terraform-aws-module.git
-   cd terraform-aws-module
-   ```
-3. **Create a Terraform module structure**:
-   ```sh
-   mkdir -p modules/network
-   cd modules/network
-   ```
-4. **Add module files** (`main.tf`, `variables.tf`, `outputs.tf`).
+# Practice Task №2
 
-   - **`main.tf`** (Example: AWS VPC Module)
-     ```hcl
-     resource "aws_vpc" "main" {
-       cidr_block = var.cidr_block
-     }
-     ```
-   - **`variables.tf`**
-     ```hcl
-     variable "cidr_block" {
-       description = "VPC CIDR block"
-       type        = string
-     }
-     ```
-   - **`outputs.tf`**
-     ```hcl
-     output "vpc_id" {
-       value = aws_vpc.main.id
-     }
-     ```
+## Working with Private repository
 
-5. **Commit and push the changes**:
-   ```sh
-   git add .
-   git commit -m "Initial Terraform module"
-   git push origin main
-   ```
+- Create a simple Terraform repository (you can clone one from [here](https://github.com/hashicorp/learn-private-module-aws-s3-webapp))
+   ![AWS Solution](./self_study/images/clo.png)
 
----
+- create release
+  ![AWS Solution](./self_study/images/rel.png)
 
-## **2️⃣ Import the Module into Your Private Registry**
-1. **Go to Terraform Cloud** → **Registry** → **Private Registry**.
-2. Click **"Add Module"** and select **your GitHub repository**.
-3. Terraform Cloud will **import the module** and make it available in your private registry.
+## Import the Module into Your Private Registry**
+- **Go to Terraform Cloud** → **Registry**.
+- Click **"Add Module"** and select **your GitHub repository**.
+- Terraform Cloud will **import the module** and make it available in your private registry.
+ ![AWS Solution](./self_study/images/ma.png)
+ ![AWS Solution](./self_study/images/tf.png)
 
----
+## Create a Configuration That Uses the Module
+-  **Create a Terraform configuration file (`main.tf`)**:
+   ![AWS Solution](./self_study/images/gen.png)
 
-## **3️⃣ Create a Configuration That Uses the Module**
-1. **Create a new Terraform project directory**:
-   ```sh
-   mkdir ~/terraform-project
-   cd ~/terraform-project
-   ```
-2. **Create a Terraform configuration file (`main.tf`)**:
-   ```hcl
-   terraform {
-     required_providers {
-       aws = {
-         source  = "hashicorp/aws"
-         version = "~> 4.0"
-       }
-     }
-   }
-
-   provider "aws" {
-     region = "us-east-1"
-   }
-
-   module "network" {
-     source     = "app.terraform.io/your-org/terraform-aws-module/aws"
-     version    = "1.0.0"
-     cidr_block = "10.0.0.0/16"
-   }
-
-   output "vpc_id" {
-     value = module.network.vpc_id
-   }
-   ```
-3. **Initialize the project**:
+- **Initialize the project**:
    ```sh
    terraform init
    ```
+   ![AWS Solution](./self_study/images/init.png)
 
----
+## **Create a Workspace for the Configuration**
+- **Go to Terraform Cloud** → **Workspaces** → **Create a Workspace**.
+- Select **"Select CLI-driven workflow"**
+  ![AWS Solution](./self_study/images/cra.png)
+  ![AWS Solution](./self_study/images/crb.png)
 
-## **4️⃣ Create a Workspace for the Configuration**
-1. **Go to Terraform Cloud** → **Workspaces** → **Create a Workspace**.
-2. Select **"Version Control Workflow"** and connect it to your GitHub repository.
-3. Choose **the main branch** and create the workspace.
+- Add the code block below to the terraform configuration file to setup the cloud integration.
 
----
+```hcl
+terraform { 
+  cloud { 
+    
+    organization = "g-project-19" 
 
-## **5️⃣ Deploy the Infrastructure**
-1. **Run Terraform Plan**:
+    workspaces { 
+      name = "s3-webapp-workspace" 
+    } 
+  } 
+}
+```
+![AWS Solution](./self_study/images/go.png)
+
+## **Deploy the Infrastructure**
+   
+- **Apply the changes**:
    ```sh
-   terraform plan
+   terraform apply 
    ```
-2. **Apply the changes**:
+![AWS Solution](./self_study/images/7.png)
+
+- Terraform will **deploy the infrastructure** using the module.
+![AWS Solution](./self_study/images/th.png)
+![AWS Solution](./self_study/images/myp.png)
+![AWS Solution](./self_study/images/yess.png)
+
+**Destroy Your Deployment**
+- **Run Terraform Destroy**:
    ```sh
-   terraform apply -auto-approve
+   terraform destroy
    ```
-3. Terraform will **deploy the infrastructure** using the module.
+   ![AWS Solution](./self_study/images/des.png) 
+   This will **remove all resources** created.
 
----
-
-## **6️⃣ Destroy Your Deployment**
-1. **Run Terraform Destroy**:
-   ```sh
-   terraform destroy -auto-approve
-   ```
-2. This will **remove all resources** created.
-
----
-
-### **🎯 Summary**
-✅ **Step 1:** Create a Terraform module repository on GitHub.  
-✅ **Step 2:** Import the module into Terraform Cloud's Private Registry.  
-✅ **Step 3:** Create a Terraform configuration that uses the module.  
-✅ **Step 4:** Create a workspace in Terraform Cloud.  
-✅ **Step 5:** Deploy the infrastructure using `terraform apply`.  
-✅ **Step 6:** Destroy the infrastructure when done.  
-
-🚀 Now you have successfully worked with a **private Terraform module repository**! Let me know if you need help.
+### Conclusion
+In this project, we learned how to automate infrastructure provisioning using Terraform Cloud, making deployments more efficient and scalable. We set up a Terraform Cloud account, created organizations and workspaces, and integrated it with GitHub to automate Terraform runs. We used Packer to build AMIs, Ansible for configuration management, and Terraform scripts to deploy AWS resources. We also explored how to manage multiple environments (dev, test, and prod) using different branches and configured notifications via Slack and email to monitor changes. Additionally, we worked with both public and private module registries to improve reusability and maintainability. This hands-on experience gave us a deeper understanding of infrastructure automation, remote execution, and best practices for managing cloud resources efficiently.
