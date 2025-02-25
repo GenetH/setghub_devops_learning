@@ -73,11 +73,11 @@ Connecting directly to the container running the MySQL server:
 ```bash
 docker exec -it <container_name> mysql -u root -p
 ```
-[AWS Solution](./self_study/images/e.png)
+![AWS Solution](./self_study/images/e.png)
 Provide the root password when prompted. With that, you have connected the MySQL client to the server.
 
 Finally, change the server root password to protect your database.
-[AWS Solution](./self_study/images/g.png)
+![AWS Solution](./self_study/images/g.png)
 
 #### Approach 2
 
@@ -86,9 +86,9 @@ First, create a network:
 ```bash
 docker network create --subnet=172.18.0.0/24 tooling_app_network
 ```
-[AWS Solution](./self_study/images/h.png) 
+![AWS Solution](./self_study/images/h.png) 
 Creating a custom network is not necessary because even if we do not create a network, Docker will use the default network for all the containers you run. By default, the network we created above is of `DRIVER Bridge`. So, also, it is the default network. You can verify this by running the `docker network ls` command.
-[AWS Solution](./self_study/images/k.png) 
+![AWS Solution](./self_study/images/k.png) 
 
 But there are use cases where this is necessary. For example, if there is a requirement to control the `cidr` range of the containers running the entire application stack. This will be an ideal situation to create a network and specify the `--subnet`.
 
@@ -101,7 +101,7 @@ First, let us create an environment variable to store the root password:
 ```sh
 export MYSQL_PW=<root-secret-password>
 ```
-[AWS Solution](./self_study/images/env.png) 
+![AWS Solution](./self_study/images/env.png) 
 Then, pull the image and run the container, all in one command like below:
 
 ```sh
@@ -118,7 +118,7 @@ If the image is not found locally, it will be downloaded from the registry.
 ```sh
 docker ps -a
 ```
-[AWS Solution](./self_study/images/run.png)
+![AWS Solution](./self_study/images/run.png)
 
 ```
 CONTAINER ID    IMAGE                        COMMAND                  CREATED         STATUS                        PORTS                     NAMES
@@ -132,7 +132,7 @@ Create a file and name it `create_user.sql` and add the below code in the file:
 CREATE USER '<user>'@'%' IDENTIFIED BY '<client-secret-password>';
 GRANT ALL PRIVILEGES ON *.* TO '<user>'@'%';
 ```
-[AWS Solution](./self_study/images/vim.png)
+![AWS Solution](./self_study/images/vim.png)
 
 **Run the script:**
 
@@ -220,7 +220,7 @@ Ensure you are inside the folder that has the `Dockerfile` and build your contai
 ```sh
 docker build -t tooling:0.0.1 .
 ```
-[AWS Solution](./self_study/images/df.png)
+![AWS Solution](./self_study/images/df.png)
 
 In the above command, we specify a parameter `-t`, so that the image can be tagged `tooling:0.0.1`. Also, you have to notice the `.` at the end. This is important as that tells Docker to locate the `Dockerfile` in the current directory you are running the command. Otherwise, you would need to specify the absolute path to the `Dockerfile`.
 
@@ -237,7 +237,7 @@ Let us observe those flags in the command:
 
 **Note:** *You will get an error. But you must troubleshoot this error and fix it. Below is your error message.*
 
-[AWS Solution](./self_study/images/df.png)
+![AWS Solution](./self_study/images/df.png)
 
 ```sh
 AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message.
