@@ -107,6 +107,8 @@ Then, pull the image and run the container, all in one command like below:
 ```sh
 docker run --network tooling_app_network -h mysqlserverhost --name=mysql-server -e MYSQL_ROOT_PASSWORD=$MYSQL_PW -d mysql/mysql-server:latest
 ```
+![AWS Solution](./self_study/images/ne.png)
+
 ### Flags used
 - `-d` runs the container in detached mode
 - `--network` connects a container to a network
@@ -139,6 +141,7 @@ GRANT ALL PRIVILEGES ON *.* TO '<user>'@'%';
 ```bash
 docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < ./create_user.sql
 ```
+![AWS Solution](./self_study/images/yy.png)
 
 If you see a warning like below, it is acceptable to ignore:
 
@@ -155,6 +158,8 @@ The good thing about this approach is that you do not have to install any client
 ```bash
 docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u <user-created-from-the-SQL-script> -p
 ```
+![AWS Solution](./self_study/images/uf.png)
+
 ### Flags used:
 - `--name` gives the container a name
 - `-it` runs in interactive mode and Allocates a pseudo-TTY
@@ -179,14 +184,15 @@ git clone https://github.com/StegTechHub/tooling-02.git
 ```sh
 export tooling_db_schema=<path-to-tooling-schema-file>/tooling_db_schema.sql
 ```
-
 You can find the `tooling_db_schema.sql` in the `html` folder of the cloned repo.
+![AWS Solution](./self_study/images/sql.png)
 
 3. Use the SQL script to create the database and prepare the schema. With the `docker exec` command, you can execute a command in a running container.
 
 ```sh
 docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < $tooling_db_schema
 ```
+![AWS Solution](./self_study/images/sq.png)
 
 4. Update the `db_conn.php` file with connection details to the database
 
@@ -196,7 +202,6 @@ $username = "<user>";
 $password = "<client-secret-password>";
 $dbname = "toolingdb";
 ```
-
 5. Run the Tooling App
 
 Containerization of an application starts with the creation of a file with a special name - `Dockerfile` (without any extensions). This can be considered as a ‘recipe’ or ‘instruction’ that tells Docker how to pack your application into a container. In this project, you will build your container from a pre-created `Dockerfile`, but as a DevOps, you must also be able to write Dockerfiles.
@@ -237,7 +242,7 @@ Let us observe those flags in the command:
 
 **Note:** *You will get an error. But you must troubleshoot this error and fix it. Below is your error message.*
 
-![AWS Solution](./self_study/images/df.png)
+![AWS Solution](./self_study/images/ca.png)
 
 ```sh
 AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message.
@@ -245,14 +250,10 @@ AH00558: apache2: Could not reliably determine the server's fully qualified doma
 **Hint:** *You must have faced this error in some of the past projects. It is time to begin to put your skills to good use. Simply do a Google search of the error message, and figure out where to update the configuration file to get the error out of your way.*
 
 If everything works, you can open the browser and type **[http://localhost:8085](http://localhost:8085)**
-
 You will see the login page.
+![AWS Solution](./self_study/images/saaa.png)
 
 The default email is **test@gmail.com**, the password is **12345**, or you can check users’ credentials stored in the `toolingdb.user` table.
-
-
-
-
 
 ### **Practice Task №1 - Implement a POC to migrate the PHP-Todo app into a containerized application.**
 
