@@ -262,17 +262,17 @@ Download `php-todo` repository **[from here](https://github.com/StegTechHub/php-
 
 ### **Part 1**
 1. Write a `Dockerfile` for the TODO app  
-![AWS Solution](./self_study/images/da.png)
-![AWS Solution](./self_study/images/dc.png)
-![AWS Solution](./self_study/images/db.png)
+ ![AWS Solution](./self_study/images/da.png)
+ ![AWS Solution](./self_study/images/dc.png)
+ ![AWS Solution](./self_study/images/db.png)
 2. Run both database and app on your laptop Docker Engine
-```sh
-docker run --network tooling_app_network -h mysql --name=mysql-server -e MYSQL_ROOT_PASSWORD=$MYSQL_PW  -d mysql/mysql-server:latest 
-```  
+   ```sh
+   docker run --network tooling_app_network -h mysql --name=mysql-server -e MYSQL_ROOT_PASSWORD=$MYSQL_PW  -d mysql/mysql-server:latest 
+   ```  
 - Build the todo app
-```sh
-docker build -t php-todo:0.0.1 .
-```
+  ```sh
+  docker build -t php-todo:0.0.1 .
+  ```
 - Run the todo app
   ```sh
   docker run --network tooling_app_network --rm --name php-todo --env-file .env -p 8080:8000 -it php-todo:0.0.1
