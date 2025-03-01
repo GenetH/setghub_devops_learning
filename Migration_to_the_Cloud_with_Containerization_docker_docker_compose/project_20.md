@@ -251,7 +251,8 @@ AH00558: apache2: Could not reliably determine the server's fully qualified doma
 
 If everything works, you can open the browser and type **[http://localhost:8085](http://localhost:8085)**
 You will see the login page.
-![AWS Solution](./self_study/images/saaa.png)
+
+![AWS Solution](./self_study/images/saa.png)
 
 The default email is **test@gmail.com**, the password is **12345**, or you can check users’ credentials stored in the `toolingdb.user` table.
 
@@ -273,13 +274,13 @@ docker run --network tooling_app_network -h mysql --name=mysql-server -e MYSQL_R
 docker build -t php-todo:0.0.1 .
 ```
 - Run the todo app
-```sh
-docker run --network tooling_app_network --rm --name php-todo --env-file .env -p 8080:8000 -it php-todo:0.0.1
-```
-![AWS Solution](./self_study/images/dhh.png)
+  ```sh
+  docker run --network tooling_app_network --rm --name php-todo --env-file .env -p 8080:8000 -it php-todo:0.0.1
+  ```
+  ![AWS Solution](./self_study/images/dhh.png)
 
 3. Access the application from the browser  
-![AWS Solution](./self_study/images/dd.png)
+  ![AWS Solution](./self_study/images/dd.png)
 
 ### **Part 2**
 1. Create an account in **[Docker Hub](#)**  
