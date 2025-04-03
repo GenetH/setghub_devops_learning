@@ -283,14 +283,48 @@ Download `php-todo` repository **[from here](https://github.com/StegTechHub/php-
   ![AWS Solution](./self_study/images/dd.png)
 
 ### **Part 2**
-1. Create an account in **[Docker Hub](#)**  
+1. Create an account in **[Docker Hub](https://hub.docker.com/)**  
+   ![AWS Solution](./self_study/images/geni.png)
 2. Create a new Docker Hub repository  
+   ![AWS Solution](./self_study/images/du.png)
+
 3. Push the docker images from your PC to the repository  
+
+   - Log in to Docker Hub
+
+   ```bash
+   docker login
+   ```
+You will be prompted to enter your **Docker Hub username** and **password**.
+
+- Tag Your Docker Image
+
+```bash
+docker tag php-todo-app:latest your-dockerhub-username/php-todo-app:latest
+```
+
+Example:
+
+```bash
+docker tag php-todo:0.0.1 your-dockerhub-username/php-todo-app:latest
+```
+Now, push the images to Docker Hub:
+
+```bash
+docker push your-dockerhub-username/php-todo-app:latest
+```
+![AWS Solution](./self_study/images/paa.png)
+![AWS Solution](./self_study/images/pab.png)
 
 ### **Part 3**
 1. Write a `Jenkinsfile` that will simulate a Docker Build and a Docker Push to the registry  
-2. Connect your repo to Jenkins  
+![AWS Solution](./self_study/images/jas.png)
+2. Launch ec2 instance for jenkins and install Docker
+![AWS Solution](./self_study/images/jas.png)
+3. Connect your repo to Jenkins  
 3. Create a multi-branch pipeline  
 4. Simulate a CI pipeline from a feature and master branch using previously created `Jenkinsfile`  
-5. Ensure that the tagged images from your `Jenkinsfile` have a prefix that suggests which branch  
+![AWS Solution](./self_study/images/waa.png)
+5. Ensure that the tagged images from your `Jenkinsfile` have a prefix that suggests which branch 
+![AWS Solution](./self_study/images/wab.png) 
 
