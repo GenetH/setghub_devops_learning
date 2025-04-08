@@ -256,7 +256,7 @@ In the example above, you will have to have module 'servers' to have output file
 
 ## Refactor your project using Modules
 
-Let us review the [repository](https://github.com/francdomain/Automate_Infrastructure_With_IaC_using_Terraform_2)of project 17, you will notice that we had a single lsit of long file for creating all of our resources, but that is not the best way to go about it because it maks our code base vey hard to read and understand, and making future changes can bring a lot of pain.
+Let us review the [repository](https://github.com/GenetH/Automate_Infrastructure_With_IaC_using_Terraform_2)of project 17, you will notice that we had a single lsit of long file for creating all of our resources, but that is not the best way to go about it because it maks our code base vey hard to read and understand, and making future changes can bring a lot of pain.
 
 ## QUICK TASK:
 

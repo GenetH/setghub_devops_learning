@@ -328,3 +328,162 @@ docker push your-dockerhub-username/php-todo-app:latest
 5. Ensure that the tagged images from your `Jenkinsfile` have a prefix that suggests which branch 
 ![AWS Solution](./self_study/images/wab.png) 
 
+
+# Deployment with Docker Compose
+
+All we have done until now required quite a lot of effort to create an image and launch an application inside it. We should not have to always run Docker commands on the terminal to get our applications up and running. There are solutions that make it easy to write [declarative code](https://en.wikipedia.org/wiki/Declarative_programming) in [YAML](https://en.wikipedia.org/wiki/YAML), and get all the applications and dependencies up and running with minimal effort by launching a single command.
+
+In this section, we will refactor the `Tooling app` POC so that we can leverage the power of `Docker Compose`.
+
+### 1. First, install Docker Compose on your workstation from [here](https://docs.docker.com/compose/install/)
+
+With `Docker Desktop`, Docker Compose is now integrated as a `Docker CLI plugin`, and you use it by typing `docker compose` instead of `docker-compose` (for stand-alone Docker Compose tool).
+
+2. **Create a file**, name it `tooling.yaml`.
+3. **Write Docker Compose definitions** with YAML syntax. The YAML file is used to define services, networks, and volumes.
+
+### Example YAML snippet:
+```yaml
+version: "3.9"
+services:
+  tooling_frontend:
+    build: .
+    ports:
+      - "5000:80"
+    volumes:
+      - tooling_frontend:/var/www/html
+```
+![AWS Solution](./self_study/images/yaab.png) 
+
+The YAML file has declarative fields, and it is vital to understand what they are used for.
+- **version**: Is used to specify the version of Docker Compose API that the Docker Compose engine will connect to. This field is optional from docker compose version v1.27.0.
+
+You can verify the Docker Compose version on your machine using the command:
+```bash
+docker-compose --version
+```
+![AWS Solution](./self_study/images/doc.png) 
+
+- **service**: A service definition contains a configuration that is applied to each container started for that service. In the snippet above, the only service listed is `tooling_frontend`. So, every other field under the `tooling_frontend` service will execute some commands that relate only to that service. Therefore, all the below-listed fields relate to the `tooling_frontend` service.
+
+    - build
+    - port
+    - volumes
+    - links
+
+You can visit the site here to find all the fields and read about each one that currently matters to you -> [balena.io](https://www.balena.io/docs/reference/supervisor/docker-compose/)
+
+You may also go directly to the official documentation site to read about each field here -> [docker-compose file v3](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+
+Let us fill up the entire file and test our application:
+
+```yaml
+version: "3.9"
+services:
+  tooling_frontend:
+    build: .
+    ports:
+      - "5000:80"
+    volumes:
+      - tooling_frontend:/var/www/html
+    links:
+      - db
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: <The database name required by Tooling app>
+      MYSQL_USER: <The user required by Tooling app>
+      MYSQL_PASSWORD: <The password required by Tooling app>
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  tooling_frontend:
+  db:
+```
+![AWS Solution](./self_study/images/doc1.png) 
+
+### **Command to Start the Containers**:
+
+Run the command to start the containers:
+```bash
+docker-compose -f tooling.yaml up -d
+```
+![AWS Solution](./self_study/images/doc2.png) 
+![AWS Solution](./self_study/images/doc22.png) 
+
+Verify that the compose is in the running status:
+
+```docker
+docker compose ls
+```
+![AWS Solution](./self_study/images/doc3.png) 
+![AWS Solution](./self_study/images/doc4.png)
+
+# Practice Task №2 - Complete Continuous Integration With A Test Stage
+
+### 1. Document your understanding of all the fields specified in the Docker Compose file `tooling.yaml`
+
+### **frontend Service:**
+- **`build: .`**: This tells Docker to build an image for the `frontend` service from the `Dockerfile` located in the current directory (`.`). The `.` refers to the context from which the Docker image will be built.
+
+- **`ports: "5002:80"`**: This maps port `5002` on the host machine to port `80` inside the container. It allows external access to the `frontend` service on port `5002`, while the service itself is listening on port `80` inside the container.
+
+- **`volumes:`**
+  - **`tooling_frontend:/var/www/html`**: This mounts a named volume `tooling_frontend` to the `/var/www/html` directory inside the container. It ensures that data inside `/var/www/html` persists across container restarts and allows sharing data between the host and the container.
+
+- **`links:`**
+  - **`- db`**: This allows the `frontend` service to connect to the `db` service by using the hostname `db`. Even though `links` is considered deprecated, Docker Compose still allows communication between containers through service names.
+
+### **db Service:**
+- **`image: mysql:8.0`**: This tells Docker to use the official MySQL image version `8.0` from Docker Hub to create the `db` container.
+
+- **`restart: always`**: This ensures that the `db` container always restarts if it stops or crashes. This is useful for keeping the database always running.
+
+- **`environment:`**
+  - **`MYSQL_DATABASE: toolingdb`**: This environment variable sets the name of the database to be created when the MySQL container starts. The database will be named `toolingdb`.
+  - **`MYSQL_USER: genet`**: This environment variable defines the MySQL user `genet` that can access the database.
+  - **`MYSQL_PASSWORD: Setghub@admin`**: This defines the password for the `genet` MySQL user.
+  - **`MYSQL_RANDOM_ROOT_PASSWORD: '1'`**: This generates a random root password for the MySQL root user, providing an extra layer of security.
+
+- **`volumes:`**
+  - **`db:/var/lib/mysql`**: This mounts the `db` volume to the `/var/lib/mysql` directory inside the container. It ensures that the database data persists across container restarts.
+
+
+### **Summary**:
+- The **`frontend` service** will be built from the Dockerfile in the current directory, it will expose port 5002, mount a volume for persistent data, and connect to the `db` service.
+- The **`db` service** will run MySQL with a custom database and user configuration, using persistent storage for MySQL data.
+
+This setup should ensure your application is fully functional with persistent data for both the frontend and the database.
+
+### 2. Update your `Jenkinsfile` with a `test stage` before pushing the image to the registry.
+
+![AWS Solution](./self_study/images/tests.png) 
+
+__Install `docker compose` on jenkins server__
+![AWS Solution](./self_study/images/docker.png) 
+
+Install docker compose plugin
+
+![AWS Solution](./self_study/images/com.png) 
+
+### 3. What you will be testing here is to ensure that the `tooling site` http endpoint is able to return status `code 200`. Any other code will be determined a stage failure.
+![AWS Solution](./self_study/images/yepp.png) 
+
+#### 4. Implement a similar pipeline for the PHP-todo app.
+
+![AWS Solution](./self_study/images/node.png) 
+
+### 5. Ensure that both pipelines have a clean-up stage where all the images are deleted on the Jenkins server.
+![AWS Solution](./self_study/images/node1.png) 
+
+Confirm the tooling site image in the registry
+
+![AWS Solution](./self_study/images/node3.png) 
+
+## Conclusion  
+
+In this project, we explored the process of migrating applications to the cloud using **Docker** and **Docker Compose**. Docker enables easy containerization, allowing applications to run consistently across different environments. We began by installing **Docker Engine**, pulling the MySQL image from Docker Hub, and setting up a MySQL database container. We then used **Docker Compose** to simplify the deployment of multi-container applications by defining services like the frontend and database in a `docker-compose.yml` file. This project highlighted the power of containerization for creating isolated, portable environments and the efficiency Docker Compose brings to orchestrating and managing complex setups.
