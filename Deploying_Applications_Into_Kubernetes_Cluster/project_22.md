@@ -1,5 +1,45 @@
 # Deploying Applications Into Kubernetes Cluster - 101
 
+In this project, you will build upon your knowledge of Kubernetes architecture, and begin to deploy applications on a K8s cluster. Kubernetes has a lot of moving parts; it operates with several layers of abstraction between your application and host machines where it runs. So many terms, and capabilities that is not realistic to learn it all at once. Hence, you will be introduced to as many concepts as possible, but gradually.
+
+Within this project we are going to learn and see in action the following:
+
+1. Deployment of software applications using [YAML](https://en.wikipedia.org/wiki/YAML) manifest files with following K8s objects:
+
+- Pods
+- ReplicaSets
+- Deployments
+- StatefulSets
+- Services (ClusterIP, NodeIP, Loadbalancer)
+- Configmaps
+- Volumes
+- PersistentVolumes
+- PersistentVolumeClaims
+...and many more
+
+2. Difference between __stateful__ and __stateless__ applications
+
+- Deploy MySQL as a StatefulSet and explain why
+
+3. Limitations of using manifests directly to deploy on K8s
+
+- Working with [Helm](https://helm.sh/) templates, its components and the most important parts - semantic versioning
+Converting all the `.yaml` templates into a helm chart
+
+4. Deploying more tools with Helm charts on AWS Elastic [Kubernetes Service (EKS)](https://aws.amazon.com/eks/)
+
+- Jenkins -MySQL -Ingress Controllers (Nginx)
+- Cert-Manager
+  - Ingress for Jenkins
+  - Ingress for the actual application
+
+5. Deploy Monitoring Tools
+
+- Prometheus
+- Grafana
+
+6. Hybrid CI/CD by combining different tools such as: [Gitlab CICD](https://docs.gitlab.com/ee/ci/), Jenkins. And, you will also be introduced to concepts around [GitOps](https://gitops.weave.works/) using [Weaveworks Flux](https://www.weave.works/oss/flux/).
+
 **Choosing the right Kubernetes cluster set up**
 
 When it comes to using a Kubernetes cluster, there is a number of options available depending on the ultimate use of it. For example, if you just need a cluster for development or learning, you can use lightweight tools like Minikube, or k3s. These tools can run on your workstation without heavy system requirements. Obviously, there is limit to the amount of workload you can deploy there for testing purposes, but it works exactly like any other Kubernetes cluster.

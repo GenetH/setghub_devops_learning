@@ -13,6 +13,7 @@
 * Choose **EKS** as the use case.
 * Select **EKS - Cluster**.
 * Click **Next**.
+
 ![AWS Solution](./self_study/images/ae.png)
 
 ### **3. Attach Required Policies**
@@ -176,7 +177,7 @@ You’re now connected! 🎉
 
 ---
 
-## ✅ **Optional: Test Connection with kubectl**
+## ** Test Connection with kubectl**
 
 Try:
 
