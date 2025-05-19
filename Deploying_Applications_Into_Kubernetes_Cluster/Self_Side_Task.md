@@ -1,8 +1,6 @@
 # Self side task
 ## ✅ Step-by-Step: Deploy Tooling App with Docker Compose and Kubernetes
 
----
-
 ## ✅ Step 1: Build the App and Push to Docker Hub
 
 ### 🔹 1.1 Build the image from Docker Compose
@@ -111,7 +109,7 @@ spec:
         - containerPort: 3306
 EOF
 ```
-![AWS Solution](./self_study/images/2m.png)
+![AWS Solution](./self_study/images/m2.png)
 
 ### 🔹 2.6  Create `mysql-service.yaml`:
 
