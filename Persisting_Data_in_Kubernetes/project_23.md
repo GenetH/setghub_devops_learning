@@ -3,7 +3,7 @@
 
 ### NOTE: Create EKS cluster first before the below section
 
-#### ✅ : Create EKS Cluster (using `eksctl`)
+#### Create EKS Cluster (using `eksctl`)
 
 ```bash
 eksctl create cluster \
@@ -308,7 +308,7 @@ In kubernetes, there are many elegant ways of persisting data. Each of which is 
 - __Persistent Volume (PV)__ and __Persistent Volume Claim (PVC)__
 - __configMap__
 
-## Managing Volumes Dynamically with PVs and PVCs
+### Managing Volumes Dynamically with PVs and PVCs
 
 Kubernetes provides API objects for storage management such that, the lower level details of volume provisioning, storage allocation, access management etc are all abstracted away from the user, and all you have to do is present manifest files that describes what you want to get done.
 
@@ -353,27 +353,27 @@ A __PersistentVolumeClaim__ (PVC) on the other hand is a request for storage. Ju
 
 __PVs__ are resources in the cluster. __PVCs__ are requests for those resources and also act as __claim checks__ to the resource. The interaction between PVs and PVCs follows this lifecycle:
 
-### 1. Provisioning
+#### 1. Provisioning
 
 There are two ways PVs may be provisioned: __statically__ or __dynamically__.
 - __Static/Manual Provisioning:__ A cluster administrator creates a number of PVs using a manifest file which will contain all the details of the real storage. __PVs are not scoped to namespaces, they are clusterwide wide resource__, therefore the PV will be available for use when requested. __PVCs on the other hand are namespace scoped__.
 
 - __Dynamic:__ When there is no PV matching a PVC's request, then based on the available StorageClass, a dynamic PV will be created for use by the PVC. If there is no StorageClass, then the request for a PV by the PVC will fail.
 
-### 2. Binding
+#### 2. Binding
 
 PVCs are bound to specific PVs. This binding is exclusive. A PVC to PV binding is a one-to-one mapping. Claims will remain unbound indefinitely if a matching volume does not exist. Claims will be bound as matching volumes become available. For example, a cluster provisioned with many 50Gi PVs would not match a PVC requesting 100Gi. The PVC can be bound when a 100Gi PV is added to the cluster.
 
-### 3. Using
+#### 3. Using
 
 Pods use claims as volumes. The cluster inspects the claim to find the bound volume and mounts that volume for a Pod. For volumes that support multiple access modes, the user specifies which mode is desired when using their claim as a volume in a Pod. Once a user has a claim and that claim is bound, the bound PV belongs to the user for as long as they need it. Users schedule Pods and access their claimed PVs by including a persistentVolumeClaim section in a Pod's volumes block
 
-### 4. Storage Object in Use Protection
+#### 4. Storage Object in Use Protection
 
 The purpose of the Storage Object in Use Protection feature is to ensure that PersistentVolumeClaims (PVCs) in active use by a Pod and PersistentVolume (PVs) that are bound to PVCs are not removed from the system, as this may result in data loss.
 __Note:__ PVC is in active use by a Pod when a Pod object exists that is using the PVC. If a user deletes a PVC in active use by a Pod, the PVC is not removed immediately. PVC removal is postponed until the PVC is no longer actively used by any Pods. Also, if an admin deletes a PV that is bound to a PVC, the PV is not removed immediately. PV removal is postponed until the PV is no longer bound to a PVC.
 
-### 5. Reclaiming
+#### 5. Reclaiming
 
 When a user is done with their volume, they can delete the PVC objects from the API that allows reclamation of the resource. The reclaim policy for a PersistentVolume tells the cluster what to do with the volume after it has been released of its claim. Currently, volumes can either be Retained, Recycled, or Deleted.
 
@@ -614,7 +614,7 @@ spec:
 ![AWS Solution](./self_study/images/sb.png) 
 ![AWS Solution](./self_study/images/fb.png) 
 
-## ConfigMap
+### ConfigMap
 
 Using __configMaps__ for persistence is not something you would consider for data storage. Rather it is a way to manage configuration files and ensure they are not lost as a result of Pod replacement.
 
@@ -843,3 +843,7 @@ deployment.apps/nginx-deployment restarted
 ![AWS Solution](./self_study/images/done.png) 
 
 This will terminate the running pod and spin up a new one.
+
+### Conclusion  
+
+In this guide, we explored the foundational concepts and practical steps for persisting data in Kubernetes. Since Kubernetes pods are inherently ephemeral, any data stored inside them is lost when the pod is deleted or restarted. To address this, we leverage Volumes, Persistent Volumes (PVs), Persistent Volume Claims (PVCs), and ConfigMaps to ensure stateful behavior and data durability. We began by setting up an Amazon EKS cluster and then demonstrated how to attach AWS EBS volumes manually using the `awsElasticBlockStore` type. However, the more scalable and automated approach involves dynamically provisioning storage using PVCs backed by a StorageClass such as `gp2`. We emphasized the importance of IAM permissions, specifically attaching the `AmazonEBSCSIDriverPolicy` to the node group role to enable volume creation. The guide also highlighted how PVCs are namespace-scoped while PVs are cluster-wide, which is a critical distinction when managing resources. Additionally, we demonstrated how ConfigMaps can be used to persist configuration data, like HTML files for Nginx, ensuring that such files remain consistent even if the pod is recreated. By using volumeMounts and appropriate configurations, we enabled persistent directories within containers, allowing applications to retain their state. This comprehensive understanding empowers you to confidently deploy stateful workloads in Kubernetes, automate volume management, and maintain best practices in managing both application data and configurations.
