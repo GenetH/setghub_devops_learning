@@ -14,8 +14,6 @@
 * Select **EKS - Cluster**.
 * Click **Next**.
 
-![AWS Solution](./self_study/images/ae.png)
-
 ### **3. Attach Required Policies**
 
 * Attach the following AWS Managed Policies:
