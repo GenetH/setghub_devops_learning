@@ -1,7 +1,7 @@
-## Persisting Data in Kubernetes - 101
+## Persisting Data in Kubernetes 
 
 
-### NOTE: Create EKS cluster first before the below section
+#### NOTE: Create EKS cluster first before the below section
 
 #### Create EKS Cluster (using `eksctl`)
 
