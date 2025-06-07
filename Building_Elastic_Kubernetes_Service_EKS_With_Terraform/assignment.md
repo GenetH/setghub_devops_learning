@@ -30,11 +30,12 @@ kubectl get svc -n artifactory
 ### Access in browser:
 
 ```bash
-kubectl describe pod artifactory-artifactory-nginx-7cb47c6c8-2kjjz -n artifactory
+kubectl port-forward svc/artifactory  8082:8082 -n artifactory
 ```
 
 Open: [http://localhost:8081](http://localhost:8081)
 
+![AWS Solution](./self_study/images/jfa.png)
 
 ## 2 Install HashiCorp Vault
 
