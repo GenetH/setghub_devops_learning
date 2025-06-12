@@ -218,9 +218,6 @@ Create the following **Security Groups**:
 
 ---
 
-
-
-
 ### **Provision EC2 Instances for NGINX**  
 
 
