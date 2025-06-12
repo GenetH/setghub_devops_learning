@@ -479,6 +479,8 @@ Congratulations. You have just deployed JFrog Artifactory!
 
 **Since it asked for a business email, I couldn't get the free license.**
 
+![AWS Solution](./self_study/images/raaa.png)
+
 6. In exactly 1 minute, the license key had arrived. Simply copy the key and apply to the console.
 
 7. Set the Base URL. Ensure to use https
