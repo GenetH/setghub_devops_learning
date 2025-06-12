@@ -477,30 +477,17 @@ Congratulations. You have just deployed JFrog Artifactory!
 
 ![AWS Solution](./self_study/images/fdf.png)
 
+**Since it asked for a business email, I couldn't get the free license.**
+
 6. In exactly 1 minute, the license key had arrived. Simply copy the key and apply to the console.
-
-![AWS Solution](./self_study/images/fdf.png)
-
-![AWS Solution](./self_study/images/fdf.png)
 
 7. Set the Base URL. Ensure to use https
 
-![AWS Solution](./self_study/images/fdf.png)
-
 8. Skip the Proxy setting
-
-![AWS Solution](./self_study/images/fdf.png)
 
 9. Skip creation of repositories for now. You will create them yourself later on.
 
-![AWS Solution](./self_study/images/fdf.png)
-
 10. finish the setup
-
-![AWS Solution](./self_study/images/fdf.png)
-
-![AWS Solution](./self_study/images/fdf.png)
-
 
 Next, its time to fix the TLS/SSL configuration so that we will have a trusted __HTTPS__ URL
 
